@@ -136,9 +136,9 @@ public class playerController1 : MonoBehaviour
         {
         health--;
         healthText.text = "Health: " + health;
+                Debug.Log("hit");
             if(health < 0)
             {
-                Debug.Log("DED");
             }
         }
     }
