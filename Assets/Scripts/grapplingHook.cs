@@ -13,7 +13,7 @@ public class grapplingHook : MonoBehaviour
     //is the hook extended
     private bool extending;
     private bool active;
-    //has teh hook hit an enemy
+    //has the hook hit an enemy
     private bool isEnemyGrabbed;
     private bool wallGrabbed;
     //the player
@@ -52,7 +52,7 @@ public class grapplingHook : MonoBehaviour
 
 
         //extending and returning grapple
-        if(parent.transform.localScale.z > maxLength * 10)
+        if (parent.transform.localScale.z > maxLength * 10)
         {
             extending = false;
         }
@@ -127,6 +127,7 @@ public class grapplingHook : MonoBehaviour
                 playerPullToWall();
             }
         }
+
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -175,4 +176,6 @@ public class grapplingHook : MonoBehaviour
     {
         playerRB.AddForce(forceDirection * forcePower);
     }
+
+
 }

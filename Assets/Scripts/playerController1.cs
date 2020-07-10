@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class playerController1 : MonoBehaviour
@@ -10,33 +8,69 @@ public class playerController1 : MonoBehaviour
     public float health;
     public float speed;
     public float length;
+    //how much force a jump has
     public float jumpForce;
+    //is the player on the ground
     private bool grounded;
+    //can player double jump
     private bool doubleJump;
+    
+    //locks rotation when swinging sword
+    //rigidbody
     private Rigidbody rb;
 
-
-    RaycastHit m_Hit;
-    // Start is called before the first frame update
+    //teh sword
+    public GameObject swordBase;
+    public float swordSpeed; // how fast teh sword moves
+    private bool swordSwinging; // is sword swinging
+                                // Start is called before the first frame update
+     //combo Counter
+    public float maxCounterResetTimer;
+    private float counterResetTimer;
+    private int hitCounter;
+    public Text comboCounter;
     // Nixon: The Change
     void Start()
     {
+        if(swordSpeed <= 0)
+        {
+            swordSpeed = 1;
+        }
+        //teh rigidbody
         rb = GetComponent<Rigidbody>();
+        //remaining health
         healthText.text = "Health: " + health;
+        //is grounded
         grounded = true;
+        //sword is not swinging
+        swordSwinging = false;
+        //combo counter
+        counterResetTimer = maxCounterResetTimer;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+        //timer for the combo counter
+        if (counterResetTimer > 0)
+        {
+            counterResetTimer -= Time.deltaTime;
+        }
+        else if (counterResetTimer < 0)
+        {
+            hitCounter = 0;
+            comboCounter.text = "Combo: " + hitCounter;
+        }
+
+        //input for the player movement
+        if (Input.GetKey(KeyCode.RightArrow) && !swordSwinging || Input.GetKey(KeyCode.D) && !swordSwinging)
         {
             transform.eulerAngles = new Vector3(0, -90, 0);
             rb.AddForce(transform.forward * speed * Time.deltaTime);
         }
-        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+        if (Input.GetKey(KeyCode.LeftArrow) && !swordSwinging || Input.GetKey(KeyCode.A) && !swordSwinging)
         {
-            transform.eulerAngles = new Vector3(0, 90, 0);
+                transform.eulerAngles = new Vector3(0, 90, 0); 
             rb.AddForce(transform.forward * speed * Time.deltaTime);
         }
         if (Input.GetKeyDown(KeyCode.Space) && grounded || Input.GetKeyDown(KeyCode.W) && grounded)
@@ -51,11 +85,10 @@ public class playerController1 : MonoBehaviour
             doubleJump = false;
         }
 
-
-        //box cast
-        if (Physics.BoxCast(transform.position - new Vector3(0, -5.5f, 0), new Vector3(0.1f, -0.5f, 0.1f), -transform.up, out m_Hit, transform.rotation, 0.1f, platformLayerMask))
+        RaycastHit boxHit;
+        //box cast for if player is grounded and can jump
+        if (Physics.BoxCast(transform.position + new Vector3(0, 0, 0), new Vector3(0.125f, 0.1f, 0.125f), new Vector3(0,-1,0), out boxHit, transform.rotation, 0.22f, platformLayerMask))
         {
-            //Output the name of the Collider your Box hit
             grounded = true;
             doubleJump = true;
         }
@@ -64,50 +97,71 @@ public class playerController1 : MonoBehaviour
             Debug.DrawRay(transform.position, new Vector3(0, -1, 0) * length, Color.red);
             grounded = false;
         }
-
-        //raycast
-        RaycastHit ground;
-        if (Physics.Raycast(gameObject.transform.position,new Vector3(0,-1,0),out ground, length, platformLayerMask))
+        //swing sword
+        if (Input.GetMouseButtonDown(1) && !swordSwinging)
         {
-            Debug.DrawRay(transform.position, new Vector3(0, -1, 0) * ground.distance, Color.green);
-            grounded = true;
-            doubleJump = true;
+            swordBase.transform.rotation = Quaternion.identity;
+            swordSwinging = true;
+            swordBase.SetActive(true);
+            swordBase.transform.eulerAngles = gameObject.transform.eulerAngles;
         }
-        else
-        {
-            Debug.DrawRay(transform.position, new Vector3(0, -1, 0) * length, Color.red);
-            grounded = false;
+        if(swordSwinging)
+        { 
+            swingSword();
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void swingSword()
     {
-        if(other.gameObject.tag == "enemy")
+        //activates the sword
+        float currentX = swordBase.transform.rotation.eulerAngles.z; // x axis#
+        if(currentX < 90)
+        {
+            //swing sword
+            swordBase.transform.Rotate(new Vector3(swordSpeed, 0, 0) * Time.deltaTime);
+        }
+        //reset sword to inactive state
+        else if(currentX > 90)
+        {
+            //swordBase.transform.rotation = Quaternion.identity;
+            swordBase.transform.eulerAngles = new Vector3(0, -90, 0);
+            swordSwinging = false;
+            swordBase.SetActive(false);
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.tag == "enemy")
         {
         health--;
         healthText.text = "Health: " + health;
+            if(health < 0)
+            {
+                Debug.Log("DED");
+            }
         }
     }
 
     void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
-
         //Check if there has been a hit yet
         if (grounded)
         {
-            //Draw a Ray forward from GameObject toward the hit
-            Gizmos.DrawRay(transform.position, transform.forward * m_Hit.distance);
-            //Draw a cube that extends to where the hit exists
-            Gizmos.DrawWireCube(transform.position + transform.forward * m_Hit.distance, transform.localScale);
+            Gizmos.color = Color.green;
         }
         //If there hasn't been a hit yet, draw the ray at the maximum distance
         else
         {
-            //Draw a Ray forward from GameObject toward the maximum distance
-            Gizmos.DrawRay(transform.position, transform.forward * 0.1f);
-            //Draw a cube at the maximum distance
-            Gizmos.DrawWireCube(transform.position + transform.forward * 0.1f, transform.localScale);
+            Gizmos.color = Color.red;
         }
+            Gizmos.DrawWireCube(transform.position - new Vector3(0,0.22f,0), new Vector3(0.25f, 0.2f, 0.25f));
+    }
+
+    public void swordCollision()
+    {
+        hitCounter++;
+        counterResetTimer = maxCounterResetTimer;
+        comboCounter.text = "Combo: " + hitCounter;
     }
 }
