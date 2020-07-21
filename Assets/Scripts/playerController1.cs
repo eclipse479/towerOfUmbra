@@ -18,6 +18,8 @@ public class playerController1 : MonoBehaviour
     //locks rotation when swinging sword
     //rigidbody
     private Rigidbody rb;
+    //enemy collision knockback
+    public float knockBackAmount;
 
     //teh sword
     public GameObject swordBase;
@@ -29,10 +31,17 @@ public class playerController1 : MonoBehaviour
     private float counterResetTimer;
     private int hitCounter;
     public Text comboCounter;
+
+    //pausing
+    private bool paused;
+    public Canvas pauseScreen;
+    public Canvas gameplayMenu;
     // Nixon: The Change
     void Start()
     {
-        if(swordSpeed <= 0)
+        paused = false;
+        pauseScreen.enabled = false;
+        if (swordSpeed <= 0)
         {
             swordSpeed = 1;
         }
@@ -49,65 +58,94 @@ public class playerController1 : MonoBehaviour
     }
 
     // Update is called once per frame
+    private void FixedUpdate()
+    {
+        //RB movement in fixed update
+       
+    }
     void Update()
     {
-        //timer for the combo counter
-        if (counterResetTimer > 0)
+        //pausing
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            counterResetTimer -= Time.deltaTime;
-        }
-        else if (counterResetTimer < 0)
-        {
-            hitCounter = 0;
-            comboCounter.text = "Combo: " + hitCounter;
-        }
+            if (!paused)
+            {
+                paused = true;
+                Time.timeScale = 0.0f;
+                pauseScreen.enabled = true;
+                gameplayMenu.enabled = false;
+            }
+            else
+            {
 
-        //input for the player movement
-        if (Input.GetKey(KeyCode.RightArrow) && !swordSwinging || Input.GetKey(KeyCode.D) && !swordSwinging)
-        {
-            transform.eulerAngles = new Vector3(0, -90, 0);
-            rb.AddForce(transform.forward * speed * Time.deltaTime);
+                paused = false;
+                Time.timeScale = 1.0f;
+                pauseScreen.enabled = false;
+                gameplayMenu.enabled = true;
+            }
         }
-        if (Input.GetKey(KeyCode.LeftArrow) && !swordSwinging || Input.GetKey(KeyCode.A) && !swordSwinging)
+        if (!paused)
         {
-                transform.eulerAngles = new Vector3(0, 90, 0); 
-            rb.AddForce(transform.forward * speed * Time.deltaTime);
-        }
-        if (Input.GetKeyDown(KeyCode.Space) && grounded || Input.GetKeyDown(KeyCode.W) && grounded)
-        {
-            rb.AddForce(transform.up * jumpForce);
-        }
-        else if(Input.GetKeyDown(KeyCode.Space) && doubleJump || Input.GetKeyDown(KeyCode.W) && doubleJump)
-        {
-            Vector3 antiFall = new Vector3(0,-rb.velocity.y,0);
-            rb.AddForce(antiFall);
-            rb.AddForce(transform.up * jumpForce * 0.5f);//jump half as high
-            doubleJump = false;
-        }
+            //timer for the combo counter
+            if (counterResetTimer > 0)
+            {
+                counterResetTimer -= Time.deltaTime;
+            }
+            else if (counterResetTimer < 0)
+            {
+                hitCounter = 0;
+                comboCounter.text = "Combo: " + hitCounter;
+            }
 
-        RaycastHit boxHit;
-        //box cast for if player is grounded and can jump
-        if (Physics.BoxCast(transform.position + new Vector3(0, 0, 0), new Vector3(0.125f, 0.1f, 0.125f), new Vector3(0,-1,0), out boxHit, transform.rotation, 0.22f, platformLayerMask))
-        {
-            grounded = true;
-            doubleJump = true;
-        }
-        else
-        {
-            Debug.DrawRay(transform.position, new Vector3(0, -1, 0) * length, Color.red);
-            grounded = false;
-        }
-        //swing sword
-        if (Input.GetMouseButtonDown(1) && !swordSwinging)
-        {
-            swordBase.transform.rotation = Quaternion.identity;
-            swordSwinging = true;
-            swordBase.SetActive(true);
-            swordBase.transform.eulerAngles = gameObject.transform.eulerAngles;
-        }
-        if(swordSwinging)
-        { 
-            swingSword();
+            //input for the player movement
+
+            if (Input.GetKey(KeyCode.RightArrow) && !swordSwinging || Input.GetKey(KeyCode.D) && !swordSwinging)
+            {
+                transform.eulerAngles = new Vector3(0, -90, 0);
+                rb.AddForce(transform.forward * speed * Time.deltaTime);
+            }
+            if (Input.GetKey(KeyCode.LeftArrow) && !swordSwinging || Input.GetKey(KeyCode.A) && !swordSwinging)
+            {
+                transform.eulerAngles = new Vector3(0, 90, 0);
+                rb.AddForce(transform.forward * speed * Time.deltaTime);
+            }
+            if (Input.GetKeyDown(KeyCode.Space) && grounded || Input.GetKeyDown(KeyCode.W) && grounded)
+            {
+                rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+            }
+            else if (Input.GetKeyDown(KeyCode.Space) && doubleJump || Input.GetKeyDown(KeyCode.W) && doubleJump)
+            {
+                Vector3 antiFall = new Vector3(0, -rb.velocity.y, 0);
+                rb.AddForce(antiFall);
+                rb.AddForce(transform.up * jumpForce * 0.5f, ForceMode.Impulse);//jump half as high
+                doubleJump = false;
+            }
+
+
+            RaycastHit boxHit;
+            //box cast for if player is grounded and can jump
+            if (Physics.BoxCast(transform.position + new Vector3(0, 0, 0), new Vector3(0.125f, 0.1f, 0.125f), new Vector3(0, -1, 0), out boxHit, transform.rotation, 0.22f, platformLayerMask))
+            {
+                grounded = true;
+                doubleJump = true;
+            }
+            else
+            {
+                Debug.DrawRay(transform.position, new Vector3(0, -1, 0) * length, Color.red);
+                grounded = false;
+            }
+            //swing sword
+            if (Input.GetMouseButtonDown(1) && !swordSwinging)
+            {
+                swordBase.transform.rotation = Quaternion.identity;
+                swordSwinging = true;
+                swordBase.SetActive(true);
+                swordBase.transform.eulerAngles = gameObject.transform.eulerAngles;
+            }
+            if (swordSwinging)
+            {
+                swingSword();
+            }
         }
     }
 
@@ -115,6 +153,7 @@ public class playerController1 : MonoBehaviour
     {
         //activates the sword
         float currentX = swordBase.transform.rotation.eulerAngles.z; // x axis#
+        //should be replaced with swinging sword animation and turning on sword collider
         if(currentX < 90)
         {
             //swing sword
@@ -132,15 +171,16 @@ public class playerController1 : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.tag == "enemy")
-        {
-        health--;
-        healthText.text = "Health: " + health;
-                Debug.Log("hit");
-            if(health < 0)
+            if (collision.gameObject.tag == "enemy")
             {
+                health--;
+                healthText.text = "Health: " + health;
+                knockBack(collision.gameObject);
+                if (health < 0)
+                {
+                    Debug.Log("ded");
+                }
             }
-        }
     }
 
     void OnDrawGizmos()
@@ -163,5 +203,14 @@ public class playerController1 : MonoBehaviour
         hitCounter++;
         counterResetTimer = maxCounterResetTimer;
         comboCounter.text = "Combo: " + hitCounter;
+    }
+
+    private void knockBack(GameObject enemy)
+    {
+        Vector3 knockBackDirection;
+
+        knockBackDirection = -transform.forward + transform.up;
+
+        rb.AddForce(knockBackDirection * knockBackAmount);
     }
 }

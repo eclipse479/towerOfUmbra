@@ -24,7 +24,7 @@ public class enemyBase : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag == "playerWeapon")
+        if(other.gameObject.tag == "swordBlade")
         {
             health--;
         }
