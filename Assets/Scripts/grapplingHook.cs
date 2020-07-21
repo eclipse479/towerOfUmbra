@@ -41,6 +41,7 @@ public class grapplingHook : MonoBehaviour
     public Vector3 forceDirection;
     private float hold;
 
+    private float playerZ;
 
     // Start is called before the first frame update
     void Start()
@@ -51,6 +52,8 @@ public class grapplingHook : MonoBehaviour
         extending = false;
         active = false;
         isEnemyGrabbed = false;
+        parent.transform.position = player.transform.position;
+        playerZ = player.transform.position.z;
     }
 
     // Update is called once per frame
@@ -88,7 +91,7 @@ public class grapplingHook : MonoBehaviour
                     extending = true; // grapple is extending
                     Vector3 destination = hit.point; // position clicked
                     //make grapple face position clicked to it can extend properly
-                    parent.gameObject.transform.LookAt(new Vector3(destination.x, destination.y, 0.25f));
+                    parent.gameObject.transform.LookAt(new Vector3(destination.x, destination.y, playerZ));
                 }
             }
         }
