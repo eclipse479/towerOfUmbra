@@ -211,6 +211,6 @@ public class playerController1 : MonoBehaviour
 
         knockBackDirection = -transform.forward + transform.up;
 
-        rb.AddForce(knockBackDirection * knockBackAmount);
+        rb.AddForce(knockBackDirection * knockBackAmount, ForceMode.Impulse);
     }
 }

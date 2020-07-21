@@ -16,9 +16,6 @@ public class grapplingHook : MonoBehaviour
     //has the hook hit an enemy
     //the player
     public GameObject player;
-    //how strong the grapple to a wall is
-    public float forcePower;
-    public float enemyPullForce;
     //rotation point
     private GameObject parent;
     //tip of the grappling hook(holds the enemy)
