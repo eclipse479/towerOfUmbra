@@ -5,7 +5,8 @@ public class playerController1 : MonoBehaviour
 {
     [SerializeField] public LayerMask platformLayerMask;
     public Text healthText;
-    public float health;
+    public float maxHealth;
+    private float currentHealth;
     public float speed;
     public float length;
     //how much force a jump has
@@ -36,7 +37,9 @@ public class playerController1 : MonoBehaviour
     private bool paused;
     public Canvas pauseScreen;
     public Canvas gameplayMenu;
-    // Nixon: The Change
+
+    public Slider healthSlider;
+
     void Start()
     {
         paused = false;
@@ -48,13 +51,17 @@ public class playerController1 : MonoBehaviour
         //teh rigidbody
         rb = GetComponent<Rigidbody>();
         //remaining health
-        healthText.text = "Health: " + health;
+        healthText.text = "Health: " + maxHealth;
         //is grounded
         grounded = true;
         //sword is not swinging
         swordSwinging = false;
         //combo counter
         counterResetTimer = maxCounterResetTimer;
+
+        currentHealth = maxHealth;
+        healthSlider.maxValue = maxHealth;
+        healthSlider.value = currentHealth;
     }
 
     // Update is called once per frame
@@ -124,7 +131,7 @@ public class playerController1 : MonoBehaviour
 
             RaycastHit boxHit;
             //box cast for if player is grounded and can jump
-            if (Physics.BoxCast(transform.position + new Vector3(0, 0, 0), new Vector3(0.125f, 0.1f, 0.125f), new Vector3(0, -1, 0), out boxHit, transform.rotation, 0.22f, platformLayerMask))
+            if (Physics.BoxCast(transform.position + new Vector3(0, 0, 0), new Vector3(0, Bounds.size.y, 0), new Vector3(0, -1, 0), out boxHit, transform.rotation, 0.22f, platformLayerMask))
             {
                 grounded = true;
                 doubleJump = true;
@@ -152,7 +159,7 @@ public class playerController1 : MonoBehaviour
     private void swingSword()
     {
         //activates the sword
-        float currentX = swordBase.transform.rotation.eulerAngles.z; // x axis#
+        float currentX = swordBase.transform.rotation.eulerAngles.z; // x axis
         //should be replaced with swinging sword animation and turning on sword collider
         if(currentX < 90)
         {
@@ -173,10 +180,10 @@ public class playerController1 : MonoBehaviour
     {
             if (collision.gameObject.tag == "enemy")
             {
-                health--;
-                healthText.text = "Health: " + health;
+                currentHealth--;
+                healthText.text = "Health: " + currentHealth;
                 knockBack(collision.gameObject);
-                if (health < 0)
+                if (currentHealth <= 0)
                 {
                     Debug.Log("ded");
                 }
@@ -207,9 +214,14 @@ public class playerController1 : MonoBehaviour
 
     private void knockBack(GameObject enemy)
     {
+        float enemyX = enemy.transform.position.x;
+        float playerX = transform.position.x;
+
+        Vector3 direction = new Vector3(playerX - enemyX, 0, 0);
+        direction.Normalize();
         Vector3 knockBackDirection;
 
-        knockBackDirection = -transform.forward + transform.up;
+        knockBackDirection = direction + transform.up;
 
         rb.AddForce(knockBackDirection * knockBackAmount, ForceMode.Impulse);
     }
