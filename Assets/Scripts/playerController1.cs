@@ -29,7 +29,7 @@ public class playerController1 : MonoBehaviour
                                 // Start is called before the first frame update
      //combo Counter
     public float maxCounterResetTimer;
-    private float counterResetTimer;
+    private float comboCounterResetTimer;
     private int hitCounter;
     public Text comboCounter;
 
@@ -38,7 +38,8 @@ public class playerController1 : MonoBehaviour
     public Canvas pauseScreen;
     public Canvas gameplayMenu;
 
-    public Slider healthSlider;
+    public GameObject healthBar;
+    private Slider healthSlider;
 
     private float wireBoxHeight;
 
@@ -61,11 +62,15 @@ public class playerController1 : MonoBehaviour
         //sword is not swinging
         swordSwinging = false;
         //combo counter
-        counterResetTimer = maxCounterResetTimer;
+        comboCounterResetTimer = maxCounterResetTimer;
 
+        healthSlider = healthBar.GetComponent<Slider>();
         currentHealth = maxHealth;
         healthSlider.maxValue = maxHealth;
         healthSlider.value = currentHealth;
+
+
+
         Collider collide = gameObject.GetComponent<Collider>();
         Vector3 temp = collide.bounds.size;
         wireBoxHeight = temp.y;
@@ -101,11 +106,11 @@ public class playerController1 : MonoBehaviour
         if (!paused)
         {
             //timer for the combo counter
-            if (counterResetTimer > 0)
+            if (comboCounterResetTimer > 0)
             {
-                counterResetTimer -= Time.deltaTime;
+                comboCounterResetTimer -= Time.deltaTime;
             }
-            else if (counterResetTimer < 0)
+            else if (comboCounterResetTimer < 0)
             {
                 hitCounter = 0;
                 comboCounter.text = "Combo: " + hitCounter;
@@ -123,7 +128,7 @@ public class playerController1 : MonoBehaviour
                 transform.eulerAngles = new Vector3(0, 90, 0);
                 rb.AddForce(transform.forward * speed * Time.deltaTime);
             }
-            if (Input.GetKeyDown(KeyCode.Space) && grounded || Input.GetKeyDown(KeyCode.W) && grounded)
+            if (Input.GetKeyDown(KeyCode.W) && grounded)
             {
                 rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
             }
@@ -135,7 +140,7 @@ public class playerController1 : MonoBehaviour
                 doubleJump = false;
             }
 
-
+            ///box cast to check if the player is grounded
             //box cast for if player is grounded and can jump
             if (Physics.BoxCast(transform.position, new Vector3(0.125f, 0.1f, 0.125f), -transform.up, out boxHit, Quaternion.identity, boxCastMaxDistance, platformLayerMask))
             {
@@ -161,7 +166,9 @@ public class playerController1 : MonoBehaviour
             }
         }
     }
-
+    /// <summary>
+    /// swings the sword
+    /// </summary>
     private void swingSword()
     {
         //activates the sword
@@ -189,6 +196,7 @@ public class playerController1 : MonoBehaviour
                 currentHealth--;
                 healthText.text = "Health: " + currentHealth;
                 knockBack(collision.gameObject);
+            healthSlider.value = currentHealth;
                 if (currentHealth <= 0)
                 {
                     Debug.Log("ded");
@@ -216,14 +224,19 @@ public class playerController1 : MonoBehaviour
         }
            
     }
-
+    /// <summary>
+    /// when the sword collides with an enemy for combo purposes
+    /// </summary>
     public void swordCollision()
     {
         hitCounter++;
-        counterResetTimer = maxCounterResetTimer;
+        comboCounterResetTimer = maxCounterResetTimer;
         comboCounter.text = "Combo: " + hitCounter;
     }
-
+    /// <summary>
+    /// knockback applied to the player when colliding with an enemy
+    /// </summary>
+    /// <param name="enemy"></param>
     private void knockBack(GameObject enemy)
     {
         float enemyX = enemy.transform.position.x;

@@ -1,19 +1,21 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class enemyBase : MonoBehaviour
 {
+    private Transform healthBar;
     private Slider healthSlider;
+
     public int health;
     /// <summary>
     /// script to hold things that all enemies will have
     /// </summary>
     void Start()
     {
-        Transform child = transform.GetChild(0);
-        healthSlider = child.GetChild(0).GetComponent<Slider>();
+        Transform healthBarCanvas = gameObject.transform.Find("healthBarCanvas");
+        healthBar = healthBarCanvas.gameObject.transform.Find("healthBar");
+        Debug.Log(healthBar);
+        healthSlider = healthBar.GetComponent<Slider>();
         healthSlider.maxValue = health;
         healthSlider.value = health;
     }
