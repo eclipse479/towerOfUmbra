@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4102062802712212961
+--- !u!1 &2670188232278295026
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,47 +8,47 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1293626993897813586}
-  - component: {fileID: 8124361996091135483}
-  - component: {fileID: 6726163024949709949}
-  - component: {fileID: 7425440910656322557}
-  - component: {fileID: 4043049271272515070}
+  - component: {fileID: 2505575618823426229}
+  - component: {fileID: 5831865625112323489}
+  - component: {fileID: 3993417753181088085}
+  - component: {fileID: 8536950176326388299}
+  - component: {fileID: 170618354095081566}
   m_Layer: 9
-  m_Name: Cave spike
+  m_Name: 20x2x2_Cave_Platform
   m_TagString: grappleTarget
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1293626993897813586
+--- !u!4 &2505575618823426229
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4102062802712212961}
+  m_GameObject: {fileID: 2670188232278295026}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -16, y: 38.05, z: -0.35}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &8124361996091135483
+--- !u!33 &5831865625112323489
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4102062802712212961}
+  m_GameObject: {fileID: 2670188232278295026}
   m_Mesh: {fileID: 0}
---- !u!23 &6726163024949709949
+--- !u!23 &3993417753181088085
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4102062802712212961}
+  m_GameObject: {fileID: 2670188232278295026}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -80,13 +80,13 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &7425440910656322557
+--- !u!114 &8536950176326388299
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4102062802712212961}
+  m_GameObject: {fileID: 2670188232278295026}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8233d90336aea43098adf6dbabd606a2, type: 3}
@@ -208,54 +208,54 @@ MonoBehaviour:
   m_SharedTextures: []
   m_Positions:
   - {x: 0, y: 0, z: 0}
-  - {x: 2, y: 0, z: 0}
-  - {x: 0, y: 6.05, z: 0}
-  - {x: 2, y: 6.05, z: 0}
-  - {x: 2, y: 0, z: 0}
-  - {x: 2, y: 0, z: -1.9999999}
-  - {x: 2, y: 6.05, z: 0}
-  - {x: 2, y: 6.049999, z: -1.9999999}
-  - {x: 2, y: 0, z: -1.9999999}
-  - {x: 0, y: 0, z: -1.9999999}
-  - {x: 2, y: 6.049999, z: -1.9999999}
-  - {x: 0, y: 6.049999, z: -1.9999999}
-  - {x: 0, y: 0, z: -1.9999999}
+  - {x: 20, y: 0.000060775255, z: 0}
+  - {x: 0, y: 2, z: 0}
+  - {x: 20, y: 2.0000637, z: 0}
+  - {x: 20, y: 0.000060775255, z: 0}
+  - {x: 20, y: 0.000060775255, z: -2}
+  - {x: 20, y: 2.0000637, z: 0}
+  - {x: 20, y: 2.0000637, z: -2}
+  - {x: 20, y: 0.000060775255, z: -2}
+  - {x: 0, y: 0, z: -2}
+  - {x: 20, y: 2.0000637, z: -2}
+  - {x: 0, y: 2, z: -2}
+  - {x: 0, y: 0, z: -2}
   - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 6.049999, z: -1.9999999}
-  - {x: 0, y: 6.05, z: 0}
-  - {x: 0, y: 6.05, z: 0}
-  - {x: 2, y: 6.05, z: 0}
-  - {x: 0, y: 6.049999, z: -1.9999999}
-  - {x: 2, y: 6.049999, z: -1.9999999}
-  - {x: 0, y: 0, z: -1.9999999}
-  - {x: 2, y: 0, z: -1.9999999}
+  - {x: 0, y: 2, z: -2}
+  - {x: 0, y: 2, z: 0}
+  - {x: 0, y: 2, z: 0}
+  - {x: 20, y: 2.0000637, z: 0}
+  - {x: 0, y: 2, z: -2}
+  - {x: 20, y: 2.0000637, z: -2}
+  - {x: 0, y: 0, z: -2}
+  - {x: 20, y: 0.000060775255, z: -2}
   - {x: 0, y: 0, z: 0}
-  - {x: 2, y: 0, z: 0}
+  - {x: 20, y: 0.000060775255, z: 0}
   m_Textures0:
   - {x: 0, y: 0}
-  - {x: -2, y: 0}
-  - {x: 0, y: 6.05}
-  - {x: -2, y: 6.05}
+  - {x: -20, y: 0.000060775255}
+  - {x: 0, y: 2}
+  - {x: -20, y: 2.0000637}
+  - {x: 0, y: 0.000060775255}
+  - {x: -2, y: 0.000060775255}
+  - {x: 0, y: 2.0000637}
+  - {x: -2, y: 2.0000637}
+  - {x: 20, y: 0.000060775255}
   - {x: 0, y: 0}
-  - {x: -1.9999999, y: 0}
-  - {x: 0, y: 6.05}
-  - {x: -1.9999999, y: 6.049999}
+  - {x: 20, y: 2.0000637}
+  - {x: 0, y: 2}
   - {x: 2, y: 0}
   - {x: 0, y: 0}
-  - {x: 2, y: 6.049999}
-  - {x: 0, y: 6.049999}
-  - {x: 1.9999999, y: 0}
+  - {x: 2, y: 2}
+  - {x: 0, y: 2}
+  - {x: 0.0000063657762, y: 0}
+  - {x: 20.000006, y: 0}
+  - {x: 0.0000063657762, y: -2}
+  - {x: 20.000006, y: -2}
+  - {x: -0, y: -2}
+  - {x: -20, y: -2}
   - {x: 0, y: 0}
-  - {x: 1.9999999, y: 6.049999}
-  - {x: 0, y: 6.05}
-  - {x: 0, y: 0.0000028848654}
-  - {x: 2, y: 0.0000028848654}
-  - {x: 0, y: -1.999997}
-  - {x: 2, y: -1.999997}
-  - {x: 0, y: -1.9999999}
-  - {x: -2, y: -1.9999999}
-  - {x: 0, y: 0}
-  - {x: -2, y: 0}
+  - {x: -20, y: 0}
   m_Textures2: []
   m_Textures3: []
   m_Tangents:
@@ -275,14 +275,14 @@ MonoBehaviour:
   - {x: 0, y: 0, z: -1, w: -1}
   - {x: 0, y: 0, z: -1, w: -1}
   - {x: 0, y: 0, z: -1, w: -1}
-  - {x: 1, y: 0, z: 0, w: -1}
-  - {x: 1, y: 0, z: 0, w: -1}
-  - {x: 1, y: 0, z: 0, w: -1}
-  - {x: 1, y: 0, z: 0, w: -1}
-  - {x: -1, y: 0, z: 0, w: -1}
-  - {x: -1, y: 0, z: 0, w: -1}
-  - {x: -1, y: 0, z: 0, w: -1}
-  - {x: -1, y: 0, z: 0, w: -1}
+  - {x: 1, y: 0.0000031828881, z: 0, w: -1}
+  - {x: 1, y: 0.0000031828881, z: 0, w: -1}
+  - {x: 1, y: 0.0000031828881, z: 0, w: -1}
+  - {x: 1, y: 0.0000031828881, z: 0, w: -1}
+  - {x: -1, y: -0.0000030387628, z: 0, w: -1}
+  - {x: -1, y: -0.0000030387628, z: 0, w: -1}
+  - {x: -1, y: -0.0000030387628, z: 0, w: -1}
+  - {x: -1, y: -0.0000030387628, z: 0, w: -1}
   m_Colors: []
   m_UnwrapParameters:
     m_HardAngle: 88
@@ -292,24 +292,24 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_IsSelectable: 1
-  m_SelectedFaces: 02000000
+  m_SelectedFaces: 01000000
   m_SelectedEdges:
-  - a: 8
-    b: 9
-  - a: 10
-    b: 8
-  - a: 9
-    b: 11
-  - a: 11
-    b: 10
-  m_SelectedVertices: 08000000090000000a0000000b000000
---- !u!64 &4043049271272515070
+  - a: 4
+    b: 5
+  - a: 6
+    b: 4
+  - a: 5
+    b: 7
+  - a: 7
+    b: 6
+  m_SelectedVertices: 04000000050000000600000007000000
+--- !u!64 &170618354095081566
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4102062802712212961}
+  m_GameObject: {fileID: 2670188232278295026}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
