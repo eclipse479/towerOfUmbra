@@ -39,6 +39,10 @@ public class EnemyBehaviour : MonoBehaviour
     public float attack_duration = 2.0f;
     public float attack_range = 0.8f;
 
+
+    // Placeholder for attack
+    public GameObject sword;
+
     // Shooting needs
     public GameObject bullet;
     bool is_shooting = false;
@@ -76,6 +80,9 @@ public class EnemyBehaviour : MonoBehaviour
 
         // Shoot Cooldown
         shoot_timer = shoot_cooldown;
+
+        // Attack
+        sword.SetActive(false);
     }
 
     // Update is called once per frame
@@ -97,7 +104,10 @@ public class EnemyBehaviour : MonoBehaviour
         {
             if (Physics.Raycast(ray.origin, target.position - transform.position, out hit, detection_range, attack_layer.value))
             {
-                behaviour = STATE.SHOOT;
+                if (!attackRange())
+                    behaviour = STATE.SHOOT;
+                else
+                    behaviour = STATE.ATTACK;
             }
         }
 
@@ -130,12 +140,15 @@ public class EnemyBehaviour : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     void shoot()
     {
         if (!is_shooting && shoot_timer == shoot_cooldown)
         {
             is_shooting = true;
-            Instantiate(bullet, transform.position + (transform.right * 1.5f), transform.rotation);
+            Instantiate(bullet, transform.position + (transform.right), transform.rotation);
         }
 
         if (is_shooting)
@@ -159,6 +172,7 @@ public class EnemyBehaviour : MonoBehaviour
         if (!is_attacking)
         {
             is_attacking = true;
+            sword.SetActive(true);
         }
 
         if (is_attacking)
@@ -171,24 +185,31 @@ public class EnemyBehaviour : MonoBehaviour
                 {
                     Debug.Log("Enemy has hit" + hit.collider.gameObject.name);
                     is_attacking = false;
+                    sword.SetActive(false);
                     attack_timer = attack_duration;
                     return true;
                 }
             }
             else
                 attack_timer -= 2.0f * Time.deltaTime;
+                sword.transform.rotation =  Quaternion.Slerp(sword.transform.rotation, Quaternion.Euler(sword.transform.rotation.x, sword.transform.rotation.y, -65.0f), attack_timer/attack_duration);
                 Debug.Log("Attack Length of Enemy: " + attack_timer.ToString());
         }
         else if (attack_timer <= 0.0f)
         {
             is_attacking = false;
+            sword.SetActive(false);
             attack_timer = attack_duration;
         }
         return false;
     }
 
 
-    // Sees in front of itself and what it hits
+    /// <summary>
+    /// Look in front of itself
+    /// </summary>
+    /// <param name="a_ray"></param>
+    /// <returns> Is target in range? Hit an obstacle? </returns>
     bool lineOfSight(Ray a_ray)
     {
         if (Physics.Raycast(a_ray, out hit, current_ray_dist))
@@ -238,7 +259,9 @@ public class EnemyBehaviour : MonoBehaviour
         return false;
     }
 
-    // Move to layer state
+    /// <summary>
+    /// Move towards the player
+    /// </summary>
     void moveToPlayer()
     {
         Vector2 move_velocity = (target.position - transform.position).normalized;
@@ -263,9 +286,18 @@ public class EnemyBehaviour : MonoBehaviour
         rb.AddForce(transform.right * speed * Time.deltaTime, ForceMode.VelocityChange);
     }
 
+    /// <summary>
+    /// Melee attack range
+    /// </summary>
+    /// <returns> If target is in range </returns>
     bool attackRange()
     {
         return (transform.position - target.position).magnitude < attack_range;
+    }
+
+    void die()
+    {
+        Destroy(this);
     }
 
     // For the enemy's search zone
