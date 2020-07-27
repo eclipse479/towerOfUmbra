@@ -40,6 +40,10 @@ public class playerController1 : MonoBehaviour
 
     public Slider healthSlider;
 
+    private float wireBoxHeight;
+
+    private float boxCastMaxDistance = 1;
+    private RaycastHit boxHit;
     void Start()
     {
         paused = false;
@@ -62,6 +66,9 @@ public class playerController1 : MonoBehaviour
         currentHealth = maxHealth;
         healthSlider.maxValue = maxHealth;
         healthSlider.value = currentHealth;
+        Collider collide = gameObject.GetComponent<Collider>();
+        Vector3 temp = collide.bounds.size;
+        wireBoxHeight = temp.y;
     }
 
     // Update is called once per frame
@@ -129,9 +136,8 @@ public class playerController1 : MonoBehaviour
             }
 
 
-            RaycastHit boxHit;
             //box cast for if player is grounded and can jump
-            if (Physics.BoxCast(transform.position + new Vector3(0, 0, 0), new Vector3(0, Bounds.size.y, 0), new Vector3(0, -1, 0), out boxHit, transform.rotation, 0.22f, platformLayerMask))
+            if (Physics.BoxCast(transform.position, new Vector3(0.125f, 0.1f, 0.125f), -transform.up, out boxHit, Quaternion.identity, boxCastMaxDistance, platformLayerMask))
             {
                 grounded = true;
                 doubleJump = true;
@@ -196,13 +202,19 @@ public class playerController1 : MonoBehaviour
         if (grounded)
         {
             Gizmos.color = Color.green;
+            //Draw a cube that extends to where the hit exists
+            Gizmos.DrawWireCube(transform.position - transform.up * boxHit.distance, new Vector3(0.125f, 0.1f, 0.125f) * 2);
         }
         //If there hasn't been a hit yet, draw the ray at the maximum distance
         else
         {
             Gizmos.color = Color.red;
+            //Draw a Ray forward from GameObject toward the maximum distance
+            Gizmos.DrawRay(transform.position, -transform.up * 0.22f);
+            //Draw a cube at the maximum distance
+            Gizmos.DrawWireCube(transform.position - transform.up * boxCastMaxDistance, new Vector3(0.125f, 0.1f, 0.125f) * 2);
         }
-            Gizmos.DrawWireCube(transform.position - new Vector3(0,0.22f,0), new Vector3(0.25f, 0.2f, 0.25f));
+           
     }
 
     public void swordCollision()
