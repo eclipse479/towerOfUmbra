@@ -132,7 +132,7 @@ public class playerController1 : MonoBehaviour
             {
                 rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
             }
-            else if (doubleJump || Input.GetKeyDown(KeyCode.W) && doubleJump)
+            else if (Input.GetKeyDown(KeyCode.W) && doubleJump)
             {
                 Vector3 antiFall = new Vector3(0, -rb.velocity.y, 0);
                 rb.AddForce(antiFall);
