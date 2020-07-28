@@ -164,8 +164,6 @@ public class grapplingHook : MonoBehaviour
         enemyBody = thingToPull.GetComponent<Rigidbody>();
         Vector3 enemyDirection = (player.transform.position - thingToPull.transform.position);
         float distance = enemyDirection.magnitude;
-        Debug.Log("force: " + CalculateJumpForce(distance, 9.8f));
-        Debug.Log("direction X: " + enemyDirection.x + " direction Y: " + enemyDirection.y + " direction Z: " + enemyDirection.z);
         enemyDirection.Normalize();
         enemyBody.AddForce(enemyDirection * CalculateJumpForce(distance,9.8f),ForceMode.Impulse);
     }
