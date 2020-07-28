@@ -8,7 +8,10 @@ public class bulletScript : MonoBehaviour
     public float lifeTime = 7;
 
     // Identify player
-    LayerMask player; 
+    LayerMask player;
+
+    // Player target
+    public Transform target;
 
     // Rigidbody
     Rigidbody bullet_rb;
@@ -19,9 +22,12 @@ public class bulletScript : MonoBehaviour
         // Layer to damage
         player = 8;
 
-        bullet_rb = GetComponent<Rigidbody>();
+        target = GameObject.Find("player").transform;
 
-        bullet_rb.AddForce(transform.right * bulletSpeed * Time.deltaTime, ForceMode.VelocityChange);
+        bullet_rb = GetComponent<Rigidbody>();
+        Vector3 direction = (target.position - transform.position).normalized;
+
+        bullet_rb.AddForce(direction * bulletSpeed * Time.deltaTime, ForceMode.VelocityChange);
         // bulletSpeed = 8;
     }
 

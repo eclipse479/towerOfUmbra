@@ -148,7 +148,7 @@ public class EnemyBehaviour : MonoBehaviour
         if (!is_shooting && shoot_timer == shoot_cooldown)
         {
             is_shooting = true;
-            Instantiate(bullet, transform.position + (transform.right), transform.rotation);
+            Instantiate(bullet, transform.position + transform.right, transform.rotation);
         }
 
         if (is_shooting)
@@ -167,41 +167,50 @@ public class EnemyBehaviour : MonoBehaviour
     /// The attacks when the player is within striking distance
     /// </summary>
     /// <returns></returns>
-    bool attack()
+    void attack()
     {
         if (!is_attacking)
         {
+            sword.transform.rotation = Quaternion.identity;
             is_attacking = true;
             sword.SetActive(true);
         }
 
-        if (is_attacking)
+      if (is_attacking)
         {
+            attack_timer -= 1.0f * Time.deltaTime;
+            attackSwing();
             // When it hit's something
             if (Physics.SphereCast(hit_transform.position, hit_range, hit_transform.right, out hit, hit_range, attack_layer.value))
             {
                 // Is it the player?
                 if (hit.collider.gameObject.layer == 8)
                 {
-                    Debug.Log("Enemy has hit" + hit.collider.gameObject.name);
-                    is_attacking = false;
-                    sword.SetActive(false);
-                    attack_timer = attack_duration;
-                    return true;
+                    hit.collider.gameObject.GetComponent<Rigidbody>().AddForce(transform.right * 5.0f);
                 }
-            }
-            else
-                attack_timer -= 2.0f * Time.deltaTime;
-                sword.transform.rotation =  Quaternion.Slerp(sword.transform.rotation, Quaternion.Euler(sword.transform.rotation.x, sword.transform.rotation.y, -65.0f), attack_timer/attack_duration);
-                Debug.Log("Attack Length of Enemy: " + attack_timer.ToString());
+            } 
+       
         }
-        else if (attack_timer <= 0.0f)
+        else if (!is_attacking || attack_timer <= 0.0f)
         {
+            sword.transform.eulerAngles = new Vector3(0, 0, 0.0f);
             is_attacking = false;
             sword.SetActive(false);
             attack_timer = attack_duration;
+        }       
+    }
+
+    void attackSwing()
+    {
+        float current_z = sword.transform.eulerAngles.z;
+        if (current_z > -90.0f)
+        {
+            sword.transform.Rotate(new Vector3(0.0f, 0.0f, 10.0f) * Time.deltaTime);
         }
-        return false;
+        else
+        {
+            sword.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
+        }
     }
 
 
