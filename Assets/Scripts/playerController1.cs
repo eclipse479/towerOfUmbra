@@ -8,7 +8,6 @@ public class playerController1 : MonoBehaviour
     public float maxHealth;
     private float currentHealth;
     public float speed;
-    public float length;
     //how much force a jump has
     public float jumpForce;
     //is the player on the ground
@@ -43,7 +42,7 @@ public class playerController1 : MonoBehaviour
 
     private float wireBoxHeight;
 
-    private float boxCastMaxDistance = 1;
+    public float boxCastMaxDistance = 1;
     private RaycastHit boxHit;
     void Start()
     {
@@ -68,8 +67,6 @@ public class playerController1 : MonoBehaviour
         currentHealth = maxHealth;
         healthSlider.maxValue = maxHealth;
         healthSlider.value = currentHealth;
-
-
 
         Collider collide = gameObject.GetComponent<Collider>();
         Vector3 temp = collide.bounds.size;
@@ -135,7 +132,7 @@ public class playerController1 : MonoBehaviour
             else if (Input.GetKeyDown(KeyCode.W) && doubleJump)
             {
                 Vector3 antiFall = new Vector3(0, -rb.velocity.y, 0);
-                rb.AddForce(antiFall);
+                rb.AddForce(antiFall, ForceMode.Impulse);
                 rb.AddForce(transform.up * jumpForce * 0.5f, ForceMode.Impulse);//jump half as high
                 doubleJump = false;
             }
@@ -149,7 +146,6 @@ public class playerController1 : MonoBehaviour
             }
             else
             {
-                Debug.DrawRay(transform.position, new Vector3(0, -1, 0) * length, Color.red);
                 grounded = false;
             }
             //swing sword
@@ -210,19 +206,19 @@ public class playerController1 : MonoBehaviour
         if (grounded)
         {
             Gizmos.color = Color.green;
-            //Draw a cube that extends to where the hit exists
+            //Draw a cube that extends to where the hit exists 
             Gizmos.DrawWireCube(transform.position - transform.up * boxHit.distance, new Vector3(0.125f, 0.1f, 0.125f) * 2);
         }
-        //If there hasn't been a hit yet, draw the ray at the maximum distance
+        //If there hasn't been a hit yet, draw the ray at the maximum distance 
         else
         {
             Gizmos.color = Color.red;
-            //Draw a Ray forward from GameObject toward the maximum distance
+            //Draw a Ray forward from GameObject toward the maximum distance 
             Gizmos.DrawRay(transform.position, -transform.up * 0.22f);
-            //Draw a cube at the maximum distance
+            //Draw a cube at the maximum distance 
             Gizmos.DrawWireCube(transform.position - transform.up * boxCastMaxDistance, new Vector3(0.125f, 0.1f, 0.125f) * 2);
         }
-           
+
     }
     /// <summary>
     /// when the sword collides with an enemy for combo purposes
@@ -239,15 +235,21 @@ public class playerController1 : MonoBehaviour
     /// <param name="enemy"></param>
     private void knockBack(GameObject enemy)
     {
+        //determines direction to knock back
         float enemyX = enemy.transform.position.x;
         float playerX = transform.position.x;
-
         Vector3 direction = new Vector3(playerX - enemyX, 0, 0);
+
         direction.Normalize();
-        Vector3 knockBackDirection;
 
-        knockBackDirection = direction + transform.up;
-
+        Vector3 knockBackDirection = direction + transform.up;
+        //remove current velocity then knocks back player
+        rb.velocity = Vector3.zero;
+        //if on ground push off ground(so friction with floor is removed)
+        if(grounded)
+        {
+            rb.AddForce(transform.up , ForceMode.Impulse);
+        }
         rb.AddForce(knockBackDirection * knockBackAmount, ForceMode.Impulse);
     }
 }
