@@ -14,7 +14,6 @@ public class enemyBase : MonoBehaviour
     {
         Transform healthBarCanvas = gameObject.transform.Find("healthBarCanvas");
         healthBar = healthBarCanvas.gameObject.transform.Find("healthBar");
-        Debug.Log(healthBar);
         healthSlider = healthBar.GetComponent<Slider>();
         healthSlider.maxValue = health;
         healthSlider.value = health;
