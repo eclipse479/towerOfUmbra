@@ -35,19 +35,24 @@ public class playerController1 : MonoBehaviour
     //pausing
     private bool paused;
     public Canvas pauseScreen;
+    public Canvas deathScreen;
     public Canvas gameplayMenu;
+    private bool dead;
 
     public GameObject healthBar;
     private Slider healthSlider;
 
-    private float wireBoxHeight;
+    public Text deleteThisLater;
 
+    public float playerMaxMovement;
     public float boxCastMaxDistance = 1;
     private RaycastHit boxHit;
     void Start()
     {
+        dead = false;
         paused = false;
         pauseScreen.enabled = false;
+        deathScreen.enabled = false;
         if (swordSpeed <= 0)
         {
             swordSpeed = 1;
@@ -63,14 +68,12 @@ public class playerController1 : MonoBehaviour
         //combo counter
         comboCounterResetTimer = maxCounterResetTimer;
 
+        //health bar values
         healthSlider = healthBar.GetComponent<Slider>();
         currentHealth = maxHealth;
         healthSlider.maxValue = maxHealth;
         healthSlider.value = currentHealth;
 
-        Collider collide = gameObject.GetComponent<Collider>();
-        Vector3 temp = collide.bounds.size;
-        wireBoxHeight = temp.y;
     }
 
     // Update is called once per frame
@@ -82,84 +85,92 @@ public class playerController1 : MonoBehaviour
     void Update()
     {
         //pausing
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (!dead)
         {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (!paused)
+                {
+                    paused = true;
+                    Time.timeScale = 0.0f;
+                    pauseScreen.enabled = true;
+                    gameplayMenu.enabled = false;
+                }
+                else
+                {
+
+                    paused = false;
+                    Time.timeScale = 1.0f;
+                    pauseScreen.enabled = false;
+                    gameplayMenu.enabled = true;
+                }
+            }
             if (!paused)
             {
-                paused = true;
-                Time.timeScale = 0.0f;
-                pauseScreen.enabled = true;
-                gameplayMenu.enabled = false;
-            }
-            else
-            {
+                //timer for the combo counter
+                if (comboCounterResetTimer > 0)
+                {
+                    comboCounterResetTimer -= Time.deltaTime;
+                }
+                else if (comboCounterResetTimer < 0)
+                {
+                    hitCounter = 0;
+                    comboCounter.text = "Combo: " + hitCounter;
+                }
 
-                paused = false;
-                Time.timeScale = 1.0f;
-                pauseScreen.enabled = false;
-                gameplayMenu.enabled = true;
+                //input for the player movement
+
+                if (Input.GetKey(KeyCode.RightArrow) && !swordSwinging || Input.GetKey(KeyCode.D) && !swordSwinging)
+                {
+                    transform.eulerAngles = new Vector3(0, -90, 0);
+                    rb.AddForce(transform.forward * speed * Time.deltaTime);
+                }
+                if (Input.GetKey(KeyCode.LeftArrow) && !swordSwinging || Input.GetKey(KeyCode.A) && !swordSwinging)
+                {
+                    transform.eulerAngles = new Vector3(0, 90, 0);
+                    rb.AddForce(transform.forward * speed * Time.deltaTime);
+                }
+                if (Input.GetKeyDown(KeyCode.W) && grounded)
+                {
+                    rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+                }
+                else if (Input.GetKeyDown(KeyCode.W) && doubleJump)
+                {
+                    Vector3 antiFall = new Vector3(0, -rb.velocity.y, 0);
+                    rb.AddForce(antiFall, ForceMode.Impulse);
+                    rb.AddForce(transform.up * jumpForce * 0.5f, ForceMode.Impulse);//jump half as high
+                    doubleJump = false;
+                }
+                speedCheck();
+
+                ///box cast to check if the player is grounded
+                //box cast for if player is grounded and can jump
+                if (Physics.BoxCast(transform.position, new Vector3(0.125f, 0.1f, 0.125f), -transform.up, out boxHit, Quaternion.identity, boxCastMaxDistance, platformLayerMask))
+                {
+                    grounded = true;
+                    doubleJump = true;
+                }
+                else
+                {
+                    grounded = false;
+                }
+                //swing sword
+                if (Input.GetMouseButtonDown(1) && !swordSwinging)
+                {
+                    swordBase.transform.rotation = Quaternion.identity;
+                    swordSwinging = true;
+                    swordBase.SetActive(true);
+                    swordBase.transform.eulerAngles = gameObject.transform.eulerAngles;
+                }
+                if (swordSwinging)
+                {
+                    swingSword();
+                }
             }
         }
-        if (!paused)
+        else if(dead)
         {
-            //timer for the combo counter
-            if (comboCounterResetTimer > 0)
-            {
-                comboCounterResetTimer -= Time.deltaTime;
-            }
-            else if (comboCounterResetTimer < 0)
-            {
-                hitCounter = 0;
-                comboCounter.text = "Combo: " + hitCounter;
-            }
-
-            //input for the player movement
-
-            if (Input.GetKey(KeyCode.RightArrow) && !swordSwinging || Input.GetKey(KeyCode.D) && !swordSwinging)
-            {
-                transform.eulerAngles = new Vector3(0, -90, 0);
-                rb.AddForce(transform.forward * speed * Time.deltaTime);
-            }
-            if (Input.GetKey(KeyCode.LeftArrow) && !swordSwinging || Input.GetKey(KeyCode.A) && !swordSwinging)
-            {
-                transform.eulerAngles = new Vector3(0, 90, 0);
-                rb.AddForce(transform.forward * speed * Time.deltaTime);
-            }
-            if (Input.GetKeyDown(KeyCode.W) && grounded)
-            {
-                rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
-            }
-            else if (Input.GetKeyDown(KeyCode.W) && doubleJump)
-            {
-                Vector3 antiFall = new Vector3(0, -rb.velocity.y, 0);
-                rb.AddForce(antiFall, ForceMode.Impulse);
-                rb.AddForce(transform.up * jumpForce * 0.5f, ForceMode.Impulse);//jump half as high
-                doubleJump = false;
-            }
-
-            ///box cast to check if the player is grounded
-            //box cast for if player is grounded and can jump
-            if (Physics.BoxCast(transform.position, new Vector3(0.125f, 0.1f, 0.125f), -transform.up, out boxHit, Quaternion.identity, boxCastMaxDistance, platformLayerMask))
-            {
-                grounded = true;
-                doubleJump = true;
-            }
-            else
-            {
-                grounded = false;
-            }
-            //swing sword
-            if (Input.GetMouseButtonDown(1) && !swordSwinging)
-            {
-                swordBase.transform.rotation = Quaternion.identity;
-                swordSwinging = true;
-                swordBase.SetActive(true);
-                swordBase.transform.eulerAngles = gameObject.transform.eulerAngles;
-            }
-            if (swordSwinging)
-            {
-                swingSword();
-            }
+            playerIsDead();
         }
     }
     /// <summary>
@@ -195,7 +206,7 @@ public class playerController1 : MonoBehaviour
             healthSlider.value = currentHealth;
                 if (currentHealth <= 0)
                 {
-                    Debug.Log("ded");
+                    dead = true;
                 }
             }
     }
@@ -252,4 +263,25 @@ public class playerController1 : MonoBehaviour
         }
         rb.AddForce(knockBackDirection * knockBackAmount, ForceMode.Impulse);
     }
+    /// <summary>
+    /// player has run out of health and has died
+    /// should play death animation ect.
+    /// </summary>
+    private void playerIsDead()
+    {
+        gameplayMenu.enabled = false;
+        pauseScreen.enabled = false;
+        deathScreen.enabled = true;
+        Time.timeScale = 0.0f;
+    }
+
+    private void speedCheck()
+    {
+        if(rb.velocity.magnitude > playerMaxMovement)
+        {
+            rb.velocity = rb.velocity.normalized * playerMaxMovement;
+        }
+        deleteThisLater.text = "speed: " + rb.velocity.magnitude;
+    }
+
 }
