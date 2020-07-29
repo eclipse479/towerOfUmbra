@@ -18,6 +18,7 @@ public class EnemyBehaviour : MonoBehaviour
     public Transform target; // The player
     Rigidbody rb;
     Ray ray;
+    public Transform ray_centre;
 
     // Keep track of the player
     public float detect_distance = 5.0f;
@@ -62,6 +63,11 @@ public class EnemyBehaviour : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         ray = new Ray();
 
+        if (ray_centre != null)
+        {
+            ray.origin = ray_centre.position;
+        }
+
         // Get the player as target
         target = GameObject.Find("player").transform;
 
@@ -89,7 +95,15 @@ public class EnemyBehaviour : MonoBehaviour
     void Update()
     {
         // The direction of the ray changes each frame
-        ray.origin = transform.position;
+        if (ray_centre != null)
+        {
+            ray.origin = ray_centre.position;
+        }
+        else
+        {
+            ray.origin = transform.position;
+        }
+
         ray.direction = transform.right;
         Debug.DrawRay(ray.origin, ray.direction, Color.green);
 
@@ -283,13 +297,17 @@ public class EnemyBehaviour : MonoBehaviour
     /// </summary>
     void walkForNothing()
     {
+        Vector3 direction = new Vector3();
         // Update the downwards cast
-        ledge_ray.origin = transform.position + (transform.right * ray_offset);
+        if (ray_centre != null)
+            ledge_ray.origin = ray_centre.position + (transform.right * ray_offset);
+        else
+            ledge_ray.origin = transform.position + (transform.right * ray_offset);
         Debug.DrawRay(ledge_ray.origin, ledge_ray.direction, Color.red);
         // If it doesn't hit anything
         if (!Physics.Raycast(ledge_ray, out hit, drop_cast_dist))
         {
-            transform.right *= -1;
+             transform.right *= -1;
         }
 
         rb.AddForce(transform.right * speed * Time.deltaTime, ForceMode.VelocityChange);
