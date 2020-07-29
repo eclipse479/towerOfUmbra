@@ -18,6 +18,7 @@ public class EnemyBehaviour : MonoBehaviour
     public Transform target; // The player
     Rigidbody rb;
     Ray ray;
+    public Transform ray_centre;
 
     // Keep track of the player
     public float detect_distance = 5.0f;
@@ -62,6 +63,11 @@ public class EnemyBehaviour : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         ray = new Ray();
 
+        if (ray_centre != null)
+        {
+            ray.origin = ray_centre.position;
+        }
+
         // Get the player as target
         target = GameObject.Find("player").transform;
 
@@ -89,7 +95,15 @@ public class EnemyBehaviour : MonoBehaviour
     void Update()
     {
         // The direction of the ray changes each frame
-        ray.origin = transform.position;
+        if (ray_centre != null)
+        {
+            ray.origin = ray_centre.position;
+        }
+        else
+        {
+            ray.origin = transform.position;
+        }
+
         ray.direction = transform.right;
         Debug.DrawRay(ray.origin, ray.direction, Color.green);
 
@@ -148,7 +162,7 @@ public class EnemyBehaviour : MonoBehaviour
         if (!is_shooting && shoot_timer == shoot_cooldown)
         {
             is_shooting = true;
-            Instantiate(bullet, transform.position + (transform.right), transform.rotation);
+            Instantiate(bullet, transform.position + transform.right, transform.rotation);
         }
 
         if (is_shooting)
@@ -167,41 +181,50 @@ public class EnemyBehaviour : MonoBehaviour
     /// The attacks when the player is within striking distance
     /// </summary>
     /// <returns></returns>
-    bool attack()
+    void attack()
     {
         if (!is_attacking)
         {
+            sword.transform.rotation = Quaternion.identity;
             is_attacking = true;
             sword.SetActive(true);
         }
 
-        if (is_attacking)
+      if (is_attacking)
         {
+            attack_timer -= 1.0f * Time.deltaTime;
+            attackSwing();
             // When it hit's something
             if (Physics.SphereCast(hit_transform.position, hit_range, hit_transform.right, out hit, hit_range, attack_layer.value))
             {
                 // Is it the player?
                 if (hit.collider.gameObject.layer == 8)
                 {
-                    Debug.Log("Enemy has hit" + hit.collider.gameObject.name);
-                    is_attacking = false;
-                    sword.SetActive(false);
-                    attack_timer = attack_duration;
-                    return true;
+                    hit.collider.gameObject.GetComponent<Rigidbody>().AddForce(transform.right * 5.0f);
                 }
-            }
-            else
-                attack_timer -= 2.0f * Time.deltaTime;
-                sword.transform.rotation =  Quaternion.Slerp(sword.transform.rotation, Quaternion.Euler(sword.transform.rotation.x, sword.transform.rotation.y, -65.0f), attack_timer/attack_duration);
-                Debug.Log("Attack Length of Enemy: " + attack_timer.ToString());
+            } 
+       
         }
-        else if (attack_timer <= 0.0f)
+        else if (!is_attacking || attack_timer <= 0.0f)
         {
+            sword.transform.eulerAngles = new Vector3(0, 0, 0.0f);
             is_attacking = false;
             sword.SetActive(false);
             attack_timer = attack_duration;
+        }       
+    }
+
+    void attackSwing()
+    {
+        float current_z = sword.transform.eulerAngles.z;
+        if (current_z > -90.0f)
+        {
+            sword.transform.Rotate(new Vector3(0.0f, 0.0f, 10.0f) * Time.deltaTime);
         }
-        return false;
+        else
+        {
+            sword.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
+        }
     }
 
 
@@ -274,13 +297,17 @@ public class EnemyBehaviour : MonoBehaviour
     /// </summary>
     void walkForNothing()
     {
+        Vector3 direction = new Vector3();
         // Update the downwards cast
-        ledge_ray.origin = transform.position + (transform.right * ray_offset);
+        if (ray_centre != null)
+            ledge_ray.origin = ray_centre.position + (transform.right * ray_offset);
+        else
+            ledge_ray.origin = transform.position + (transform.right * ray_offset);
         Debug.DrawRay(ledge_ray.origin, ledge_ray.direction, Color.red);
         // If it doesn't hit anything
         if (!Physics.Raycast(ledge_ray, out hit, drop_cast_dist))
         {
-            transform.right *= -1;
+             transform.right *= -1;
         }
 
         rb.AddForce(transform.right * speed * Time.deltaTime, ForceMode.VelocityChange);
