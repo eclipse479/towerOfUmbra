@@ -198,7 +198,7 @@ public class playerController1 : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-            if (collision.gameObject.tag == "enemy")
+            if (collision.gameObject.tag == "enemy" || collision.gameObject.tag == "bullet")
             {
                 currentHealth--;
                 healthText.text = "Health: " + currentHealth;
@@ -274,7 +274,9 @@ public class playerController1 : MonoBehaviour
         deathScreen.enabled = true;
         Time.timeScale = 0.0f;
     }
-
+    /// <summary>
+    /// checks the player speed and limits it if it exceeds the movement
+    /// </summary>
     private void speedCheck()
     {
         if(rb.velocity.magnitude > playerMaxMovement)
