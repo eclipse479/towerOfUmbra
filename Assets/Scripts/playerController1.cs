@@ -4,10 +4,12 @@ using UnityEngine.UI;
 public class playerController1 : MonoBehaviour
 {
     [SerializeField] public LayerMask platformLayerMask;
+    //health variables
     public Text healthText;
     public float maxHealth;
     private float currentHealth;
-    public float speed;
+
+
     //how much force a jump has
     public float jumpForce;
     //is the player on the ground
@@ -15,7 +17,6 @@ public class playerController1 : MonoBehaviour
     //can player double jump
     private bool doubleJump;
     
-    //locks rotation when swinging sword
     //rigidbody
     private Rigidbody rb;
     //enemy collision knockback
@@ -35,18 +36,29 @@ public class playerController1 : MonoBehaviour
     //pausing
     private bool paused;
     public Canvas pauseScreen;
-    public Canvas deathScreen;
     public Canvas gameplayMenu;
+
+    //player has no health
+    public Canvas deathScreen;
     private bool dead;
 
+    //player health bar
     public GameObject healthBar;
-    private Slider healthSlider;
+    private Image healthbarImage;
 
+    //temp player speed text
     public Text deleteThisLater;
 
-    public float playerMaxMovement;
+    //player movement
+    public float speed;
+    public float playerMaxMovementSpeed;
+
+    //variable for checking if player is grounded
     public float boxCastMaxDistance = 1;
     private RaycastHit boxHit;
+
+    //physics material so player can slide down walls
+    private Collider collide;
     void Start()
     {
         dead = false;
@@ -57,8 +69,10 @@ public class playerController1 : MonoBehaviour
         {
             swordSpeed = 1;
         }
-        //teh rigidbody
+        //the rigidbody
         rb = GetComponent<Rigidbody>();
+        //the collider
+        collide = GetComponent<Collider>();
         //remaining health
         healthText.text = "Health: " + maxHealth;
         //is grounded
@@ -69,11 +83,9 @@ public class playerController1 : MonoBehaviour
         comboCounterResetTimer = maxCounterResetTimer;
 
         //health bar values
-        healthSlider = healthBar.GetComponent<Slider>();
+        healthbarImage = healthBar.transform.GetChild(1).gameObject.GetComponent<Image>();
         currentHealth = maxHealth;
-        healthSlider.maxValue = maxHealth;
-        healthSlider.value = currentHealth;
-
+    
     }
 
     // Update is called once per frame
@@ -122,27 +134,53 @@ public class playerController1 : MonoBehaviour
 
                 if (Input.GetKey(KeyCode.RightArrow) && !swordSwinging || Input.GetKey(KeyCode.D) && !swordSwinging)
                 {
+                    //remove friction when running
+                    collide.material.dynamicFriction = 0.0f;
+                    collide.material.staticFriction = 0.0f;
+                    //change player facing direction
                     transform.eulerAngles = new Vector3(0, -90, 0);
+                    //move player
+                    if(grounded)
                     rb.AddForce(transform.forward * speed * Time.deltaTime);
+                    else
+                        rb.AddForce(transform.forward * speed * Time.deltaTime * 0.5f);
                 }
                 if (Input.GetKey(KeyCode.LeftArrow) && !swordSwinging || Input.GetKey(KeyCode.A) && !swordSwinging)
                 {
+                    //remove friction when running
+                    collide.material.dynamicFriction = 0.0f;
+                    collide.material.staticFriction = 0.0f;
+                    //change player facing direction
                     transform.eulerAngles = new Vector3(0, 90, 0);
-                    rb.AddForce(transform.forward * speed * Time.deltaTime);
+                    //move player
+                    if (grounded)//player movement on the ground
+                        rb.AddForce(transform.forward * speed * Time.deltaTime);
+                    else // slower acceleration while in the air
+                        rb.AddForce(transform.forward * speed * Time.deltaTime * 0.5f);
                 }
                 if (Input.GetKeyDown(KeyCode.W) && grounded)
                 {
+                    //jumps
                     rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
                 }
                 else if (Input.GetKeyDown(KeyCode.W) && doubleJump)
                 {
+                    //jumps if in the air (double jump)
                     Vector3 antiFall = new Vector3(0, -rb.velocity.y, 0);
                     rb.AddForce(antiFall, ForceMode.Impulse);
                     rb.AddForce(transform.up * jumpForce * 0.5f, ForceMode.Impulse);//jump half as high
                     doubleJump = false;
                 }
-                speedCheck();
-
+                ///---------------------------------------------------------------------------------------------------------
+                deleteThisLater.text = "friction: " + collide.material.dynamicFriction;
+                ///---------------------------------------------------------------------------------------------------------
+                //keeps the player speed in check
+                speedCheck(); 
+                //when movement keys are released
+                if(!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+                {
+                    changeFriction();
+                }
                 ///box cast to check if the player is grounded
                 //box cast for if player is grounded and can jump
                 if (Physics.BoxCast(transform.position, new Vector3(0.125f, 0.1f, 0.125f), -transform.up, out boxHit, Quaternion.identity, boxCastMaxDistance, platformLayerMask))
@@ -200,10 +238,12 @@ public class playerController1 : MonoBehaviour
     {
             if (collision.gameObject.tag == "enemy" || collision.gameObject.tag == "bullet")
             {
+                //reduce health
                 currentHealth--;
                 healthText.text = "Health: " + currentHealth;
                 knockBack(collision.gameObject);
-            healthSlider.value = currentHealth;
+                //move health bar health
+                healthbarImage.fillAmount = currentHealth / maxHealth;
                 if (currentHealth <= 0)
                 {
                     dead = true;
@@ -279,11 +319,25 @@ public class playerController1 : MonoBehaviour
     /// </summary>
     private void speedCheck()
     {
-        if(rb.velocity.magnitude > playerMaxMovement)
+        if (rb.velocity.x > playerMaxMovementSpeed)
         {
-            rb.velocity = rb.velocity.normalized * playerMaxMovement;
+            rb.velocity = new Vector3(playerMaxMovementSpeed, rb.velocity.y, rb.velocity.z);
         }
-        deleteThisLater.text = "speed: " + rb.velocity.magnitude;
+        else if (rb.velocity.x < -playerMaxMovementSpeed)
+        {
+            rb.velocity = new Vector3(-playerMaxMovementSpeed, rb.velocity.y, rb.velocity.z);
+        }
+    }
+
+    private void changeFriction()
+    {
+        if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+        {
+            //resets friction on player
+            
+            collide.material.dynamicFriction = 0.6f;
+            collide.material.staticFriction = 0.6f;
+        }
     }
 
 }
