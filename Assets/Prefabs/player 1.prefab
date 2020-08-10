@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3522807610455801902}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: swordBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,8 @@ GameObject:
   - component: {fileID: 5059040518626453972}
   - component: {fileID: 3762744054707873687}
   - component: {fileID: 1935345053}
-  m_Layer: 0
+  - component: {fileID: 5483794980473450533}
+  m_Layer: 8
   m_Name: sword
   m_TagString: swordBlade
   m_Icon: {fileID: 0}
@@ -78,6 +79,18 @@ BoxCollider:
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1935345053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8272544793453446208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 946c260af193c0a419bb645a59e629f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5483794980473450533
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -154,18 +167,22 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   healthText: {fileID: 0}
-  maxHealth: 0
-  speed: 1000
-  length: 0.35
-  jumpForce: 300
-  knockBackAmount: 0
+  maxHealth: 10
+  jumpForce: 100
+  knockBackAmount: 7
   swordBase: {fileID: 1801513023619854345}
-  swordSpeed: 180
+  swordSpeed: 720
   maxCounterResetTimer: 3
   comboCounter: {fileID: 0}
   pauseScreen: {fileID: 0}
   gameplayMenu: {fileID: 0}
+  deathScreen: {fileID: 0}
   healthBar: {fileID: 0}
+  deleteThisLater: {fileID: 0}
+  speed: 250000
+  playerMaxMovementSpeed: 0.5
+  boxCastMaxDistance: 1
+  antiSlopeBumpForce: 0.75
 --- !u!54 &9211146760413322804
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -174,8 +191,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9211146760413322802}
   serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0.5
+  m_Mass: 11
+  m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
