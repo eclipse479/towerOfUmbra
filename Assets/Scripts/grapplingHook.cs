@@ -145,7 +145,7 @@ public class grapplingHook : MonoBehaviour
             isEnemyGrabbed = false;
             wallGrabbed = true;
             extending = false;
-            forceDirection = (tip.gameObject.transform.position - player.gameObject.transform.position);
+            forceDirection = (new Vector3(tip.gameObject.transform.position.x, tip.gameObject.transform.position.y,player.gameObject.transform.position.z) - player.gameObject.transform.position);
             hold = forceDirection.magnitude;
             forceDirection.Normalize();
         }
