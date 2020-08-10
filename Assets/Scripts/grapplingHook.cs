@@ -163,6 +163,7 @@ public class grapplingHook : MonoBehaviour
 
     public void pullEnemy(GameObject thingToPull)
     {
+        collide.enabled = false;
         isEnemyGrabbed = false;
         Rigidbody enemyBody;
         enemyBody = thingToPull.GetComponent<Rigidbody>();
@@ -173,6 +174,7 @@ public class grapplingHook : MonoBehaviour
     }
     public void playerPullToWall()
     {
+        collide.enabled = false;
         wallGrabbed = false;
         playerRB.AddForce(forceDirection * CalculateJumpForce(hold, 9.8f) * grapplePullToWallForce, ForceMode.Impulse);
     }
