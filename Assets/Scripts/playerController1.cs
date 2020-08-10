@@ -57,8 +57,10 @@ public class playerController1 : MonoBehaviour
     public float boxCastMaxDistance = 1;
     private RaycastHit boxHit;
 
-    //physics material so player can slide down walls
+    //collider that the physics material is on so friction can be changed
     private Collider collide;
+    public float antiSlopeBumpForce = 0.75f;
+
     void Start()
     {
         dead = false;
@@ -137,6 +139,7 @@ public class playerController1 : MonoBehaviour
                     //remove friction when running
                     collide.material.dynamicFriction = 0.0f;
                     collide.material.staticFriction = 0.0f;
+                    collide.material.frictionCombine = PhysicMaterialCombine.Minimum;
                     //change player facing direction
                     transform.eulerAngles = new Vector3(0, -90, 0);
                     //move player
@@ -150,17 +153,20 @@ public class playerController1 : MonoBehaviour
                     //remove friction when running
                     collide.material.dynamicFriction = 0.0f;
                     collide.material.staticFriction = 0.0f;
+                    collide.material.frictionCombine = PhysicMaterialCombine.Minimum;
                     //change player facing direction
                     transform.eulerAngles = new Vector3(0, 90, 0);
                     //move player
                     if (grounded)//player movement on the ground
                         rb.AddForce(transform.forward * speed * Time.deltaTime);
                     else // slower acceleration while in the air
-                        rb.AddForce(transform.forward * speed * Time.deltaTime * 0.5f);
+                        rb.AddForce(transform.forward * speed * Time.deltaTime * 0.75f);
                 }
                 if (Input.GetKeyDown(KeyCode.W) && grounded)
                 {
                     //jumps
+                    Vector3 velocityKill = new Vector3(0, -rb.velocity.y, 0);
+                    rb.AddForce(velocityKill, ForceMode.Impulse);
                     rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
                 }
                 else if (Input.GetKeyDown(KeyCode.W) && doubleJump)
@@ -171,9 +177,10 @@ public class playerController1 : MonoBehaviour
                     rb.AddForce(transform.up * jumpForce * 0.5f, ForceMode.Impulse);//jump half as high
                     doubleJump = false;
                 }
-                ///---------------------------------------------------------------------------------------------------------
-                deleteThisLater.text = "friction: " + collide.material.dynamicFriction;
-                ///---------------------------------------------------------------------------------------------------------
+
+                //keep player on the ground
+                applyAntiBump();
+
                 //keeps the player speed in check
                 speedCheck(); 
                 //when movement keys are released
@@ -187,13 +194,20 @@ public class playerController1 : MonoBehaviour
                 {
                     grounded = true;
                     doubleJump = true;
+                    deleteThisLater.text = "point X: " + boxHit.point.x + " point Y: " + boxHit.point.y + " point Z: " + boxHit.point.z + " playerX: " + gameObject.transform.position.x + " playerY: " + gameObject.transform.position.y + " playerZ: " + gameObject.transform.position.z;
+                    if(boxHit.collider.gameObject.tag == "Finish")
+                    {
+                        Renderer rend = boxHit.collider.gameObject.GetComponent<Renderer>();
+                        rend.material.color = Color.red;
+                    }
                 }
                 else
                 {
                     grounded = false;
+                    deleteThisLater.text = "Not grounded";
                 }
                 //swing sword
-                if (Input.GetMouseButtonDown(1) && !swordSwinging)
+                if (Input.GetMouseButtonDown(0) && !swordSwinging)
                 {
                     swordBase.transform.rotation = Quaternion.identity;
                     swordSwinging = true;
@@ -210,6 +224,9 @@ public class playerController1 : MonoBehaviour
         {
             playerIsDead();
         }
+
+    
+    slopeCheck();
     }
     /// <summary>
     /// swings the sword
@@ -334,10 +351,33 @@ public class playerController1 : MonoBehaviour
         if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
         {
             //resets friction on player
-            
-            collide.material.dynamicFriction = 0.6f;
-            collide.material.staticFriction = 0.6f;
+
+            collide.material.dynamicFriction = 1.0f;
+            collide.material.staticFriction = 1.0f;
+            collide.material.frictionCombine = PhysicMaterialCombine.Maximum;
         }
     }
 
+
+    private void slopeCheck()
+    {
+        RaycastHit slopeCheckRay;
+        if (Physics.Raycast(transform.position, -transform.up, out slopeCheckRay, 1.0f))
+        {
+            Debug.DrawRay(transform.position, -transform.up * slopeCheckRay.distance, Color.blue);
+        }
+        else
+        {
+            Debug.DrawRay(transform.position, -transform.up, Color.blue);
+        }
+        ///---------------------------------------------------------------------------------------------------------
+        //deleteThisLater.text = "Normal X: " + slopeCheckRay.normal.x + " Normal Y: " + slopeCheckRay.normal.y + " Normal Z: " + slopeCheckRay.normal.z;
+        ///---------------------------------------------------------------------------------------------------------
+    }
+
+    private void applyAntiBump()
+    {
+        if(grounded)
+        rb.AddForce(-Vector3.up * antiSlopeBumpForce);
+    }
 }

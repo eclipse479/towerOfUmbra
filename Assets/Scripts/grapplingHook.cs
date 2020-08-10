@@ -17,6 +17,9 @@ public class grapplingHook : MonoBehaviour
     //tip of the grappling hook(holds the enemy)
     private GameObject tip;
 
+    //camera stats
+    public Camera playerCamera;
+    public float grappleDistFromPlayer;
     //are changed in another script
     [HideInInspector]
     public bool extending;
@@ -35,7 +38,7 @@ public class grapplingHook : MonoBehaviour
     private float hold;
 
     private float playerZ;
-
+    public float grapplePullToWallForce;
     // Start is called before the first frame update
     void Start()
     {
@@ -53,7 +56,7 @@ public class grapplingHook : MonoBehaviour
     void Update()
     {
         //moves grapple to player position
-        parent.transform.position = player.transform.position;
+        parent.transform.position = player.transform.position + (playerCamera.transform.forward * grappleDistFromPlayer);
 
 
         //extending and returning grapple
@@ -73,7 +76,7 @@ public class grapplingHook : MonoBehaviour
         if (!active)
         {
             //gets a new spot to shoot a grapple towards
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(1))
             {
                 RaycastHit hit;
 
@@ -84,7 +87,7 @@ public class grapplingHook : MonoBehaviour
                     extending = true; // grapple is extending
                     Vector3 destination = hit.point; // position clicked
                     //make grapple face position clicked to it can extend properly
-                    parent.gameObject.transform.LookAt(new Vector3(destination.x, destination.y, playerZ));
+                    parent.gameObject.transform.LookAt(new Vector3(destination.x, destination.y, transform.position.z));
                 }
             }
         }
@@ -166,7 +169,7 @@ public class grapplingHook : MonoBehaviour
     public void playerPullToWall()
     {
         wallGrabbed = false;
-        playerRB.AddForce(forceDirection * CalculateJumpForce(hold, 9.8f), ForceMode.Impulse);
+        playerRB.AddForce(forceDirection * CalculateJumpForce(hold, 9.8f) * grapplePullToWallForce, ForceMode.Impulse);
     }
 
     private float CalculateJumpForce(float jumpHeight, float gravity)
