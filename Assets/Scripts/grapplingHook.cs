@@ -37,6 +37,7 @@ public class grapplingHook : MonoBehaviour
     public Vector3 forceDirection;
     private float hold;
 
+    private Collider collide;
     private float playerZ;
     public float grapplePullToWallForce;
     // Start is called before the first frame update
@@ -44,6 +45,8 @@ public class grapplingHook : MonoBehaviour
     {
         parent = gameObject.transform.parent.gameObject;
         playerRB = player.GetComponent<Rigidbody>();
+        collide = gameObject.GetComponent<Collider>();
+        collide.enabled = false;
         tip = gameObject.transform.GetChild(0).gameObject;
         extending = false;
         active = false;
@@ -63,6 +66,7 @@ public class grapplingHook : MonoBehaviour
         if (parent.transform.localScale.z > maxLength * 10)
         {
             extending = false;
+            collide.enabled = false;
         }
         else if (parent.transform.localScale.z < 0.1f)
         {
@@ -83,6 +87,7 @@ public class grapplingHook : MonoBehaviour
 
                 if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100))
                 {
+                    collide.enabled = true;
                     active = true; // grapple exists
                     extending = true; // grapple is extending
                     Vector3 destination = hit.point; // position clicked
