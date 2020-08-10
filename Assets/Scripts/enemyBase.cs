@@ -22,10 +22,7 @@ public class enemyBase : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(health <= 0)
-        {
-            Destroy(gameObject);
-        }
+        
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -33,6 +30,10 @@ public class enemyBase : MonoBehaviour
         {
             health--;
             healthSlider.value = health;
+            if (health <= 0)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }
