@@ -40,6 +40,7 @@ public class grapplingHook : MonoBehaviour
     private Collider collide;
     private float playerZ;
     public float grapplePullToWallForce;
+    public float grapplePullEnemyForce;
     // Start is called before the first frame update
     void Start()
     {
@@ -170,7 +171,7 @@ public class grapplingHook : MonoBehaviour
         Vector3 enemyDirection = (player.transform.position - thingToPull.transform.position);
         float distance = enemyDirection.magnitude;
         enemyDirection.Normalize();
-        enemyBody.AddForce(enemyDirection * CalculateJumpForce(distance,9.8f),ForceMode.Impulse);
+        enemyBody.AddForce(enemyDirection * CalculateJumpForce(distance,9.8f) * grapplePullEnemyForce, ForceMode.Impulse);
     }
     public void playerPullToWall()
     {
