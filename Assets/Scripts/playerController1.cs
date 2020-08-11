@@ -61,10 +61,18 @@ public class playerController1 : MonoBehaviour
     private Collider collide;
     public float antiSlopeBumpForce = 0.75f;
 
+    private RaycastHit slopeCheckRay;
+    RaycastHit inFrontOfPlayer;
+    private bool jumping;
+    private bool applyAntiBumpForce;
+    private float maxAntiBumpForceTimer = 0.3f;
+    private float antiBumpForceTimer;
     void Start()
     {
         dead = false;
         paused = false;
+        jumping = false;
+        applyAntiBumpForce = false;
         pauseScreen.enabled = false;
         deathScreen.enabled = false;
         if (swordSpeed <= 0)
@@ -168,6 +176,8 @@ public class playerController1 : MonoBehaviour
                     Vector3 velocityKill = new Vector3(0, -rb.velocity.y, 0);
                     rb.AddForce(velocityKill, ForceMode.Impulse);
                     rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+                    jumping = true;
+                    applyAntiBumpForce = false;
                 }
                 else if (Input.GetKeyDown(KeyCode.W) && doubleJump)
                 {
@@ -177,14 +187,18 @@ public class playerController1 : MonoBehaviour
                     rb.AddForce(transform.up * jumpForce * 0.5f, ForceMode.Impulse);//jump half as high
                     doubleJump = false;
                 }
-
-                //keep player on the ground
+                ///---------------------------------------------------------------------------------------------------------------------------
+                //checks in front is the ground is different from the current ground then apply a downward force to keep player on the ground
+                checkInFront();
+                //check the ground beneth the player
+                slopeCheck();
+                //apply anti bump force for slopes
                 applyAntiBump();
-
                 //keeps the player speed in check
-                speedCheck(); 
+                speedCheck();
+                ///---------------------------------------------------------------------------------------------------------------------------
                 //when movement keys are released
-                if(!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+                if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
                 {
                     changeFriction();
                 }
@@ -193,8 +207,8 @@ public class playerController1 : MonoBehaviour
                 if (Physics.BoxCast(transform.position, new Vector3(0.125f, 0.1f, 0.125f), -transform.up, out boxHit, Quaternion.identity, boxCastMaxDistance, platformLayerMask))
                 {
                     grounded = true;
+                    jumping = false;
                     doubleJump = true;
-                    deleteThisLater.text = "point X: " + boxHit.point.x + " point Y: " + boxHit.point.y + " point Z: " + boxHit.point.z + " playerX: " + gameObject.transform.position.x + " playerY: " + gameObject.transform.position.y + " playerZ: " + gameObject.transform.position.z;
                     if(boxHit.collider.gameObject.tag == "Finish")
                     {
                         Renderer rend = boxHit.collider.gameObject.GetComponent<Renderer>();
@@ -204,7 +218,6 @@ public class playerController1 : MonoBehaviour
                 else
                 {
                     grounded = false;
-                    deleteThisLater.text = "Not grounded";
                 }
                 //swing sword
                 if (Input.GetMouseButtonDown(0) && !swordSwinging)
@@ -225,8 +238,7 @@ public class playerController1 : MonoBehaviour
             playerIsDead();
         }
 
-    
-    slopeCheck();
+
     }
     /// <summary>
     /// swings the sword
@@ -361,14 +373,14 @@ public class playerController1 : MonoBehaviour
 
     private void slopeCheck()
     {
-        RaycastHit slopeCheckRay;
-        if (Physics.Raycast(transform.position, -transform.up, out slopeCheckRay, 1.0f))
+        
+        if (Physics.Raycast(transform.position + new Vector3(0,-0.1f,0), -transform.up, out slopeCheckRay, 1.0f, platformLayerMask))
         {
-            Debug.DrawRay(transform.position, -transform.up * slopeCheckRay.distance, Color.blue);
+            Debug.DrawRay(transform.position + new Vector3(0, -0.1f, 0), -transform.up * slopeCheckRay.distance, Color.blue);
         }
         else
         {
-            Debug.DrawRay(transform.position, -transform.up, Color.blue);
+            Debug.DrawRay(transform.position + new Vector3(0, -0.1f, 0), -transform.up, Color.blue);
         }
         ///---------------------------------------------------------------------------------------------------------
         //deleteThisLater.text = "Normal X: " + slopeCheckRay.normal.x + " Normal Y: " + slopeCheckRay.normal.y + " Normal Z: " + slopeCheckRay.normal.z;
@@ -377,7 +389,46 @@ public class playerController1 : MonoBehaviour
 
     private void applyAntiBump()
     {
-        if(grounded)
-        rb.AddForce(-Vector3.up * antiSlopeBumpForce);
+        if (applyAntiBumpForce && !jumping)
+        {
+            deleteThisLater.text = "APPLY THE FORCE!!!";
+            rb.AddForce(-Vector3.up * antiSlopeBumpForce);
+            //timer for how long the force is applied if the player does nothing
+            antiBumpForceTimer -= Time.deltaTime;
+            if (antiBumpForceTimer < 0)
+                applyAntiBumpForce = false;
+        }
+        else
+        {
+        }
+    }
+    /// <summary>
+    /// sends a raycast down in front of the player and to determine is a slope if in front
+    /// </summary>
+    /// <returns></returns>
+    private void checkInFront()
+    {
+        Vector3 rayCastPos = transform.position + new Vector3(0, -0.4f, 0) + (transform.forward * 0.1f);
+        float length = 0.4f;
+        if (Physics.Raycast(rayCastPos, -transform.up, out inFrontOfPlayer, length, platformLayerMask))
+        {
+            
+            Debug.DrawRay(rayCastPos, -transform.up * inFrontOfPlayer.distance, Color.cyan);
+            //if the spot in front of the player hits ground and the normal is not the same as the normal the player is on
+            if (inFrontOfPlayer.normal.y != slopeCheckRay.normal.y)
+            {
+                antiBumpForceTimer = maxAntiBumpForceTimer;
+                applyAntiBumpForce = true;
+            }
+            else
+            {
+                deleteThisLater.text = "sameGround";
+            }
+        }
+        else
+        {
+            deleteThisLater.text = "nothing in front";
+            Debug.DrawRay(rayCastPos, -transform.up * length, Color.cyan);
+        }
     }
 }
