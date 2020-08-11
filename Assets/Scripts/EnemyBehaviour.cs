@@ -162,7 +162,10 @@ public class EnemyBehaviour : MonoBehaviour
         if (!is_shooting && shoot_timer == shoot_cooldown)
         {
             is_shooting = true;
-            Instantiate(bullet, transform.position + transform.right, transform.rotation);
+            if (ray_centre != null)
+                Instantiate(bullet, ray_centre.position + transform.right, transform.rotation);
+            else
+                Instantiate(bullet, transform.position + transform.right, transform.rotation);
         }
 
         if (is_shooting)
