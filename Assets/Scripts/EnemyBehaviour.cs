@@ -1,9 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyBehaviour : MonoBehaviour
 {
+    // Knockback
+    public float knockback = 20.0f;
+
+    private Transform healthBar;
+    private Slider healthSlider;
+    public int health;
+
     // Where the hit box is
     public Transform hit_transform;
     public float hit_range = 0.5f;
@@ -59,6 +67,12 @@ public class EnemyBehaviour : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Transform healthBarCanvas = gameObject.transform.Find("healthBarCanvas");
+        healthBar = healthBarCanvas.gameObject.transform.Find("healthBar");
+        healthSlider = healthBar.GetComponent<Slider>();
+        healthSlider.maxValue = health;
+        healthSlider.value = health;
+
         // Rigidbody and rays
         rb = GetComponent<Rigidbody>();
         ray = new Ray();
@@ -151,6 +165,11 @@ public class EnemyBehaviour : MonoBehaviour
         if (lineOfSight(ray))
         {
             behaviour = STATE.CHASING; 
+        }
+
+        if (health <= 0.0f)
+        {
+            die();
         }
     }
 
@@ -300,7 +319,7 @@ public class EnemyBehaviour : MonoBehaviour
     /// </summary>
     void walkForNothing()
     {
-        Vector3 direction = new Vector3();
+        
         // Update the downwards cast
         if (ray_centre != null)
             ledge_ray.origin = ray_centre.position + (transform.right * ray_offset);
@@ -327,7 +346,7 @@ public class EnemyBehaviour : MonoBehaviour
 
     void die()
     {
-        Destroy(this);
+        Destroy(gameObject);
     }
 
     // For the enemy's search zone
@@ -342,6 +361,15 @@ public class EnemyBehaviour : MonoBehaviour
         Gizmos.DrawWireSphere(hit_transform.position, hit_range);
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "swordBlade")
+        {
+            rb.AddForce(other.gameObject.transform.forward * knockback, ForceMode.Impulse);
+            health--;
+            healthSlider.value = health;
+        }
+    }
 
 
     public enum STATE
