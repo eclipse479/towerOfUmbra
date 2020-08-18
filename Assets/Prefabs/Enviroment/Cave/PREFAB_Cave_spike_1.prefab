@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4727261544793115010
+--- !u!1 &4102062802712212961
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,47 +8,47 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6653463795122204645}
-  - component: {fileID: 7456565495552311739}
-  - component: {fileID: 3792961222156181012}
-  - component: {fileID: 747904335859058345}
-  - component: {fileID: 5054753809218826976}
-  m_Layer: 0
-  m_Name: Ground
+  - component: {fileID: 1293626993897813586}
+  - component: {fileID: 8124361996091135483}
+  - component: {fileID: 6726163024949709949}
+  - component: {fileID: 7425440910656322557}
+  - component: {fileID: 4043049271272515070}
+  m_Layer: 9
+  m_Name: PREFAB_Cave_spike_1
   m_TagString: grappleTarget
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6653463795122204645
+--- !u!4 &1293626993897813586
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4727261544793115010}
+  m_GameObject: {fileID: 4102062802712212961}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -15.23, y: -9.27, z: 0.6}
+  m_LocalPosition: {x: -16, y: 38.05, z: -0.35}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &7456565495552311739
+--- !u!33 &8124361996091135483
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4727261544793115010}
+  m_GameObject: {fileID: 4102062802712212961}
   m_Mesh: {fileID: 0}
---- !u!23 &3792961222156181012
+--- !u!23 &6726163024949709949
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4727261544793115010}
+  m_GameObject: {fileID: 4102062802712212961}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -80,13 +80,13 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &747904335859058345
+--- !u!114 &7425440910656322557
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4727261544793115010}
+  m_GameObject: {fileID: 4102062802712212961}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8233d90336aea43098adf6dbabd606a2, type: 3}
@@ -207,55 +207,55 @@ MonoBehaviour:
   - m_Vertices: 0b0000000e00000012000000
   m_SharedTextures: []
   m_Positions:
-  - {x: -20, y: 0, z: 0}
-  - {x: 30, y: 0, z: 0}
-  - {x: -20, y: 5, z: 0}
-  - {x: 30, y: 5, z: 0}
-  - {x: 30, y: 0, z: 0}
-  - {x: 30, y: 0, z: -1}
-  - {x: 30, y: 5, z: 0}
-  - {x: 30, y: 5, z: -1}
-  - {x: 30, y: 0, z: -1}
-  - {x: -20, y: 0, z: -1}
-  - {x: 30, y: 5, z: -1}
-  - {x: -20, y: 5, z: -1}
-  - {x: -20, y: 0, z: -1}
-  - {x: -20, y: 0, z: 0}
-  - {x: -20, y: 5, z: -1}
-  - {x: -20, y: 5, z: 0}
-  - {x: -20, y: 5, z: 0}
-  - {x: 30, y: 5, z: 0}
-  - {x: -20, y: 5, z: -1}
-  - {x: 30, y: 5, z: -1}
-  - {x: -20, y: 0, z: -1}
-  - {x: 30, y: 0, z: -1}
-  - {x: -20, y: 0, z: 0}
-  - {x: 30, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 2, y: 0, z: 0}
+  - {x: 0, y: 6.05, z: 0}
+  - {x: 2, y: 6.05, z: 0}
+  - {x: 2, y: 0, z: 0}
+  - {x: 2, y: 0, z: -1.9999999}
+  - {x: 2, y: 6.05, z: 0}
+  - {x: 2, y: 6.049999, z: -1.9999999}
+  - {x: 2, y: 0, z: -1.9999999}
+  - {x: 0, y: 0, z: -1.9999999}
+  - {x: 2, y: 6.049999, z: -1.9999999}
+  - {x: 0, y: 6.049999, z: -1.9999999}
+  - {x: 0, y: 0, z: -1.9999999}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 6.049999, z: -1.9999999}
+  - {x: 0, y: 6.05, z: 0}
+  - {x: 0, y: 6.05, z: 0}
+  - {x: 2, y: 6.05, z: 0}
+  - {x: 0, y: 6.049999, z: -1.9999999}
+  - {x: 2, y: 6.049999, z: -1.9999999}
+  - {x: 0, y: 0, z: -1.9999999}
+  - {x: 2, y: 0, z: -1.9999999}
+  - {x: 0, y: 0, z: 0}
+  - {x: 2, y: 0, z: 0}
   m_Textures0:
-  - {x: 20, y: 0}
-  - {x: -30, y: 0}
-  - {x: 20, y: 5}
-  - {x: -30, y: 5}
   - {x: 0, y: 0}
-  - {x: -1, y: 0}
-  - {x: 0, y: 5}
-  - {x: -1, y: 5}
-  - {x: 30, y: 0}
-  - {x: -20, y: 0}
-  - {x: 30, y: 5}
-  - {x: -20, y: 5}
-  - {x: 1, y: 0}
+  - {x: -2, y: 0}
+  - {x: 0, y: 6.05}
+  - {x: -2, y: 6.05}
   - {x: 0, y: 0}
-  - {x: 1, y: 5}
-  - {x: 0, y: 5}
-  - {x: -20, y: 0}
-  - {x: 30, y: 0}
-  - {x: -20, y: -1}
-  - {x: 30, y: -1}
-  - {x: 20, y: -1}
-  - {x: -30, y: -1}
-  - {x: 20, y: 0}
-  - {x: -30, y: 0}
+  - {x: -1.9999999, y: 0}
+  - {x: 0, y: 6.05}
+  - {x: -1.9999999, y: 6.049999}
+  - {x: 2, y: 0}
+  - {x: 0, y: 0}
+  - {x: 2, y: 6.049999}
+  - {x: 0, y: 6.049999}
+  - {x: 1.9999999, y: 0}
+  - {x: 0, y: 0}
+  - {x: 1.9999999, y: 6.049999}
+  - {x: 0, y: 6.05}
+  - {x: 0, y: 0.0000028848654}
+  - {x: 2, y: 0.0000028848654}
+  - {x: 0, y: -1.999997}
+  - {x: 2, y: -1.999997}
+  - {x: 0, y: -1.9999999}
+  - {x: -2, y: -1.9999999}
+  - {x: 0, y: 0}
+  - {x: -2, y: 0}
   m_Textures2: []
   m_Textures3: []
   m_Tangents:
@@ -292,28 +292,28 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_IsSelectable: 1
-  m_SelectedFaces: 03000000
+  m_SelectedFaces: 02000000
   m_SelectedEdges:
-  - a: 12
-    b: 13
-  - a: 14
-    b: 12
-  - a: 13
-    b: 15
-  - a: 15
-    b: 14
-  m_SelectedVertices: 0c0000000d0000000e0000000f000000
---- !u!64 &5054753809218826976
+  - a: 8
+    b: 9
+  - a: 10
+    b: 8
+  - a: 9
+    b: 11
+  - a: 11
+    b: 10
+  m_SelectedVertices: 08000000090000000a0000000b000000
+--- !u!64 &4043049271272515070
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4727261544793115010}
+  m_GameObject: {fileID: 4102062802712212961}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 14
   m_Mesh: {fileID: 0}
