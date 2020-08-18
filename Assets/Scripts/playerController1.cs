@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Assertions.Must;
 using UnityEngine.UI;
 
 public class playerController1 : MonoBehaviour
@@ -16,7 +17,7 @@ public class playerController1 : MonoBehaviour
     private bool grounded;
     //can player double jump
     private bool doubleJump;
-    
+
     //rigidbody
     private Rigidbody rb;
     //enemy collision knockback
@@ -24,10 +25,10 @@ public class playerController1 : MonoBehaviour
 
     //teh sword
     public GameObject swordBase;
-    public float swordSpeed; // how fast teh sword moves
+    public float swordSpeed;    // how fast the sword moves
     private bool swordSwinging; // is sword swinging
                                 // Start is called before the first frame update
-     //combo Counter
+                                //combo Counter
     public float maxCounterResetTimer;
     private float comboCounterResetTimer;
     private int hitCounter;
@@ -61,18 +62,22 @@ public class playerController1 : MonoBehaviour
     private Collider collide;
     public float antiSlopeBumpForce = 0.75f;
 
-    private RaycastHit slopeCheckRay;
+    private RaycastHit floorCheckRay;
     RaycastHit inFrontOfPlayer;
+
+    //is player jumping
     private bool jumping;
-    private bool applyAntiBumpForce;
+    private float groundedDelay;
+    public float maxGroundedDelay = 0.2f;
+    //timer for how long the force is applied
     private float maxAntiBumpForceTimer = 0.3f;
     private float antiBumpForceTimer;
+
     void Start()
     {
         dead = false;
         paused = false;
         jumping = false;
-        applyAntiBumpForce = false;
         pauseScreen.enabled = false;
         deathScreen.enabled = false;
         if (swordSpeed <= 0)
@@ -95,15 +100,10 @@ public class playerController1 : MonoBehaviour
         //health bar values
         healthbarImage = healthBar.transform.GetChild(1).gameObject.GetComponent<Image>();
         currentHealth = maxHealth;
-    
+
     }
 
     // Update is called once per frame
-    private void FixedUpdate()
-    {
-        //RB movement in fixed update
-       
-    }
     void Update()
     {
         //pausing
@@ -139,9 +139,7 @@ public class playerController1 : MonoBehaviour
                     hitCounter = 0;
                     comboCounter.text = "Combo: " + hitCounter;
                 }
-
                 //input for the player movement
-
                 if (Input.GetKey(KeyCode.RightArrow) && !swordSwinging || Input.GetKey(KeyCode.D) && !swordSwinging)
                 {
                     //remove friction when running
@@ -151,10 +149,10 @@ public class playerController1 : MonoBehaviour
                     //change player facing direction
                     transform.eulerAngles = new Vector3(0, -90, 0);
                     //move player
-                    if(grounded)
-                    rb.AddForce(transform.forward * speed * Time.deltaTime);
+                    if (grounded)
+                        rb.AddForce(transform.forward * speed * Time.deltaTime);
                     else
-                        rb.AddForce(transform.forward * speed * Time.deltaTime * 0.5f);
+                        rb.AddForce(transform.forward * speed * Time.deltaTime * 0.75f);
                 }
                 if (Input.GetKey(KeyCode.LeftArrow) && !swordSwinging || Input.GetKey(KeyCode.A) && !swordSwinging)
                 {
@@ -170,47 +168,63 @@ public class playerController1 : MonoBehaviour
                     else // slower acceleration while in the air
                         rb.AddForce(transform.forward * speed * Time.deltaTime * 0.75f);
                 }
-                if (Input.GetKeyDown(KeyCode.W) && grounded)
+                if (Input.GetKeyDown(KeyCode.W) && grounded) //jumps
                 {
+                    //removes current vertical velocity
+                    Vector3 velocityKill = rb.velocity;
+                    velocityKill.y = 0;
+                    rb.velocity = velocityKill;
                     //jumps
-                    Vector3 velocityKill = new Vector3(0, -rb.velocity.y, 0);
-                    rb.AddForce(velocityKill, ForceMode.Impulse);
                     rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
                     jumping = true;
-                    applyAntiBumpForce = false;
+                    antiBumpForceTimer = -1;
+                    groundedDelay = maxGroundedDelay;
                 }
-                else if (Input.GetKeyDown(KeyCode.W) && doubleJump)
+                else if (Input.GetKeyDown(KeyCode.W) && doubleJump) //jumps if in the air (double jump)
                 {
-                    //jumps if in the air (double jump)
-                    Vector3 antiFall = new Vector3(0, -rb.velocity.y, 0);
-                    rb.AddForce(antiFall, ForceMode.Impulse);
+                    //removes current vertical velocity
+                    Vector3 velocityKill = rb.velocity;
+                    velocityKill.y = 0;
+                    rb.velocity = velocityKill;
                     rb.AddForce(transform.up * jumpForce * 0.5f, ForceMode.Impulse);//jump half as high
                     doubleJump = false;
+                    jumping = true;
+                    antiBumpForceTimer = -1;
+                    groundedDelay = maxGroundedDelay;
                 }
-                ///---------------------------------------------------------------------------------------------------------------------------
-                //checks in front is the ground is different from the current ground then apply a downward force to keep player on the ground
-                checkInFront();
-                //check the ground beneth the player
-                slopeCheck();
-                //apply anti bump force for slopes
-                applyAntiBump();
-                //keeps the player speed in check
-                speedCheck();
-                ///---------------------------------------------------------------------------------------------------------------------------
+                if(Input.GetKeyDown(KeyCode.M)) //delete this later
+                {
+                    //insert test code here
+                    rb.MovePosition(new Vector3(72.51f, 9.5f, 0.5f));
+                }
+                
                 //when movement keys are released
                 if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
                 {
                     changeFriction();
                 }
+                else // if any movement key is pressed
+                {
+                    if (rb.velocity.x > 1 || rb.velocity.x < -1)
+                    {
+                        //apply anti bump force for slopes
+                     applyAntiBump(); 
+                    }
+                }
                 ///box cast to check if the player is grounded
                 //box cast for if player is grounded and can jump
+                groundedDelay -= Time.deltaTime;
                 if (Physics.BoxCast(transform.position, new Vector3(0.125f, 0.1f, 0.125f), -transform.up, out boxHit, Quaternion.identity, boxCastMaxDistance, platformLayerMask))
                 {
                     grounded = true;
-                    jumping = false;
                     doubleJump = true;
-                    if(boxHit.collider.gameObject.tag == "Finish")
+                    if (groundedDelay < 0)
                     {
+                        jumping = false;
+                    }
+                    if (boxHit.collider.gameObject.tag == "Finish")
+                    {
+                        //slope testing purposes
                         Renderer rend = boxHit.collider.gameObject.GetComponent<Renderer>();
                         rend.material.color = Color.red;
                     }
@@ -219,6 +233,14 @@ public class playerController1 : MonoBehaviour
                 {
                     grounded = false;
                 }
+
+                ///---------------------------------------------------------------------------------------------------------------------------
+                //checks ground directally beneth and in front of the player
+                groundCheck();
+                //keeps the player speed in check
+                speedCheck();
+                ///---------------------------------------------------------------------------------------------------------------------------
+
                 //swing sword
                 if (Input.GetMouseButtonDown(0) && !swordSwinging)
                 {
@@ -233,13 +255,25 @@ public class playerController1 : MonoBehaviour
                 }
             }
         }
-        else if(dead)
+        else if (dead)
         {
             playerIsDead();
         }
-
-
+        //debug ray to check if a ramp is infront of the player
+        Debug.DrawRay(transform.position + new Vector3(0, -0.45f, 0), transform.forward * 0.25f, Color.green);
+        if (jumping)
+            deleteThisLater.color = Color.yellow;
+        else if (antiBumpForceTimer > 0 && !jumping)
+        {
+            deleteThisLater.color = Color.red;
+        }
+        else
+        {
+            deleteThisLater.color = Color.cyan;
+        }
     }
+
+
     /// <summary>
     /// swings the sword
     /// </summary>
@@ -248,13 +282,13 @@ public class playerController1 : MonoBehaviour
         //activates the sword
         float currentX = swordBase.transform.rotation.eulerAngles.z; // x axis
         //should be replaced with swinging sword animation and turning on sword collider
-        if(currentX < 90)
+        if (currentX < 90)
         {
             //swing sword
             swordBase.transform.Rotate(new Vector3(swordSpeed, 0, 0) * Time.deltaTime);
         }
         //reset sword to inactive state
-        else if(currentX > 90)
+        else if (currentX > 90)
         {
             //swordBase.transform.rotation = Quaternion.identity;
             swordBase.transform.eulerAngles = new Vector3(0, -90, 0);
@@ -265,19 +299,19 @@ public class playerController1 : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-            if (collision.gameObject.tag == "enemy" || collision.gameObject.tag == "bullet")
+        if (collision.gameObject.tag == "enemy" || collision.gameObject.tag == "bullet")
+        {
+            //reduce health
+            currentHealth--;
+            healthText.text = "Health: " + currentHealth;
+            knockBack(collision.gameObject);
+            //move health bar health
+            healthbarImage.fillAmount = currentHealth / maxHealth;
+            if (currentHealth <= 0)
             {
-                //reduce health
-                currentHealth--;
-                healthText.text = "Health: " + currentHealth;
-                knockBack(collision.gameObject);
-                //move health bar health
-                healthbarImage.fillAmount = currentHealth / maxHealth;
-                if (currentHealth <= 0)
-                {
-                    dead = true;
-                }
+                dead = true;
             }
+        }
     }
 
     void OnDrawGizmos()
@@ -326,9 +360,9 @@ public class playerController1 : MonoBehaviour
         //remove current velocity then knocks back player
         rb.velocity = Vector3.zero;
         //if on ground push off ground(so friction with floor is removed)
-        if(grounded)
+        if (grounded)
         {
-            rb.AddForce(transform.up , ForceMode.Impulse);
+            rb.AddForce(transform.up, ForceMode.Impulse);
         }
         rb.AddForce(knockBackDirection * knockBackAmount, ForceMode.Impulse);
     }
@@ -357,7 +391,9 @@ public class playerController1 : MonoBehaviour
             rb.velocity = new Vector3(-playerMaxMovementSpeed, rb.velocity.y, rb.velocity.z);
         }
     }
-
+    /// <summary>
+    /// increased friction to the highest possible value
+    /// </summary>
     private void changeFriction()
     {
         if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
@@ -370,55 +406,69 @@ public class playerController1 : MonoBehaviour
         }
     }
 
-
-    private void slopeCheck()
+    /// <summary>
+    /// checks the floor directally beneth the player
+    /// </summary>
+    private void floorCheck()
     {
-        
-        if (Physics.Raycast(transform.position + new Vector3(0,-0.1f,0), -transform.up, out slopeCheckRay, 1.0f, platformLayerMask))
+        if (Physics.Raycast(transform.position + new Vector3(0, -0.4f, 0), -transform.up, out floorCheckRay, 0.2f, platformLayerMask))
         {
-            Debug.DrawRay(transform.position + new Vector3(0, -0.1f, 0), -transform.up * slopeCheckRay.distance, Color.blue);
+            Debug.DrawRay(transform.position + new Vector3(0, -0.4f, 0), -transform.up * floorCheckRay.distance, Color.blue);
         }
         else
         {
-            Debug.DrawRay(transform.position + new Vector3(0, -0.1f, 0), -transform.up, Color.blue);
+            Debug.DrawRay(transform.position + new Vector3(0, -0.4f, 0), -transform.up * 0.2f, Color.blue);
         }
         ///---------------------------------------------------------------------------------------------------------
         //deleteThisLater.text = "Normal X: " + slopeCheckRay.normal.x + " Normal Y: " + slopeCheckRay.normal.y + " Normal Z: " + slopeCheckRay.normal.z;
         ///---------------------------------------------------------------------------------------------------------
     }
 
+    /// <summary>
+    /// applies a force downwards when enter/exiting a slope to keep the player on the ground
+    /// </summary>
     private void applyAntiBump()
     {
-        if (applyAntiBumpForce && !jumping)
+
+        if (antiBumpForceTimer >= 0)
         {
-            deleteThisLater.text = "APPLY THE FORCE!!!";
-            rb.AddForce(-Vector3.up * antiSlopeBumpForce);
-            //timer for how long the force is applied if the player does nothing
             antiBumpForceTimer -= Time.deltaTime;
-            if (antiBumpForceTimer < 0)
-                applyAntiBumpForce = false;
         }
-        else
+        if (antiBumpForceTimer > 0 && !jumping && grounded)
         {
+            RaycastHit forwardRay;
+            if (!Physics.Raycast(transform.position + new Vector3(0, -0.45f, 0), transform.forward, out forwardRay, 1.0f, platformLayerMask))
+            {
+                Debug.DrawRay(transform.position + new Vector3(0, -0.45f, 0), transform.forward, Color.black);
+                deleteThisLater.text = "APPLY THE FORCE!!!";
+                rb.AddForce(-Vector3.up * antiSlopeBumpForce, ForceMode.Impulse);
+            }
+            else
+                Debug.DrawRay(transform.position + new Vector3(0, -0.45f, 0), transform.forward * forwardRay.distance, Color.black);
         }
     }
+
     /// <summary>
     /// sends a raycast down in front of the player and to determine is a slope if in front
     /// </summary>
     /// <returns></returns>
-    private void checkInFront()
+    private void groundCheck()
     {
-        Vector3 rayCastPos = transform.position + new Vector3(0, -0.4f, 0) + (transform.forward * 0.1f);
-        float length = 0.4f;
+        //check directally beneth the player
+        floorCheck();
+        
+
+        //check the ground slightly in front of the player
+        Vector3 rayCastPos = transform.position + new Vector3(0, -0.4f, 0) + (transform.forward * 0.5f);
+        float length = 0.2f;
         if (Physics.Raycast(rayCastPos, -transform.up, out inFrontOfPlayer, length, platformLayerMask))
         {
-            
+
             Debug.DrawRay(rayCastPos, -transform.up * inFrontOfPlayer.distance, Color.cyan);
             //if the spot in front of the player hits ground and the normal is not the same as the normal the player is on
-            if (inFrontOfPlayer.normal.y != slopeCheckRay.normal.y)
+            if (floorCheckRay.normal.y != inFrontOfPlayer.normal.y)
             {
                 antiBumpForceTimer = maxAntiBumpForceTimer;
-                applyAntiBumpForce = true;
             }
             else
             {
@@ -428,7 +478,8 @@ public class playerController1 : MonoBehaviour
         else
         {
             deleteThisLater.text = "nothing in front";
-            Debug.DrawRay(rayCastPos, -transform.up * length, Color.cyan);
+            Debug.DrawRay(rayCastPos, -transform.up * length, Color.gray);
         }
     }
+
 }

@@ -171,12 +171,16 @@ MonoBehaviour:
   maxLength: 3
   extendRate: 2
   player: {fileID: 0}
+  playerCamera: {fileID: 0}
+  grappleDistFromPlayer: 0
   extending: 0
   playerRB: {fileID: 0}
   isEnemyGrabbed: 0
   wallGrabbed: 0
   grabbedEnemy: {fileID: 0}
   forceDirection: {x: 0, y: 0, z: 0}
+  grapplePullToWallForce: 0
+  grapplePullEnemyForce: 0
 --- !u!1001 &6973653290564084462
 PrefabInstance:
   m_ObjectHideFlags: 0
