@@ -1,4 +1,17 @@
-﻿using System.Collections;
+﻿/*
+ * Script: Enemy Behaviour
+ * Author: Nixon Sok
+ * 
+ * Purpose: A state machine that dictates the enemy's actions
+ * 
+ * Defieciencies: Doesn't work with NavMesh yet.
+ * 
+ * 
+ */
+
+
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -67,6 +80,8 @@ public class EnemyBehaviour : MonoBehaviour
     // Enemy Behaviour State
     STATE behaviour = STATE.WALKING;
 
+    Animator animator;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -108,6 +123,9 @@ public class EnemyBehaviour : MonoBehaviour
 
         // Attack
         sword.SetActive(false);
+
+        // Animator
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -179,10 +197,15 @@ public class EnemyBehaviour : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Play shooting animation the fire
     /// </summary>
     void shoot()
     {
+        // Begin shooting
+        if (animator.GetBool("Shooting"))
+            animator.SetBool("Shooting", true);
+
+
         if (!is_shooting && shoot_timer == shoot_cooldown)
         {
             is_shooting = true;
@@ -314,6 +337,10 @@ public class EnemyBehaviour : MonoBehaviour
     /// </summary>
     void moveToPlayer()
     {
+        // See the player, then get dat mudderfuker!!!
+        if (!animator.GetBool(0))
+            animator.SetBool(0, true);
+
         Vector2 move_velocity = (target.position - transform.position).normalized;
         
         rb.AddForce(move_velocity * speed * Time.deltaTime, ForceMode.VelocityChange);
@@ -324,13 +351,18 @@ public class EnemyBehaviour : MonoBehaviour
     /// </summary>
     void walkForNothing()
     {
-        
+        // If it isn't running yet, run B*TCH, runnn!!!!
+        if (!animator.GetBool(0))
+            animator.SetBool(0, true);
+
         // Update the downwards cast
         if (ray_centre != null)
             ledge_ray.origin = ray_centre.position + (transform.right * ray_offset);
         else
             ledge_ray.origin = transform.position + (transform.right * ray_offset);
-        Debug.DrawRay(ledge_ray.origin, ledge_ray.direction, Color.red);
+        // Debug.DrawRay(ledge_ray.origin, ledge_ray.direction, Color.red);
+
+
         // If it doesn't hit anything
         if (!Physics.Raycast(ledge_ray, out hit, drop_cast_dist))
         {
@@ -374,6 +406,24 @@ public class EnemyBehaviour : MonoBehaviour
             rb.AddForce(other.gameObject.transform.forward * knockback, ForceMode.Impulse);
             health--;
             healthSlider.value = health;
+        }
+    }
+
+    /// <summary>
+    /// Used to play animations based on current state
+    /// </summary>
+    void running(STATE a_behaviour)
+    {
+        switch(a_behaviour)
+        {
+            case 0:
+                if (!animator.GetBool(0))
+                    animator.SetBool(0, true);
+                break;
+            case STATE.CHASING:
+                if (!animator.GetBool(0))
+                    animator.SetBool(0, true);
+                break;
         }
     }
 
