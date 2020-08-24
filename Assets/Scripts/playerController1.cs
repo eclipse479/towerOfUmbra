@@ -72,7 +72,7 @@ public class playerController1 : MonoBehaviour
     //timer for how long the force is applied
     private float maxAntiBumpForceTimer = 0.3f;
     private float antiBumpForceTimer;
-
+    public float gravityIncrease = 0;
     void Start()
     {
         dead = false;
@@ -102,7 +102,10 @@ public class playerController1 : MonoBehaviour
         currentHealth = maxHealth;
 
     }
-
+    void FixedUpdate()
+    {
+        rb.AddForce(Physics.gravity * rb.mass * gravityIncrease);
+    }
     // Update is called once per frame
     void Update()
     {
@@ -207,8 +210,8 @@ public class playerController1 : MonoBehaviour
                 {
                     if (rb.velocity.x > 1 || rb.velocity.x < -1)
                     {
-                        //apply anti bump force for slopes
-                     applyAntiBump(); 
+                     //apply anti bump force for slopes
+                     applyAntiBump();
                     }
                 }
                 ///box cast to check if the player is grounded
@@ -434,13 +437,13 @@ public class playerController1 : MonoBehaviour
         {
             antiBumpForceTimer -= Time.deltaTime;
         }
-        if (antiBumpForceTimer > 0 && !jumping && grounded)
+        if (antiBumpForceTimer > 0 && !jumping /*&& grounded*/)
         {
             RaycastHit forwardRay;
             if (!Physics.Raycast(transform.position + new Vector3(0, -0.45f, 0), transform.forward, out forwardRay, 1.0f, platformLayerMask))
             {
                 Debug.DrawRay(transform.position + new Vector3(0, -0.45f, 0), transform.forward, Color.black);
-                deleteThisLater.text = "APPLY THE FORCE!!!";
+                deleteThisLater.text = "APPLY THE FORCE!!! time left: " + antiBumpForceTimer;
                 rb.AddForce(-Vector3.up * antiSlopeBumpForce, ForceMode.Impulse);
             }
             else
@@ -460,13 +463,12 @@ public class playerController1 : MonoBehaviour
 
         //check the ground slightly in front of the player
         Vector3 rayCastPos = transform.position + new Vector3(0, -0.4f, 0) + (transform.forward * 0.5f);
-        float length = 0.2f;
+        float length = 0.4f;
         if (Physics.Raycast(rayCastPos, -transform.up, out inFrontOfPlayer, length, platformLayerMask))
         {
-
             Debug.DrawRay(rayCastPos, -transform.up * inFrontOfPlayer.distance, Color.cyan);
             //if the spot in front of the player hits ground and the normal is not the same as the normal the player is on
-            if (floorCheckRay.normal.y != inFrontOfPlayer.normal.y)
+            if (floorCheckRay.normal.y != inFrontOfPlayer.normal.y && floorCheckRay.normal.y != 0 && inFrontOfPlayer.normal.y != 0)
             {
                 antiBumpForceTimer = maxAntiBumpForceTimer;
             }

@@ -61,12 +61,17 @@ public class EnemyBehaviour : MonoBehaviour
     // Switch for states
     bool is_alert;
 
+    //reference to enemies left text
+    public Text enemiesLeftText;
+    private EnemiesLeftCounter textCounter;
     // Enemy Behaviour State
     STATE behaviour = STATE.WALKING;
 
     // Start is called before the first frame update
     void Start()
     {
+        textCounter = enemiesLeftText.GetComponent<EnemiesLeftCounter>();
+        textCounter.add();
         Transform healthBarCanvas = gameObject.transform.Find("healthBarCanvas");
         healthBar = healthBarCanvas.gameObject.transform.Find("healthBar");
         healthSlider = healthBar.GetComponent<Slider>();
@@ -346,6 +351,7 @@ public class EnemyBehaviour : MonoBehaviour
 
     void die()
     {
+        textCounter.subtract();
         Destroy(gameObject);
     }
 
