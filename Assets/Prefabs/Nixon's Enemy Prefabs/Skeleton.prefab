@@ -142,6 +142,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   knockback: 20
+  health: 10
   hit_transform: {fileID: 5287828221545442300}
   hit_range: 1
   attack_layer:
@@ -161,7 +162,6 @@ MonoBehaviour:
   sword: {fileID: 0}
   bullet: {fileID: 7091955269792678419, guid: bb59f89fb9312114ca0153b3160eeca7, type: 3}
   shoot_cooldown: 2
-  health: 10
 --- !u!1 &4124424781847610947
 GameObject:
   m_ObjectHideFlags: 0
@@ -430,6 +430,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -6057140222963153312, guid: 994a51cd4d5677b40a26355b922bc29f,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 2ea46ef6b06b83e429df0ebcaa2b2d0a, type: 2}
     - target: {fileID: -4216859302048453862, guid: 994a51cd4d5677b40a26355b922bc29f,
         type: 3}
       propertyPath: m_LocalPosition.x
