@@ -216,7 +216,6 @@ GameObject:
   - component: {fileID: 1693044253016629973}
   - component: {fileID: 1693044253016629968}
   - component: {fileID: 1693044253016629972}
-  - component: {fileID: 1707087034563907367}
   - component: {fileID: 8192331624063546115}
   m_Layer: 0
   m_Name: Spider V2
@@ -274,7 +273,6 @@ MonoBehaviour:
   min_dist: 1.28
   attack_duration: 2
   attack_range: 1
-  sword: {fileID: 49682695686983304}
   bullet: {fileID: 7091955269792678419, guid: bb59f89fb9312114ca0153b3160eeca7, type: 3}
   shoot_cooldown: 6
   enemiesLeftText: {fileID: 0}
@@ -308,19 +306,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 120
   m_CollisionDetection: 0
---- !u!114 &1707087034563907367
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1693044253016629983}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3e06192ef0175b4c8817ba13870a366, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 5
 --- !u!95 &8192331624063546115
 Animator:
   serializedVersion: 3

@@ -123,7 +123,7 @@ public class EnemyBehaviour : MonoBehaviour
         shoot_timer = shoot_cooldown;
 
         // Animator
-        animator = GetComponent<Animator>();
+        
     }
 
     // Update is called once per frame
@@ -200,8 +200,7 @@ public class EnemyBehaviour : MonoBehaviour
     void shoot()
     {
         // Begin shooting
-        if (animator.GetBool("Shooting"))
-            animator.SetBool("Shooting", true);
+        
 
 
         if (!is_shooting && shoot_timer == shoot_cooldown)
