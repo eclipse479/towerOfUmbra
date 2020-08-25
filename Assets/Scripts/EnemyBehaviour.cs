@@ -78,6 +78,27 @@ public class EnemyBehaviour : MonoBehaviour
 
     Animator animator;
 
+    // Things that need to be loaded before first frame
+    private void Awake()
+    {
+        // Get the player as target
+        target = GameObject.Find("player").transform;
+        rb = GetComponent<Rigidbody>();
+
+
+        // Rigidbody and rays
+        ray = new Ray();
+
+        if (ray_centre != null)
+        {
+            ray.origin = ray_centre.position;
+        }
+
+        // They cast down no matter what
+        ledge_ray = new Ray();
+        ledge_ray.direction = -transform.up;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -89,27 +110,11 @@ public class EnemyBehaviour : MonoBehaviour
         healthSlider.maxValue = health;
         healthSlider.value = health;
 
-        // Rigidbody and rays
-        rb = GetComponent<Rigidbody>();
-        ray = new Ray();
-
-        if (ray_centre != null)
-        {
-            ray.origin = ray_centre.position;
-        }
-
-        // Get the player as target
-        target = GameObject.Find("player").transform;
-
         // A Forward Raycast to see in front of itself
         current_ray_dist = max_ray_dist;
 
         // Downward ray cast to check its sides
         drop_check = drop_cast_dist;
-
-        // They cast down no matter what
-        ledge_ray = new Ray();
-        ledge_ray.direction = -transform.up;
 
         // Attack Timer
         attack_timer = attack_duration;
@@ -310,11 +315,7 @@ public class EnemyBehaviour : MonoBehaviour
     /// Move towards the player
     /// </summary>
     void moveToPlayer()
-    {
-        // See the player, then get dat mudderfuker!!!
-        if (!animator.GetBool(0))
-            animator.SetBool(0, true);
-
+    { 
         Vector2 move_velocity = (target.position - transform.position).normalized;
         
         rb.AddForce(move_velocity * speed * Time.deltaTime, ForceMode.VelocityChange);
@@ -332,7 +333,7 @@ public class EnemyBehaviour : MonoBehaviour
             ledge_ray.origin = transform.position + (transform.right * ray_offset);
 
         // In case ledge ray isn't pointing down
-        ledge_ray.direction = -transform.up;
+        // ledge_ray.direction = -transform.up;
 
         // If it doesn't hit anything
         if (!Physics.Raycast(ledge_ray, out hit, drop_cast_dist))
@@ -377,24 +378,6 @@ public class EnemyBehaviour : MonoBehaviour
             rb.AddForce(other.gameObject.transform.forward * knockback, ForceMode.Impulse);
             health--;
             healthSlider.value = health;
-        }
-    }
-
-    /// <summary>
-    /// Used to play animations based on current state
-    /// </summary>
-    void running(STATE a_behaviour)
-    {
-        switch(a_behaviour)
-        {
-            case 0:
-                if (!animator.GetBool(0))
-                    animator.SetBool(0, true);
-                break;
-            case STATE.CHASING:
-                if (!animator.GetBool(0))
-                    animator.SetBool(0, true);
-                break;
         }
     }
 
