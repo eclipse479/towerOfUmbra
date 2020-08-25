@@ -61,10 +61,6 @@ public class EnemyBehaviour : MonoBehaviour
     public float attack_duration = 2.0f;
     public float attack_range = 0.8f;
 
-
-    // Placeholder for attack
-    public GameObject sword;
-
     // Shooting needs
     public GameObject bullet;
     bool is_shooting = false;
@@ -74,22 +70,23 @@ public class EnemyBehaviour : MonoBehaviour
     // Switch for states
     bool is_alert;
 
+    //reference to enemies left text
+    public Text enemiesLeftText;
+    private EnemiesLeftCounter textCounter;
     // Enemy Behaviour State
     STATE behaviour = STATE.WALKING;
 
     Animator animator;
 
-    // Start is called before the first frame update
-    void Start()
+    // Things that need to be loaded before first frame
+    private void Awake()
     {
-        Transform healthBarCanvas = gameObject.transform.Find("healthBarCanvas");
-        healthBar = healthBarCanvas.gameObject.transform.Find("healthBar");
-        healthSlider = healthBar.GetComponent<Slider>();
-        healthSlider.maxValue = health;
-        healthSlider.value = health;
+        // Get the player as target
+        target = GameObject.Find("player").transform;
+        rb = GetComponent<Rigidbody>();
+
 
         // Rigidbody and rays
-        rb = GetComponent<Rigidbody>();
         ray = new Ray();
 
         if (ray_centre != null)
@@ -97,8 +94,21 @@ public class EnemyBehaviour : MonoBehaviour
             ray.origin = ray_centre.position;
         }
 
-        // Get the player as target
-        target = GameObject.Find("player").transform;
+        // They cast down no matter what
+        ledge_ray = new Ray();
+        ledge_ray.direction = -transform.up;
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        textCounter = enemiesLeftText.GetComponent<EnemiesLeftCounter>();
+        textCounter.add();
+        Transform healthBarCanvas = gameObject.transform.Find("healthBarCanvas");
+        healthBar = healthBarCanvas.gameObject.transform.Find("healthBar");
+        healthSlider = healthBar.GetComponent<Slider>();
+        healthSlider.maxValue = health;
+        healthSlider.value = health;
 
         // A Forward Raycast to see in front of itself
         current_ray_dist = max_ray_dist;
@@ -106,21 +116,14 @@ public class EnemyBehaviour : MonoBehaviour
         // Downward ray cast to check its sides
         drop_check = drop_cast_dist;
 
-        // They cast down no matter what
-        ledge_ray = new Ray();
-        ledge_ray.direction = -transform.up;
-
         // Attack Timer
         attack_timer = attack_duration;
 
         // Shoot Cooldown
         shoot_timer = shoot_cooldown;
 
-        // Attack
-        sword.SetActive(false);
-
         // Animator
-        animator = GetComponent<Animator>();
+        
     }
 
     // Update is called once per frame
@@ -197,8 +200,7 @@ public class EnemyBehaviour : MonoBehaviour
     void shoot()
     {
         // Begin shooting
-        if (animator.GetBool("Shooting"))
-            animator.SetBool("Shooting", true);
+        
 
 
         if (!is_shooting && shoot_timer == shoot_cooldown)
@@ -230,15 +232,13 @@ public class EnemyBehaviour : MonoBehaviour
     {
         if (!is_attacking)
         {
-            sword.transform.rotation = Quaternion.identity;
             is_attacking = true;
-            sword.SetActive(true);
         }
 
       if (is_attacking)
         {
             attack_timer -= 1.0f * Time.deltaTime;
-            attackSwing();
+    
             // When it hit's something
             if (Physics.SphereCast(hit_transform.position, hit_range, hit_transform.right, out hit, hit_range, attack_layer.value))
             {
@@ -247,31 +247,14 @@ public class EnemyBehaviour : MonoBehaviour
                 {
                     hit.collider.gameObject.GetComponent<Rigidbody>().AddForce(transform.right * 5.0f);
                 }
-            } 
-       
+            }     
         }
         else if (!is_attacking || attack_timer <= 0.0f)
         {
-            sword.transform.eulerAngles = new Vector3(0, 0, 0.0f);
             is_attacking = false;
-            sword.SetActive(false);
             attack_timer = attack_duration;
         }       
     }
-
-    void attackSwing()
-    {
-        float current_z = sword.transform.eulerAngles.z;
-        if (current_z > -90.0f)
-        {
-            sword.transform.Rotate(new Vector3(0.0f, 0.0f, 10.0f) * Time.deltaTime);
-        }
-        else
-        {
-            sword.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
-        }
-    }
-
 
     /// <summary>
     /// Look in front of itself
@@ -331,11 +314,7 @@ public class EnemyBehaviour : MonoBehaviour
     /// Move towards the player
     /// </summary>
     void moveToPlayer()
-    {
-        // See the player, then get dat mudderfuker!!!
-        if (!animator.GetBool(0))
-            animator.SetBool(0, true);
-
+    { 
         Vector2 move_velocity = (target.position - transform.position).normalized;
         
         rb.AddForce(move_velocity * speed * Time.deltaTime, ForceMode.VelocityChange);
@@ -346,17 +325,14 @@ public class EnemyBehaviour : MonoBehaviour
     /// </summary>
     void walkForNothing()
     {
-        // If it isn't running yet, run B*TCH, runnn!!!!
-        if (!animator.GetBool(0))
-            animator.SetBool(0, true);
-
         // Update the downwards cast
         if (ray_centre != null)
             ledge_ray.origin = ray_centre.position + (transform.right * ray_offset);
         else
             ledge_ray.origin = transform.position + (transform.right * ray_offset);
-        // Debug.DrawRay(ledge_ray.origin, ledge_ray.direction, Color.red);
 
+        // In case ledge ray isn't pointing down
+        // ledge_ray.direction = -transform.up;
 
         // If it doesn't hit anything
         if (!Physics.Raycast(ledge_ray, out hit, drop_cast_dist))
@@ -378,6 +354,7 @@ public class EnemyBehaviour : MonoBehaviour
 
     void die()
     {
+        textCounter.subtract();
         Destroy(gameObject);
     }
 
@@ -400,24 +377,6 @@ public class EnemyBehaviour : MonoBehaviour
             rb.AddForce(other.gameObject.transform.forward * knockback, ForceMode.Impulse);
             health--;
             healthSlider.value = health;
-        }
-    }
-
-    /// <summary>
-    /// Used to play animations based on current state
-    /// </summary>
-    void running(STATE a_behaviour)
-    {
-        switch(a_behaviour)
-        {
-            case 0:
-                if (!animator.GetBool(0))
-                    animator.SetBool(0, true);
-                break;
-            case STATE.CHASING:
-                if (!animator.GetBool(0))
-                    animator.SetBool(0, true);
-                break;
         }
     }
 
