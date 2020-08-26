@@ -1,9 +1,3 @@
-
-﻿using UnityEngine;
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-// using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 
@@ -30,8 +24,8 @@ public class grapplingHook : MonoBehaviour
     //are changed in another script
     [HideInInspector]
     public bool extending;
-    [HideInInspector]
-    public Rigidbody playerRB;
+    private Rigidbody playerRB;
+    private Rigidbody rb;
     [HideInInspector]
     public bool isEnemyGrabbed;
     [HideInInspector]
@@ -45,13 +39,16 @@ public class grapplingHook : MonoBehaviour
     private float hold;
 
     private Collider collide;
-    private float playerZ;
     public float grapplePullToWallForce;
     public float grapplePullEnemyForce;
+    private LineRenderer lRend;
+
     // Start is called before the first frame update
     void Start()
     {
         parent = gameObject.transform.parent.gameObject;
+        lRend = transform.GetComponent<LineRenderer>();
+        rb = transform.GetComponent<Rigidbody>();
         playerRB = player.GetComponent<Rigidbody>();
         collide = gameObject.GetComponent<Collider>();
         collide.enabled = false;
@@ -60,7 +57,6 @@ public class grapplingHook : MonoBehaviour
         active = false;
         isEnemyGrabbed = false;
         parent.transform.position = player.transform.position;
-        playerZ = player.transform.position.z;
     }
 
     // Update is called once per frame
@@ -68,23 +64,13 @@ public class grapplingHook : MonoBehaviour
     {
         //moves grapple to player position
         parent.transform.position = player.transform.position + (playerCamera.transform.forward * grappleDistFromPlayer);
+        //sets the line renderer to draw between the hook and parent
+        lRend.SetPosition(0, parent.transform.position);
+        lRend.SetPosition(1, transform.position);
+        //the distance from the parent to the hook
+        Vector3 distanceParentToPointVec = parent.transform.position - transform.position;
+        float distanceFormParentToPointFloat = distanceParentToPointVec.magnitude;
 
-
-        //extending and returning grapple
-        if (parent.transform.localScale.z > maxLength * 10)
-        {
-            extending = false;
-            collide.enabled = false;
-        }
-        else if (parent.transform.localScale.z < 0.1f)
-        {
-            isEnemyGrabbed = false;
-            wallGrabbed = false; 
-            extending = true;
-            active = false;
-        }
-
-        //is a grapple currently being shot out
         if (!active)
         {
             //gets a new spot to shoot a grapple towards
@@ -95,33 +81,40 @@ public class grapplingHook : MonoBehaviour
 
                 if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100))
                 {
-                    collide.enabled = true;
-                    active = true; // grapple exists
-                    extending = true; // grapple is extending
                     Vector3 destination = hit.point; // position clicked
                     //make grapple face position clicked to it can extend properly
                     parent.gameObject.transform.LookAt(new Vector3(destination.x, destination.y, transform.position.z));
+                    collide.enabled = true;
+                    active = true; // grapple exists
+                    extending = true; // grapple is extending
+                    rb.isKinematic = false;
                 }
             }
         }
-        //grapple exists
-        if (active)
+
+        if (distanceFormParentToPointFloat > maxLength)
         {
-            if (extending) // growing
-            {
-                parent.transform.localScale += new Vector3(0, 0, extendRate) * 10 * Time.deltaTime;
-            }
-            else if (!extending)//shrinking
-            {
-                parent.transform.localScale += new Vector3(0, 0, -extendRate) * 10 * Time.deltaTime;
-            }
-            //stops negative scale values
-            if (parent.transform.localScale.z < 0)
-            {
-                parent.transform.localScale = new Vector3(1, 1, 0.01f);
-                active = false;
-            }
+            extending = false;
+            collide.enabled = false;
+            //Debug.Log("extending too far"); 
+            //Debug.Log(hold);
         }
+        else if (!extending)
+        {
+            rb.isKinematic = true;
+            Vector3 toTarget = (parent.transform.position - transform.position).normalized;
+            if (Vector3.Dot(toTarget, transform.right) > 0) // checks if the parents position is in front of the hook
+            {
+                Debug.Log("parent is in front of this game object.");
+                isEnemyGrabbed = false;
+                wallGrabbed = false; 
+                active = false;
+                transform.position = parent.transform.position;
+            }
+                //rb.MovePosition(parent.transform.position);
+        }
+        //is a grapple currently being shot out
+        //grapple exists
 
         //grabbing enemy/wall
         if (!extending)//if shrinking
@@ -135,6 +128,23 @@ public class grapplingHook : MonoBehaviour
             {
                 //pulls player to wall
                 playerPullToWall();
+            }
+        }
+    }
+    private void FixedUpdate()
+    {
+        if (active)
+        {
+            if (extending) // growing
+            {
+                //rb.MovePosition(transform.position + (transform.right * extendRate * Time.deltaTime));
+                transform.position += parent.transform.forward * extendRate * Time.deltaTime;
+            }
+            else if (!extending)//shrinking
+            {
+
+                //rb.MovePosition(transform.position - (transform.right * extendRate * Time.deltaTime));
+                transform.position -= parent.transform.forward * extendRate * Time.deltaTime;
             }
         }
 

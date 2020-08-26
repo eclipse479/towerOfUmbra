@@ -195,7 +195,7 @@ public class playerController1 : MonoBehaviour
                     antiBumpForceTimer = -1;
                     groundedDelay = maxGroundedDelay;
                 }
-                if(Input.GetKeyDown(KeyCode.M)) //delete this later
+                if(Input.GetKeyDown(KeyCode.N)) //delete this later
                 {
                     //insert test code here
                     rb.MovePosition(new Vector3(72.51f, 9.5f, 0.5f));
