@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1417503690
 RectTransform:
   m_ObjectHideFlags: 0
@@ -95,7 +95,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &46641205183032717
 RectTransform:
   m_ObjectHideFlags: 0
@@ -108,7 +108,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7743204380419602790}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -167,7 +167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ea8468a9fdd7ad43aea979799263102, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  completeCanvas: {fileID: 3776825321833326709}
+  completeCanvas: {fileID: 0}
   gamePlayScreen: {fileID: 7743204379176393206}
 --- !u!1 &7743204379789341729
 GameObject:
@@ -186,7 +186,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7743204379789341728
 RectTransform:
   m_ObjectHideFlags: 0
@@ -279,9 +279,9 @@ RectTransform:
   - {fileID: 7743204379789341728}
   - {fileID: 7743204380573309873}
   - {fileID: 1417503690}
-  - {fileID: 3776825321833326710}
   - {fileID: 5677281272060389232}
   - {fileID: 46641205183032717}
+  - {fileID: 8949066934622770842}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -367,7 +367,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7743204380573309873
 RectTransform:
   m_ObjectHideFlags: 0
@@ -427,7 +427,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 'Combo: '
---- !u!1001 &4101480541492000370
+--- !u!1001 &8121081645554960542
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -472,7 +472,7 @@ PrefabInstance:
     - target: {fileID: 901450331074715140, guid: 6818a2a01a853ac4289004835fd5ac7b,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 901450331074715140, guid: 6818a2a01a853ac4289004835fd5ac7b,
         type: 3}
@@ -546,17 +546,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6818a2a01a853ac4289004835fd5ac7b, type: 3}
---- !u!224 &3776825321833326710 stripped
+--- !u!224 &8949066934622770842 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 901450331074715140, guid: 6818a2a01a853ac4289004835fd5ac7b,
     type: 3}
-  m_PrefabInstance: {fileID: 4101480541492000370}
-  m_PrefabAsset: {fileID: 0}
---- !u!223 &3776825321833326709 stripped
-Canvas:
-  m_CorrespondingSourceObject: {fileID: 901450331074715143, guid: 6818a2a01a853ac4289004835fd5ac7b,
-    type: 3}
-  m_PrefabInstance: {fileID: 4101480541492000370}
+  m_PrefabInstance: {fileID: 8121081645554960542}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &9012027521909043470
 PrefabInstance:
@@ -603,7 +597,7 @@ PrefabInstance:
     - target: {fileID: 3735989278041020030, guid: b4524d14459b03749bbc1c686f7299d7,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3735989278041020030, guid: b4524d14459b03749bbc1c686f7299d7,
         type: 3}
@@ -674,6 +668,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: FancyHealthBar
+      objectReference: {fileID: 0}
+    - target: {fileID: 3735989278041020031, guid: b4524d14459b03749bbc1c686f7299d7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b4524d14459b03749bbc1c686f7299d7, type: 3}
