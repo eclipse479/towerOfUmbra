@@ -27,11 +27,15 @@ Transform:
   m_LocalPosition: {x: -106.126366, y: 0.3499617, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+<<<<<<< Updated upstream
   - {fileID: 1056725837482407459}
+=======
+  - {fileID: 8550241606866352173}
+>>>>>>> Stashed changes
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &3201964007821158038
+--- !u!1001 &6083545818874325144
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -46,7 +50,7 @@ PrefabInstance:
     - target: {fileID: 2505575618823426229, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -11
+      value: -31
       objectReference: {fileID: 0}
     - target: {fileID: 2505575618823426229, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
@@ -101,7 +105,7 @@ PrefabInstance:
     - target: {fileID: 2670188232278295026, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_Name
-      value: 20x2x2_Cave_Platform (1)
+      value: 20x2x2_Cave_Platform
       objectReference: {fileID: 0}
     - target: {fileID: 5831865625112323489, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
@@ -110,6 +114,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
+<<<<<<< Updated upstream
       propertyPath: m_SelectedFaces.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -212,81 +217,295 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Positions.Array.data[16].y
       value: 1.999999
+=======
+      propertyPath: m_SelectedFaces.Array.data[0]
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_SelectedEdges.Array.data[0].a
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_SelectedEdges.Array.data[0].b
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_SelectedEdges.Array.data[1].a
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_SelectedEdges.Array.data[1].b
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_SelectedEdges.Array.data[2].a
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_SelectedEdges.Array.data[2].b
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_SelectedEdges.Array.data[3].a
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_SelectedEdges.Array.data[3].b
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_SelectedVertices.Array.data[0]
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_SelectedVertices.Array.data[1]
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_SelectedVertices.Array.data[2]
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_SelectedVertices.Array.data[3]
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_Positions.Array.data[0].x
+      value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_Positions.Array.data[0].y
+      value: -0.00000092763764
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_Positions.Array.data[2].x
+      value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_Positions.Array.data[2].y
+      value: 1.9999992
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_Positions.Array.data[9].x
+      value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_Positions.Array.data[9].y
+      value: -0.00000092763764
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_Positions.Array.data[11].x
+      value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_Positions.Array.data[11].y
+      value: 1.9999992
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_Positions.Array.data[12].x
+      value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_Positions.Array.data[12].y
+      value: -0.00000092763764
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_Positions.Array.data[13].x
+      value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_Positions.Array.data[13].y
+      value: -0.00000092763764
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_Positions.Array.data[14].x
+      value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_Positions.Array.data[14].y
+      value: 1.9999992
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_Positions.Array.data[15].x
+      value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_Positions.Array.data[15].y
+      value: 1.9999992
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_Positions.Array.data[16].x
+      value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_Positions.Array.data[16].y
+      value: 1.9999992
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_Positions.Array.data[18].x
+<<<<<<< Updated upstream
       value: -30.000008
+=======
+      value: -30
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_Positions.Array.data[18].y
+<<<<<<< Updated upstream
       value: 1.999999
+=======
+      value: 1.9999992
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_Positions.Array.data[20].x
+<<<<<<< Updated upstream
       value: -30.000008
+=======
+      value: -30
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_Positions.Array.data[20].y
+<<<<<<< Updated upstream
       value: -0.0000009276377
+=======
+      value: -0.00000092763764
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_Positions.Array.data[22].x
+<<<<<<< Updated upstream
       value: -30.000008
+=======
+      value: -30
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_Positions.Array.data[22].y
+<<<<<<< Updated upstream
       value: -0.0000009276377
+=======
+      value: -0.00000092763764
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_Textures0.Array.data[0].x
+<<<<<<< Updated upstream
       value: 30.000008
+=======
+      value: 30
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_Textures0.Array.data[0].y
+<<<<<<< Updated upstream
       value: -0.0000009276377
+=======
+      value: -0.00000092763764
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_Textures0.Array.data[2].x
+<<<<<<< Updated upstream
       value: 30.000008
+=======
+      value: 30
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_Textures0.Array.data[2].y
+<<<<<<< Updated upstream
       value: 1.999999
+=======
+      value: 1.9999992
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_Textures0.Array.data[9].x
+<<<<<<< Updated upstream
       value: -30.000008
+=======
+      value: -30
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_Textures0.Array.data[9].y
+<<<<<<< Updated upstream
       value: -0.0000009276377
+=======
+      value: -0.00000092763764
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_Textures0.Array.data[11].x
+<<<<<<< Updated upstream
       value: -30.000008
+=======
+      value: -30
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_Textures0.Array.data[11].y
+<<<<<<< Updated upstream
       value: 1.999999
+=======
+      value: 1.9999992
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_Textures0.Array.data[12].y
+<<<<<<< Updated upstream
       value: -0.0000009276377
+=======
+      value: -0.00000092763764
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
@@ -296,22 +515,38 @@ PrefabInstance:
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_Textures0.Array.data[13].y
+<<<<<<< Updated upstream
       value: -0.0000009276377
+=======
+      value: -0.00000092763764
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_Textures0.Array.data[14].y
+<<<<<<< Updated upstream
       value: 1.999999
+=======
+      value: 1.9999992
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_Textures0.Array.data[15].y
+<<<<<<< Updated upstream
       value: 1.999999
+=======
+      value: 1.9999992
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_Textures0.Array.data[16].x
+<<<<<<< Updated upstream
       value: -30.000006
+=======
+      value: -29.999998
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
@@ -321,7 +556,11 @@ PrefabInstance:
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_Textures0.Array.data[18].x
+<<<<<<< Updated upstream
       value: -30.000006
+=======
+      value: -29.999998
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
@@ -331,51 +570,88 @@ PrefabInstance:
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_Textures0.Array.data[20].x
+<<<<<<< Updated upstream
       value: 30.000008
+=======
+      value: 30
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_Textures0.Array.data[22].x
+<<<<<<< Updated upstream
       value: 30.000008
+=======
+      value: 30
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_Tangents.Array.data[16].y
+<<<<<<< Updated upstream
       value: 0.0000012922285
+=======
+      value: 0.0000012898445
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_Tangents.Array.data[17].y
+<<<<<<< Updated upstream
       value: 0.0000012922285
+=======
+      value: 0.0000012898445
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_Tangents.Array.data[18].y
+<<<<<<< Updated upstream
       value: 0.0000012922285
+=======
+      value: 0.0000012898445
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_Tangents.Array.data[19].y
+<<<<<<< Updated upstream
       value: 0.0000012922285
+=======
+      value: 0.0000012898445
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_Tangents.Array.data[20].y
+<<<<<<< Updated upstream
       value: -0.0000012340577
+=======
+      value: -0.0000012340579
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_Tangents.Array.data[21].y
+<<<<<<< Updated upstream
       value: -0.0000012340577
+=======
+      value: -0.0000012340579
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_Tangents.Array.data[22].y
+<<<<<<< Updated upstream
       value: -0.0000012340577
+=======
+      value: -0.0000012340579
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
       propertyPath: m_Tangents.Array.data[23].y
+<<<<<<< Updated upstream
       value: -0.0000012340577
       objectReference: {fileID: 0}
     - target: {fileID: 8536950176326388299, guid: 7b0d36f12e4fa1d448acb46435954788,
@@ -442,6 +718,9 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SelectedVertices.Array.data[3]
       value: 15
+=======
+      value: -0.0000012340579
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7b0d36f12e4fa1d448acb46435954788, type: 3}
