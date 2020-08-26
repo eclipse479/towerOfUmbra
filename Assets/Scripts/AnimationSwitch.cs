@@ -17,16 +17,35 @@ public class AnimationSwitch : MonoBehaviour
     EnemyBehaviour state;
     Animator animation;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
         state = GetComponent<EnemyBehaviour>();
-        animation = GetComponent<Animator>();
+        animation = GetComponentInChildren<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        // Check to see which actions are being performed
+        switch (state.State)
+        {
+            case EnemyBehaviour.STATE.SHOOT:
+                
+                animation.SetTrigger("Shoot");
+                break;
+            case EnemyBehaviour.STATE.ATTACK:
+                    animation.SetTrigger("Attack");
+                break;
+            case EnemyBehaviour.STATE.CHASING:
+                    animation.SetBool("Walk", true);
+                break;
+            case EnemyBehaviour.STATE.WALKING:
+                    animation.SetBool("Walk", true);
+                break;
+            default:
+                animation.SetBool("Walk", false);
+                animation.SetBool("Idle", true);
+                break;
+        }
     }
 }

@@ -13,6 +13,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -85,7 +86,6 @@ public class EnemyBehaviour : MonoBehaviour
         target = GameObject.Find("player").transform;
         rb = GetComponent<Rigidbody>();
 
-
         // Rigidbody and rays
         ray = new Ray();
 
@@ -97,6 +97,12 @@ public class EnemyBehaviour : MonoBehaviour
         // They cast down no matter what
         ledge_ray = new Ray();
         ledge_ray.direction = -transform.up;
+
+        Transform healthBarCanvas = gameObject.transform.Find("healthBarCanvas");
+        healthBar = healthBarCanvas.gameObject.transform.Find("healthBar");
+        healthSlider = healthBar.GetComponent<Slider>();
+        healthSlider.maxValue = health;
+        healthSlider.value = health;
     }
 
     // Start is called before the first frame update
@@ -104,12 +110,7 @@ public class EnemyBehaviour : MonoBehaviour
     {
         textCounter = enemiesLeftText.GetComponent<EnemiesLeftCounter>();
         textCounter.add();
-        Transform healthBarCanvas = gameObject.transform.Find("healthBarCanvas");
-        healthBar = healthBarCanvas.gameObject.transform.Find("healthBar");
-        healthSlider = healthBar.GetComponent<Slider>();
-        healthSlider.maxValue = health;
-        healthSlider.value = health;
-
+      
         // A Forward Raycast to see in front of itself
         current_ray_dist = max_ray_dist;
 
@@ -154,14 +155,16 @@ public class EnemyBehaviour : MonoBehaviour
             if (Physics.Raycast(ray.origin, target.position - transform.position, out hit, detection_range, attack_layer.value))
             {
                 if (!attackRange())
+                {
                     behaviour = STATE.SHOOT;
+                }
                 else
                     behaviour = STATE.ATTACK;
             }
         }
 
-        // Check state to determine actions
-        switch(behaviour)
+        //// Check state to determine actions
+        switch (behaviour)
         {
             case 0: // Walking or patroling
                 walkForNothing();
@@ -173,7 +176,6 @@ public class EnemyBehaviour : MonoBehaviour
                 attack();
                 break;
             case (STATE)3: // Shoot
-                shoot();
                 break;
             default:
                 behaviour = STATE.WALKING;
@@ -182,10 +184,10 @@ public class EnemyBehaviour : MonoBehaviour
 
         // How far is the player from the enemy
         detectionZone();
-     
+
         if (lineOfSight(ray))
         {
-            behaviour = STATE.CHASING; 
+            behaviour = STATE.CHASING;
         }
 
         if (health <= 0.0f)
@@ -199,11 +201,6 @@ public class EnemyBehaviour : MonoBehaviour
     /// </summary>
     void shoot()
     {
-        // Begin shooting
-        if (animator.GetBool("Shooting"))
-            animator.SetBool("Shooting", true);
-
-
         if (!is_shooting && shoot_timer == shoot_cooldown)
         {
             is_shooting = true;
@@ -211,17 +208,6 @@ public class EnemyBehaviour : MonoBehaviour
                 Instantiate(bullet, ray_centre.position + transform.right, transform.rotation);
             else
                 Instantiate(bullet, transform.position + transform.right, transform.rotation);
-        }
-
-        if (is_shooting)
-        {
-            shoot_timer -= 2.0f * Time.deltaTime;
-        }
-
-        if (shoot_timer <= 0.0f)
-        {
-            shoot_timer = shoot_cooldown;
-            is_shooting = false;
         }
     }
 
@@ -236,10 +222,10 @@ public class EnemyBehaviour : MonoBehaviour
             is_attacking = true;
         }
 
-      if (is_attacking)
+        if (is_attacking)
         {
             attack_timer -= 1.0f * Time.deltaTime;
-    
+
             // When it hit's something
             if (Physics.SphereCast(hit_transform.position, hit_range, hit_transform.right, out hit, hit_range, attack_layer.value))
             {
@@ -248,13 +234,13 @@ public class EnemyBehaviour : MonoBehaviour
                 {
                     hit.collider.gameObject.GetComponent<Rigidbody>().AddForce(transform.right * 5.0f);
                 }
-            }     
+            }
         }
         else if (!is_attacking || attack_timer <= 0.0f)
         {
             is_attacking = false;
             attack_timer = attack_duration;
-        }       
+        }
     }
 
     /// <summary>
@@ -276,11 +262,11 @@ public class EnemyBehaviour : MonoBehaviour
                     /* Will add State change later */
                     return true;
                 case 9:
-                  
+
                     if ((hit.point - transform.position).magnitude < min_dist && behaviour == STATE.WALKING)
-                    { 
+                    {
                         transform.right *= -1; // Turn around
-                        a_ray.direction = transform.right;      
+                        a_ray.direction = transform.right;
                     }
                     return false;
                 default:
@@ -303,7 +289,7 @@ public class EnemyBehaviour : MonoBehaviour
 
         if (distance_to_player < detect_distance)
         {
-            transform.right = new Vector3((target.position - transform.position).x, 0,0).normalized;
+            transform.right = new Vector3((target.position - transform.position).x, 0, 0).normalized;
             behaviour = STATE.CHASING;
             return true;
         }
@@ -315,9 +301,9 @@ public class EnemyBehaviour : MonoBehaviour
     /// Move towards the player
     /// </summary>
     void moveToPlayer()
-    { 
+    {
         Vector2 move_velocity = (target.position - transform.position).normalized;
-        
+
         rb.AddForce(move_velocity * speed * Time.deltaTime, ForceMode.VelocityChange);
     }
 
@@ -338,7 +324,7 @@ public class EnemyBehaviour : MonoBehaviour
         // If it doesn't hit anything
         if (!Physics.Raycast(ledge_ray, out hit, drop_cast_dist))
         {
-             transform.right *= -1;
+            transform.right *= -1;
         }
 
         rb.AddForce(transform.right * speed * Time.deltaTime, ForceMode.VelocityChange);
@@ -355,7 +341,7 @@ public class EnemyBehaviour : MonoBehaviour
 
     void die()
     {
-        textCounter.subtract();
+        // textCounter.subtract();
         Destroy(gameObject);
     }
 
@@ -381,6 +367,11 @@ public class EnemyBehaviour : MonoBehaviour
         }
     }
 
+    public STATE State
+    {
+        get { return behaviour; }
+    }
+    
 
     public enum STATE
     {
