@@ -20,7 +20,6 @@ public class EnemyBehaviour : MonoBehaviour
 {
     // Knockback
     public float knockback = 20.0f;
-
     private Transform healthBar;
     private Slider healthSlider;
     public int health;
