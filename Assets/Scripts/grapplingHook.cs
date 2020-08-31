@@ -4,32 +4,38 @@ using UnityEngine;
 public class grapplingHook : MonoBehaviour
 {
     //total length of the hook
+    [Header("GRAPPLE STATS")]
+    [Tooltip("how far the grapple can move")]
     public float maxLength;
     //how fast it extends
+    [Tooltip("how fast the grapple moves")]
     public float extendRate;
     //is the hook extended
 
     private bool active;
     //has the hook hit an enemy
     //the player
+    [Header("PLAYER STATS")]
+    [Tooltip("the player")]
     public GameObject player;
     //rotation point
+    //camera stats
+    [Tooltip("the camera that follows the player")]
+    public Camera playerCamera;
+    [Tooltip("how far the grapple is from the player")]
+    public float grappleDistFromPlayer;
+    
     private GameObject parent;
     //tip of the grappling hook(holds the enemy)
     private GameObject tip;
 
-    //camera stats
-    public Camera playerCamera;
-    public float grappleDistFromPlayer;
-    //are changed in another script
-    [HideInInspector]
-    public bool extending;
+    
+
     private Rigidbody playerRB;
     private Rigidbody rb;
-    [HideInInspector]
-    public bool isEnemyGrabbed;
-    [HideInInspector]
-    public bool wallGrabbed;
+    private bool extending;
+    private bool isEnemyGrabbed;
+    private bool wallGrabbed;
     //enemy hit by grappling hook
     [HideInInspector]
     public GameObject grabbedEnemy;
@@ -39,10 +45,13 @@ public class grapplingHook : MonoBehaviour
     private float hold;
 
     private Collider collide;
+    [Header("FORCE MULTIPLIERS")]
+    [Tooltip("force multiplier when a wall is hit with the grapple")]
     public float grapplePullToWallForce;
+    [Tooltip("force multiplier when an enemy is hit by the grapple")]
     public float grapplePullEnemyForce;
-    private LineRenderer lRend;
 
+    private LineRenderer lRend;
     // Start is called before the first frame update
     void Start()
     {
