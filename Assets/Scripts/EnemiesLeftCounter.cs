@@ -5,11 +5,13 @@ public class EnemiesLeftCounter : MonoBehaviour
 {
     private Text counterText;
     private float enemyCounter;
+    [Header("UIS")]
     [Tooltip("level complete UI")]
     public Canvas completeCanvas;
     [Tooltip("gameplay UI")]
     public Canvas gamePlayScreen;
-    [Tooltip("a wall to get disabled when there are no more enemies")]
+    [Header("PLAYER BLOCKING OBJECT")]
+    [Tooltip("a object to get disabled when there are no more enemies")]
     public GameObject playerBlockingWall;
     // Start is called before the first frame update
     void Start()

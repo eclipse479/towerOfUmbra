@@ -4,6 +4,7 @@ using UnityEngine;
 public class grapplingHook : MonoBehaviour
 {
     //total length of the hook
+    [Header("GRAPPLE STATS")]
     [Tooltip("how far the grapple can move")]
     public float maxLength;
     //how fast it extends
@@ -14,18 +15,20 @@ public class grapplingHook : MonoBehaviour
     private bool active;
     //has the hook hit an enemy
     //the player
+    [Header("PLAYER STATS")]
     [Tooltip("the player")]
     public GameObject player;
     //rotation point
+    //camera stats
+    [Tooltip("the camera that follows the player")]
+    public Camera playerCamera;
+    [Tooltip("how far the grapple is from the player")]
+    public float grappleDistFromPlayer;
+    
     private GameObject parent;
     //tip of the grappling hook(holds the enemy)
     private GameObject tip;
 
-    //camera stats
-    [Tooltip("the camera that follows the player")]
-    public Camera playerCamera;
-    [Tooltip("how far the grapple is from teh player")]
-    public float grappleDistFromPlayer;
     
 
     private Rigidbody playerRB;
@@ -42,6 +45,7 @@ public class grapplingHook : MonoBehaviour
     private float hold;
 
     private Collider collide;
+    [Header("FORCE MULTIPLIERS")]
     [Tooltip("force multiplier when a wall is hit with the grapple")]
     public float grapplePullToWallForce;
     [Tooltip("force multiplier when an enemy is hit by the grapple")]
