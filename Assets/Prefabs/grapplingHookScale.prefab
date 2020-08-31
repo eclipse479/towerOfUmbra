@@ -175,12 +175,11 @@ MonoBehaviour:
   playerCamera: {fileID: 0}
   grappleDistFromPlayer: 1.55
   extending: 0
-  playerRB: {fileID: 0}
   isEnemyGrabbed: 0
   wallGrabbed: 0
   grabbedEnemy: {fileID: 0}
   forceDirection: {x: 0, y: 0, z: 0}
-  grapplePullToWallForce: 12
+  grapplePullToWallForce: 20
   grapplePullEnemyForce: 3500
 --- !u!54 &1763213344
 Rigidbody:
@@ -208,12 +207,12 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 27b764a7956bc2f47957f01c7bf699f5,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.031
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 27b764a7956bc2f47957f01c7bf699f5,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.02
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 27b764a7956bc2f47957f01c7bf699f5,
         type: 3}
