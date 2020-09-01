@@ -5,10 +5,12 @@ using UnityEngine;
 public class LevelTrigger : MonoBehaviour
 {
     LevelLoader levelLoader;
+    EnemiesLeftCounter counter;
 
     private void Awake()
     {
         levelLoader = GameObject.Find("LevelChanger").GetComponent<LevelLoader>();
+        counter = GameObject.Find("enemiesLeft").GetComponent<EnemiesLeftCounter>();
     }
     // Start is called before the first frame update
     void Start()
@@ -19,16 +21,18 @@ public class LevelTrigger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        GameObject other = collision.gameObject;
-
-        if (other.layer == 8)
+        if (counter.EnemiesLeft == 0)
         {
-            levelLoader.LoadLevelNext();
+            GameObject other = collision.gameObject;
+
+            if (other.layer == 8)
+            {
+                levelLoader.LoadLevelNext();
+            }
         }
     }
 }
