@@ -181,9 +181,6 @@ public class EnemyBehaviour : MonoBehaviour
                 break;
         }
 
-        // How far is the player from the enemy
-        detectionZone();
-
         if (lineOfSight(ray))
         {
             behaviour = STATE.CHASING;
@@ -200,13 +197,6 @@ public class EnemyBehaviour : MonoBehaviour
     /// </summary>
     void shoot()
     {
-<<<<<<< HEAD
-=======
-        // Begin shooting
-        
-
-
->>>>>>> master
         if (!is_shooting && shoot_timer == shoot_cooldown)
         {
             is_shooting = true;

@@ -45,4 +45,9 @@ public class EnemiesLeftCounter : MonoBehaviour
         enemyCounter = list.Length;
         counterText.text = "Enemies left: " + enemyCounter;
     }
+
+    public float EnemiesLeft
+    {
+        get { return enemyCounter; }
+    }
 }
