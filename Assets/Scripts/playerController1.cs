@@ -6,73 +6,100 @@ public class playerController1 : MonoBehaviour
 {
     [SerializeField] public LayerMask platformLayerMask;
     //health variables
+    [Header("HEATH SETTINGS")]
+    [Tooltip("Text that displays health left")]
     public Text healthText;
+    [Tooltip("Player max health")]
     public float maxHealth;
     private float currentHealth;
+    //player health bar
+    [Tooltip("The health bar game object")]
+    public GameObject healthBar;
+    private Image healthbarImage;
 
 
+
+    //rigidbody
+    private Rigidbody rb;
+    //enemy collision knockback
+    [Header("KNOCKBACK")]
+    [Tooltip("How high the player is knocked when hit")]
+    public float verticalKnockBackAmount;
+    [Tooltip("How far the player is knocked when hit")]
+    public float horizontalKnockBackAmount;
+
+    [Header("SWORD SETTINGS")]
+    //the sword
+    [Tooltip("the base of the players sword")]
+    public GameObject swordBase;
+    [Tooltip("how fast the sword swings")]
+    public float swordSpeed;    // how fast the sword moves
+    private bool swordSwinging; // is sword swinging
+                          
+    [Header("COMBO COUNTER")]
+    [Tooltip("timer for the combo counter")]
+    public float maxCounterResetTimer;
+    private float comboCounterResetTimer;
+    private int hitCounter;
+    [Tooltip("combo counter text")]
+    public Text comboCounter;
+
+    //pausing
+    private bool paused;
+    [Header("UIS")]
+    [Tooltip("the pause UI")]
+    public Canvas pauseScreen;
+    [Tooltip("the in game UI")]
+    public Canvas gameplayMenu;
+    //player has no health
+    [Tooltip("the game over screen")]
+    public Canvas deathScreen;
+    
+    private bool dead;
+
+
+    [Header("PLAYER MOVEMENT")]
+    //player movement
+    [Tooltip("the players acceleration")]
+    public float speed;
+    [Tooltip("the players max horizontal movement speed")]
+    public float playerMaxMovementSpeed;
     //how much force a jump has
+    [Tooltip("How strong the player jumping is")]
     public float jumpForce;
     //is the player on the ground
     private bool grounded;
     //can player double jump
     private bool doubleJump;
+    //is player jumping
+    private bool jumping;
+    [Tooltip("how long until the player can be grounded again after jumping")]
+    public float maxGroundedDelay = 0.2f;
+    private float groundedDelay;
 
-    //rigidbody
-    private Rigidbody rb;
-    //enemy collision knockback
-    public float knockBackAmount;
-
-    //teh sword
-    public GameObject swordBase;
-    public float swordSpeed;    // how fast the sword moves
-    private bool swordSwinging; // is sword swinging
-                                // Start is called before the first frame update
-                                //combo Counter
-    public float maxCounterResetTimer;
-    private float comboCounterResetTimer;
-    private int hitCounter;
-    public Text comboCounter;
-
-    //pausing
-    private bool paused;
-    public Canvas pauseScreen;
-    public Canvas gameplayMenu;
-
-    //player has no health
-    public Canvas deathScreen;
-    private bool dead;
-
-    //player health bar
-    public GameObject healthBar;
-    private Image healthbarImage;
-
-    //temp player speed text
-    public Text deleteThisLater;
-
-    //player movement
-    public float speed;
-    public float playerMaxMovementSpeed;
-
-    //variable for checking if player is grounded
-    public float boxCastMaxDistance = 1;
-    private RaycastHit boxHit;
 
     //collider that the physics material is on so friction can be changed
     private Collider collide;
+    [Tooltip("force applied to keep the player on the ground at slopes")]
     public float antiSlopeBumpForce = 0.75f;
 
-    private RaycastHit floorCheckRay;
-    RaycastHit inFrontOfPlayer;
 
-    //is player jumping
-    private bool jumping;
-    private float groundedDelay;
-    public float maxGroundedDelay = 0.2f;
+
     //timer for how long the force is applied
     private float maxAntiBumpForceTimer = 0.3f;
     private float antiBumpForceTimer;
+    [Header("OTHER")]
+    [Tooltip("increase in gravity 0 -> normal 1 -> double")]
     public float gravityIncrease = 0;
+    //variable for checking if player is grounded
+    [Tooltip("how far the box cast is sent downward")]
+    public float boxCastMaxDistance = 1;
+    private RaycastHit boxHit;
+    private RaycastHit floorCheckRay;
+    RaycastHit inFrontOfPlayer;
+    //temp player speed text
+    [Tooltip("Text used for debugging")]
+    public Text deleteThisLater;
     void Start()
     {
         dead = false;
@@ -195,7 +222,7 @@ public class playerController1 : MonoBehaviour
                     antiBumpForceTimer = -1;
                     groundedDelay = maxGroundedDelay;
                 }
-                if(Input.GetKeyDown(KeyCode.M)) //delete this later
+                if(Input.GetKeyDown(KeyCode.N)) //delete this later
                 {
                     //insert test code here
                     rb.MovePosition(new Vector3(72.51f, 9.5f, 0.5f));
@@ -367,7 +394,7 @@ public class playerController1 : MonoBehaviour
         {
             rb.AddForce(transform.up, ForceMode.Impulse);
         }
-        rb.AddForce(knockBackDirection * knockBackAmount, ForceMode.Impulse);
+        rb.AddForce(knockBackDirection * horizontalKnockBackAmount, ForceMode.Impulse);
     }
     /// <summary>
     /// player has run out of health and has died

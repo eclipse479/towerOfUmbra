@@ -21,7 +21,6 @@ public class EnemyBehaviour : MonoBehaviour
 {
     // Knockback
     public float knockback = 20.0f;
-
     private Transform healthBar;
     private Slider healthSlider;
     public int health;
@@ -124,7 +123,7 @@ public class EnemyBehaviour : MonoBehaviour
         shoot_timer = shoot_cooldown;
 
         // Animator
-        animator = GetComponent<Animator>();
+        
     }
 
     // Update is called once per frame
@@ -201,6 +200,13 @@ public class EnemyBehaviour : MonoBehaviour
     /// </summary>
     void shoot()
     {
+<<<<<<< HEAD
+=======
+        // Begin shooting
+        
+
+
+>>>>>>> master
         if (!is_shooting && shoot_timer == shoot_cooldown)
         {
             is_shooting = true;

@@ -21,7 +21,7 @@ public class PrototypeGameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(restartKey))
         {
-            SceneManager.LoadScene(0);
+            SceneManager.LoadScene(1);
         }
 
         if (Input.GetKeyDown(QuitKey))
