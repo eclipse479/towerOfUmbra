@@ -29,15 +29,15 @@ public class EnemiesLeftCounter : MonoBehaviour
             if(playerBlockingWall != null)
             {
                 playerBlockingWall.SetActive(false);
-                counterText.text = "all enemies have been slain";
             }
+            counterText.text = "all enemies have been slain";
         }
     }
 
     public void add()
     {
         enemyCounter++;
-        //counterText.text = "Enemies left: " + enemyCounter;
+        counterText.text = "Enemies left: " + enemyCounter;
     }
     public void getNumberOfEnemies()
     {
