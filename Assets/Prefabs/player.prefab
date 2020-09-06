@@ -65,9 +65,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   healthText: {fileID: 0}
-  maxHealth: 10
-  jumpForce: 190
-  knockBackAmount: 7
+  maxHealth: 30
+  healthBar: {fileID: 0}
+  verticalKnockBackAmount: 0
+  horizontalKnockBackAmount: 150
   swordBase: {fileID: 8196744805440885904}
   swordSpeed: 720
   maxCounterResetTimer: 3
@@ -75,14 +76,14 @@ MonoBehaviour:
   pauseScreen: {fileID: 0}
   gameplayMenu: {fileID: 0}
   deathScreen: {fileID: 0}
-  healthBar: {fileID: 0}
-  deleteThisLater: {fileID: 0}
   speed: 200000
   playerMaxMovementSpeed: 1.5
-  boxCastMaxDistance: 1
-  antiSlopeBumpForce: 2.5
+  jumpForce: 190
   maxGroundedDelay: 0.2
+  antiSlopeBumpForce: 2.5
   gravityIncrease: 2.3
+  boxCastMaxDistance: 1
+  deleteThisLater: {fileID: 0}
 --- !u!54 &1663090885067405997
 Rigidbody:
   m_ObjectHideFlags: 0
