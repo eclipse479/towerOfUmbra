@@ -386,15 +386,16 @@ public class playerController1 : MonoBehaviour
 
         direction.Normalize();
 
-        Vector3 knockBackDirection = direction + transform.up;
         //remove current velocity then knocks back player
         rb.velocity = Vector3.zero;
+
+        Vector3 knockBackDirection = new Vector3(direction.x * horizontalKnockBackAmount, direction.y * verticalKnockBackAmount, 0);
         //if on ground push off ground(so friction with floor is removed)
         if (grounded)
         {
             rb.AddForce(transform.up, ForceMode.Impulse);
         }
-        rb.AddForce(knockBackDirection * horizontalKnockBackAmount, ForceMode.Impulse);
+        rb.AddForce(knockBackDirection, ForceMode.Impulse);
     }
     /// <summary>
     /// player has run out of health and has died
