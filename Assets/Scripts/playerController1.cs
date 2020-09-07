@@ -67,6 +67,9 @@ public class playerController1 : MonoBehaviour
     //how much force a jump has
     [Tooltip("How strong the player jumping is")]
     public float jumpForce;
+    [Tooltip("movement force multiplier when the player is not grounded")]
+    [Range(0,1)]
+    public float airMovementMultiplier = 0.75f;
     //is the player on the ground
     private bool grounded;
     //can player double jump
