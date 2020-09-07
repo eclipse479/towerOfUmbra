@@ -67,6 +67,9 @@ public class playerController1 : MonoBehaviour
     //how much force a jump has
     [Tooltip("How strong the player jumping is")]
     public float jumpForce;
+    [Tooltip("movement force multiplier when the player is not grounded")]
+    [Range(0,1)]
+    public float airMovementMultiplier = 0.75f;
     //is the player on the ground
     private bool grounded;
     //can player double jump
@@ -386,15 +389,16 @@ public class playerController1 : MonoBehaviour
 
         direction.Normalize();
 
-        Vector3 knockBackDirection = direction + transform.up;
         //remove current velocity then knocks back player
         rb.velocity = Vector3.zero;
+
+        Vector3 knockBackDirection = new Vector3(direction.x * horizontalKnockBackAmount, direction.y * verticalKnockBackAmount, 0);
         //if on ground push off ground(so friction with floor is removed)
         if (grounded)
         {
             rb.AddForce(transform.up, ForceMode.Impulse);
         }
-        rb.AddForce(knockBackDirection * horizontalKnockBackAmount, ForceMode.Impulse);
+        rb.AddForce(knockBackDirection, ForceMode.Impulse);
     }
     /// <summary>
     /// player has run out of health and has died
