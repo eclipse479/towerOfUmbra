@@ -29,8 +29,8 @@ public class EnemiesLeftCounter : MonoBehaviour
             if(playerBlockingWall != null)
             {
                 playerBlockingWall.SetActive(false);
+                counterText.text = "all enemies have been slain";
             }
-            counterText.text = "all enemies have been slain";
         }
     }
 

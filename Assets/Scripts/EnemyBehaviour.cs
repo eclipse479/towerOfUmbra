@@ -337,7 +337,7 @@ public class EnemyBehaviour : MonoBehaviour
 
     void die()
     {
-        textCounter.subtract();
+        // textCounter.subtract();
         Destroy(gameObject);
     }
 

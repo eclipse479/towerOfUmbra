@@ -7,8 +7,6 @@ public class LevelTrigger : MonoBehaviour
     LevelLoader levelLoader;
     EnemiesLeftCounter counter;
 
-    float count;
-
     private void Awake()
     {
         levelLoader = GameObject.Find("LevelChanger").GetComponent<LevelLoader>();
@@ -27,7 +25,7 @@ public class LevelTrigger : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-       if (count == 0)
+        if (counter.EnemiesLeft == 0)
         {
             GameObject other = collision.gameObject;
 
