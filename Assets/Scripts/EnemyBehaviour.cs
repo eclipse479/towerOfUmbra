@@ -2,7 +2,7 @@
  * Script: Enemy Behaviour
  * Author: Nixon Sok
  * 
- * Purpose: A state machine that dictates the enemy's actions
+ * Purpose: A state machine that dictates the enemy's actions and affects enemy counter
  * 
  * Defieciencies: Doesn't work with NavMesh yet.
  * 
@@ -337,7 +337,7 @@ public class EnemyBehaviour : MonoBehaviour
 
     void die()
     {
-        // textCounter.subtract();
+        textCounter.subtract();
         Destroy(gameObject);
     }
 

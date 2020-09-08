@@ -37,7 +37,7 @@ public class EnemiesLeftCounter : MonoBehaviour
     public void add()
     {
         enemyCounter++;
-        //counterText.text = "Enemies left: " + enemyCounter;
+        counterText.text = "Enemies left: " + enemyCounter;
     }
     public void getNumberOfEnemies()
     {
