@@ -189,7 +189,7 @@ public class playerController1 : MonoBehaviour
                     if (grounded)
                         rb.AddForce(transform.forward * speed * Time.deltaTime, ForceMode.Force);
                     else
-                        rb.AddForce(transform.forward * speed * Time.deltaTime * airMovementMultiplier, ForceMode.VelocityChange);
+                        rb.AddForce(transform.forward * speed * Time.deltaTime * airMovementMultiplier, ForceMode.Force);
                 }
                 if (Input.GetKey(KeyCode.LeftArrow) && !swordSwinging || Input.GetKey(KeyCode.A) && !swordSwinging)
                 {
@@ -199,7 +199,7 @@ public class playerController1 : MonoBehaviour
                     transform.eulerAngles = new Vector3(0, 90, 0);
                     //move player
                     if (grounded)//player movement on the ground
-                        rb.AddForce(transform.forward * speed * Time.deltaTime,ForceMode.VelocityChange);
+                        rb.AddForce(transform.forward * speed * Time.deltaTime,ForceMode.Force);
                     else // slower acceleration while in the air
                         rb.AddForce(transform.forward * speed * Time.deltaTime * airMovementMultiplier, ForceMode.Force);
                 }
