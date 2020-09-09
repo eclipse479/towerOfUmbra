@@ -11,7 +11,8 @@ public class playerController1 : MonoBehaviour
     public Text healthText;
     [Tooltip("Player max health")]
     public float maxHealth;
-    private float currentHealth;
+    [HideInInspector]
+    public float currentHealth;
     //player health bar
     [Tooltip("The health bar game object")]
     public GameObject healthBar;
@@ -175,35 +176,35 @@ public class playerController1 : MonoBehaviour
                     hitCounter = 0;
                     comboCounter.text = "Combo: " + hitCounter;
                 }
+                //keeps the player speed in check
+                speedCheck();
                 //input for the player movement
                 if (Input.GetKey(KeyCode.RightArrow) && !swordSwinging || Input.GetKey(KeyCode.D) && !swordSwinging)
                 {
                     //remove friction when running
-                    collide.material.dynamicFriction = 0.0f;
-                    collide.material.staticFriction = 0.0f;
-                    collide.material.frictionCombine = PhysicMaterialCombine.Minimum;
+                    removeFriction();
                     //change player facing direction
                     transform.eulerAngles = new Vector3(0, -90, 0);
                     //move player
                     if (grounded)
-                        rb.AddForce(transform.forward * speed * Time.deltaTime);
+                        rb.AddForce(transform.forward * speed * Time.deltaTime, ForceMode.Force);
                     else
-                        rb.AddForce(transform.forward * speed * Time.deltaTime * 0.75f);
+                        rb.AddForce(transform.forward * speed * Time.deltaTime * airMovementMultiplier, ForceMode.Force);
                 }
                 if (Input.GetKey(KeyCode.LeftArrow) && !swordSwinging || Input.GetKey(KeyCode.A) && !swordSwinging)
                 {
                     //remove friction when running
-                    collide.material.dynamicFriction = 0.0f;
-                    collide.material.staticFriction = 0.0f;
-                    collide.material.frictionCombine = PhysicMaterialCombine.Minimum;
+                    removeFriction();
                     //change player facing direction
                     transform.eulerAngles = new Vector3(0, 90, 0);
                     //move player
                     if (grounded)//player movement on the ground
-                        rb.AddForce(transform.forward * speed * Time.deltaTime);
+                        rb.AddForce(transform.forward * speed * Time.deltaTime,ForceMode.Force);
                     else // slower acceleration while in the air
-                        rb.AddForce(transform.forward * speed * Time.deltaTime * 0.75f);
+                        rb.AddForce(transform.forward * speed * Time.deltaTime * airMovementMultiplier, ForceMode.Force);
                 }
+
+
                 if (Input.GetKeyDown(KeyCode.W) && grounded) //jumps
                 {
                     //removes current vertical velocity
@@ -211,7 +212,7 @@ public class playerController1 : MonoBehaviour
                     velocityKill.y = 0;
                     rb.velocity = velocityKill;
                     //jumps
-                    rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+                    rb.AddForce(transform.up * jumpForce, ForceMode.VelocityChange);
                     jumping = true;
                     antiBumpForceTimer = -1;
                     groundedDelay = maxGroundedDelay;
@@ -222,29 +223,24 @@ public class playerController1 : MonoBehaviour
                     Vector3 velocityKill = rb.velocity;
                     velocityKill.y = 0;
                     rb.velocity = velocityKill;
-                    rb.AddForce(transform.up * jumpForce * doubleJumpForce, ForceMode.Impulse);//jump half as high
+                    rb.AddForce(transform.up * jumpForce * doubleJumpForce, ForceMode.VelocityChange);//jump half as high
                     doubleJump = false;
                     jumping = true;
                     antiBumpForceTimer = -1;
                     groundedDelay = maxGroundedDelay;
                 }
-                if(Input.GetKeyDown(KeyCode.N)) //delete this later
-                {
-                    //insert test code here
-                    rb.MovePosition(new Vector3(72.51f, 9.5f, 0.5f));
-                }
                 
                 //when movement keys are released
                 if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
                 {
-                    changeFriction();
+                    addFriction();
                 }
                 else // if any movement key is pressed
                 {
                     if (rb.velocity.x > 1 || rb.velocity.x < -1)
                     {
-                     //apply anti bump force for slopes
-                     applyAntiBump();
+                        //apply anti bump force for slopes
+                        applyAntiBump();
                     }
                 }
                 ///box cast to check if the player is grounded
@@ -273,8 +269,6 @@ public class playerController1 : MonoBehaviour
                 ///---------------------------------------------------------------------------------------------------------------------------
                 //checks ground directally beneth and in front of the player
                 groundCheck();
-                //keeps the player speed in check
-                speedCheck();
                 ///---------------------------------------------------------------------------------------------------------------------------
 
                 //swing sword
@@ -396,12 +390,12 @@ public class playerController1 : MonoBehaviour
         rb.velocity = Vector3.zero;
 
         Vector3 knockBackDirection = new Vector3(direction.x * horizontalKnockBackAmount, direction.y * verticalKnockBackAmount, 0);
-        //if on ground push off ground(so friction with floor is removed)
+        //get off ground so friction wont be taken into account
         if (grounded)
         {
-            rb.AddForce(transform.up, ForceMode.Impulse);
+            rb.AddForce(transform.up * 0.2f, ForceMode.VelocityChange);
         }
-        rb.AddForce(knockBackDirection, ForceMode.Impulse);
+        rb.AddForce(knockBackDirection, ForceMode.VelocityChange);
     }
     /// <summary>
     /// player has run out of health and has died
@@ -412,7 +406,7 @@ public class playerController1 : MonoBehaviour
         gameplayMenu.enabled = false;
         pauseScreen.enabled = false;
         deathScreen.enabled = true;
-        Time.timeScale = 0.0f;
+        addFriction();
     }
     /// <summary>
     /// checks the player speed and limits it if it exceeds the movement
@@ -431,16 +425,19 @@ public class playerController1 : MonoBehaviour
     /// <summary>
     /// increased friction to the highest possible value
     /// </summary>
-    private void changeFriction()
+    private void addFriction()
     {
-        if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
-        {
             //resets friction on player
-
             collide.material.dynamicFriction = 1.0f;
             collide.material.staticFriction = 1.0f;
             collide.material.frictionCombine = PhysicMaterialCombine.Maximum;
-        }
+    }
+    private void removeFriction()
+    {
+        //resets friction on player
+        collide.material.dynamicFriction = 0;
+        collide.material.staticFriction = 0;
+        collide.material.frictionCombine = PhysicMaterialCombine.Minimum;
     }
 
     /// <summary>
@@ -478,7 +475,7 @@ public class playerController1 : MonoBehaviour
             {
                 Debug.DrawRay(transform.position + new Vector3(0, -0.45f, 0), transform.forward, Color.black);
                 deleteThisLater.text = "APPLY THE FORCE!!! time left: " + antiBumpForceTimer;
-                rb.AddForce(-Vector3.up * antiSlopeBumpForce, ForceMode.Impulse);
+                rb.AddForce(-Vector3.up * antiSlopeBumpForce, ForceMode.VelocityChange);
             }
             else
                 Debug.DrawRay(transform.position + new Vector3(0, -0.45f, 0), transform.forward * forwardRay.distance, Color.black);
