@@ -70,6 +70,9 @@ public class playerController1 : MonoBehaviour
     [Tooltip("movement force multiplier when the player is not grounded")]
     [Range(0,1)]
     public float airMovementMultiplier = 0.75f;
+    [Tooltip("Force multiplier for the double jump, min - 0")]
+    [Min(0)]
+    public float doubleJumpForce;
     //is the player on the ground
     private bool grounded;
     //can player double jump
@@ -219,7 +222,7 @@ public class playerController1 : MonoBehaviour
                     Vector3 velocityKill = rb.velocity;
                     velocityKill.y = 0;
                     rb.velocity = velocityKill;
-                    rb.AddForce(transform.up * jumpForce * 0.5f, ForceMode.Impulse);//jump half as high
+                    rb.AddForce(transform.up * jumpForce * doubleJumpForce, ForceMode.Impulse);//jump half as high
                     doubleJump = false;
                     jumping = true;
                     antiBumpForceTimer = -1;
