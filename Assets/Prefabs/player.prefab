@@ -65,7 +65,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   healthText: {fileID: 0}
-  maxHealth: 30
+  maxHealth: 20
   healthBar: {fileID: 0}
   verticalKnockBackAmount: 0
   horizontalKnockBackAmount: 150
@@ -78,10 +78,12 @@ MonoBehaviour:
   deathScreen: {fileID: 0}
   speed: 200000
   playerMaxMovementSpeed: 1.5
-  jumpForce: 190
+  jumpForce: 160
+  airMovementMultiplier: 0.75
+  doubleJumpForce: 0.72
   maxGroundedDelay: 0.2
   antiSlopeBumpForce: 2.5
-  gravityIncrease: 2.3
+  gravityIncrease: 1.45
   boxCastMaxDistance: 1
   deleteThisLater: {fileID: 0}
 --- !u!54 &1663090885067405997
