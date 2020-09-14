@@ -175,6 +175,7 @@ public class EnemyBehaviour : MonoBehaviour
                 attack();
                 break;
             case (STATE)3: // Shoot
+                shoot();
                 break;
             default:
                 behaviour = STATE.WALKING;

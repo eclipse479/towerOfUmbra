@@ -13,11 +13,15 @@ public class EnemiesLeftCounter : MonoBehaviour
     [Header("PLAYER BLOCKING OBJECT")]
     [Tooltip("a object to get disabled when there are no more enemies")]
     public GameObject playerBlockingWall;
+
+    private void Awake()
+    {
+        counterText = gameObject.GetComponent<Text>();
+    }
     // Start is called before the first frame update
     void Start()
     {
         completeCanvas.enabled = false;
-        counterText = gameObject.GetComponent<Text>();
     }
 
     public void subtract()
