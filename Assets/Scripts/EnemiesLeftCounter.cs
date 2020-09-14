@@ -14,9 +14,17 @@ public class EnemiesLeftCounter : MonoBehaviour
     [Tooltip("a object to get disabled when there are no more enemies")]
     public GameObject playerBlockingWall;
 
+    private GameObject[] torches;
+
     private void Awake()
     {
         counterText = gameObject.GetComponent<Text>();
+        torches = GameObject.FindGameObjectsWithTag("torch");
+        //turn the torches off
+        foreach (GameObject fire in torches)
+        {
+            fire.SetActive(false);
+        }
     }
     // Start is called before the first frame update
     void Start()
@@ -35,6 +43,7 @@ public class EnemiesLeftCounter : MonoBehaviour
                 playerBlockingWall.SetActive(false);
                 counterText.text = "all enemies have been slain";
             }
+            setTorchesOnFire();
         }
     }
 
@@ -53,5 +62,13 @@ public class EnemiesLeftCounter : MonoBehaviour
     public float EnemiesLeft
     {
         get { return enemyCounter; }
+    }
+
+    private void setTorchesOnFire()
+    {
+        foreach(GameObject fire in torches)
+        {
+            fire.SetActive(true);
+        }
     }
 }

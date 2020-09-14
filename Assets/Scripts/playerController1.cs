@@ -205,7 +205,7 @@ public class playerController1 : MonoBehaviour
                 }
 
 
-                if (Input.GetKeyDown(KeyCode.W) && grounded) //jumps
+                if (Input.GetKeyDown(KeyCode.Space) && grounded) //jumps
                 {
                     //removes current vertical velocity
                     Vector3 velocityKill = rb.velocity;
@@ -217,7 +217,7 @@ public class playerController1 : MonoBehaviour
                     antiBumpForceTimer = -1;
                     groundedDelay = maxGroundedDelay;
                 }
-                else if (Input.GetKeyDown(KeyCode.W) && doubleJump) //jumps if in the air (double jump)
+                else if (Input.GetKeyDown(KeyCode.Space) && doubleJump) //jumps if in the air (double jump)
                 {
                     //removes current vertical velocity
                     Vector3 velocityKill = rb.velocity;
