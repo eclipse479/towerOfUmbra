@@ -20,8 +20,7 @@ public class camera : MonoBehaviour
         theCamera.orthographicSize = distanceFromPlayer;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void LateUpdate()
     {
         //camera follows player
         transform.position = new Vector3(player.transform.position.x - leftRight, player.transform.position.y + upDown, player.transform.position.z + distanceFromPlayer);
