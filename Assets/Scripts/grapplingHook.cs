@@ -29,7 +29,7 @@ public class grapplingHook : MonoBehaviour
     //tip of the grappling hook(holds the enemy)
     private GameObject tip;
 
-    
+    public float baseHeightIncrease;
 
     private Rigidbody playerRB;
     private Rigidbody rb;
@@ -72,7 +72,7 @@ public class grapplingHook : MonoBehaviour
     void Update()
     {
         //moves grapple to player position
-        parent.transform.position = player.transform.position + (playerCamera.transform.forward * grappleDistFromPlayer);
+        parent.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + baseHeightIncrease, player.transform.position.z) + (playerCamera.transform.forward * grappleDistFromPlayer);
         //sets the line renderer to draw between the hook and parent
         lRend.SetPosition(0, parent.transform.position);
         lRend.SetPosition(1, transform.position);

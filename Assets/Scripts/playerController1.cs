@@ -107,6 +107,10 @@ public class playerController1 : MonoBehaviour
     //temp player speed text
     [Tooltip("Text used for debugging")]
     public Text deleteThisLater;
+    
+    
+    //animations
+    private Animator ani;
     void Start()
     {
         dead = false;
@@ -134,7 +138,7 @@ public class playerController1 : MonoBehaviour
         //health bar values
         healthbarImage = healthBar.transform.GetChild(1).gameObject.GetComponent<Image>();
         currentHealth = maxHealth;
-
+        ani = GetComponentInChildren<Animator>();
     }
     void FixedUpdate()
     {
@@ -146,6 +150,7 @@ public class playerController1 : MonoBehaviour
         //pausing
         if (!dead)
         {
+            //pausing
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 if (!paused)
@@ -164,6 +169,7 @@ public class playerController1 : MonoBehaviour
                     gameplayMenu.enabled = true;
                 }
             }
+            //make sure game isn't paused for logic
             if (!paused)
             {
                 //timer for the combo counter
@@ -204,10 +210,16 @@ public class playerController1 : MonoBehaviour
                         rb.AddForce(transform.forward * speed * Time.deltaTime * airMovementMultiplier, ForceMode.Force);
                 }
 
+                //check if falling
+                if (!grounded && rb.velocity.y < 0)
+                {
+                    ani.SetBool("falling", true);
+                }
 
                 if (Input.GetKeyDown(KeyCode.Space) && grounded) //jumps
                 {
                     //removes current vertical velocity
+                    ani.SetTrigger("jumped"); // jump animation
                     Vector3 velocityKill = rb.velocity;
                     velocityKill.y = 0;
                     rb.velocity = velocityKill;
@@ -246,10 +258,12 @@ public class playerController1 : MonoBehaviour
                 ///box cast to check if the player is grounded
                 //box cast for if player is grounded and can jump
                 groundedDelay -= Time.deltaTime;
-                if (Physics.BoxCast(transform.position, new Vector3(0.125f, 0.1f, 0.125f), -transform.up, out boxHit, Quaternion.identity, boxCastMaxDistance, platformLayerMask))
+                if (Physics.BoxCast(transform.position + new Vector3(0, 1.1f, 0), new Vector3(0.125f, 0.1f, 0.125f), -transform.up, out boxHit, Quaternion.identity, boxCastMaxDistance, platformLayerMask))
                 {
                     grounded = true;
                     doubleJump = true;
+                    ani.SetBool("grounded", true);
+                    ani.SetBool("falling", false);
                     if (groundedDelay < 0)
                     {
                         jumping = false;
@@ -264,6 +278,7 @@ public class playerController1 : MonoBehaviour
                 else
                 {
                     grounded = false;
+                    ani.SetBool("grounded", false);
                 }
 
                 ///---------------------------------------------------------------------------------------------------------------------------
@@ -278,6 +293,7 @@ public class playerController1 : MonoBehaviour
                     swordSwinging = true;
                     swordBase.SetActive(true);
                     swordBase.transform.eulerAngles = gameObject.transform.eulerAngles;
+                    ani.SetTrigger("attack"); // attack animation
                 }
                 if (swordSwinging)
                 {
@@ -389,11 +405,16 @@ public class playerController1 : MonoBehaviour
         //remove current velocity then knocks back player
         rb.velocity = Vector3.zero;
 
-        Vector3 knockBackDirection = new Vector3(direction.x * horizontalKnockBackAmount, direction.y * verticalKnockBackAmount, 0);
+        if(playerX - enemyX > 0)
+        {
+
+        }
+
+        Vector3 knockBackDirection = new Vector3(horizontalKnockBackAmount, verticalKnockBackAmount, 0);
         //get off ground so friction wont be taken into account
         if (grounded)
         {
-            rb.AddForce(transform.up * 0.2f, ForceMode.VelocityChange);
+            rb.AddForce(transform.up * 0.1f, ForceMode.VelocityChange);
         }
         rb.AddForce(knockBackDirection, ForceMode.VelocityChange);
     }
@@ -421,6 +442,14 @@ public class playerController1 : MonoBehaviour
         {
             rb.velocity = new Vector3(-playerMaxMovementSpeed, rb.velocity.y, rb.velocity.z);
         }
+
+        float currentSpeed = rb.velocity.x;
+        if (currentSpeed < 0)
+        {
+            currentSpeed *= -1; // always positive
+        }
+        float speedInput = currentSpeed / playerMaxMovementSpeed;
+        ani.SetFloat("speed", speedInput);
     }
     /// <summary>
     /// increased friction to the highest possible value
