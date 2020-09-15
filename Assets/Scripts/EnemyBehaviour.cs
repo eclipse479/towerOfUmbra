@@ -20,25 +20,36 @@ using UnityEngine.UI;
 public class EnemyBehaviour : MonoBehaviour
 {
     // Knockback
+    [Header("Knockback to self")]
     public float knockback = 20.0f;
     private Transform healthBar;
     private Slider healthSlider;
+    [Header("Health Points")]
     public int health;
 
     // Where the hit box is
-    public Transform hit_transform;
+    [Header("Attack Area and Settings")]
+    public Transform hit_box;
     public float hit_range = 0.5f;
     public LayerMask attack_layer;
     RaycastHit hit;
 
     // Detecting obstacles and player
+    [Header("Enemy Detection Settings")]
     public float detection_range = 5.0f; // How far the enemy can detect the player
     public float max_ray_dist = 10.0f; // When enemy can has seen the player.
     float current_ray_dist;
+    
+    [Header("Movement Speed")]
     public float speed = 5.0f;
+
+    [Header("Target to chase")]
     public Transform target; // The player
+
     Rigidbody rb;
     Ray ray;
+
+    [Header("Centre of Enemy")]
     public Transform ray_centre;
 
     // Keep track of the player
@@ -48,29 +59,37 @@ public class EnemyBehaviour : MonoBehaviour
     // Rays to check on each side
     Ray ledge_ray;
     const int num_of_rays = 2; // There will only ever be two
+
+    [Header("Ledge detection")]
     public float ray_offset = 3.0f; // How far apart the rays are from the Player
     public float drop_cast_dist = 1.5f; // The 
 
     // Distance check for an obstacle
+    [Header("Obstacle Check Distance")]
     public float min_dist = 1.0f;
     float drop_check;
 
     // Attacking
     bool is_attacking = false;
+    bool can_attack = true;
     float attack_timer;
-    public float attack_duration = 2.0f;
+    [Header("Attack Settings")]
+    public float attack_cooldown = 2.0f;
     public float attack_range = 0.8f;
 
     // Shooting needs
+    [Header("Shooting Settings")]
     public GameObject bullet;
-    bool is_shooting = false;
     public float shoot_cooldown = 2.0f;
+    bool is_shooting = false;
+    bool can_shoot = true;
     float shoot_timer;
 
     // Switch for states
     bool is_alert;
 
     //reference to enemies left text
+    [Header("The enemy counter text")]
     public Text enemiesLeftText;
     private EnemiesLeftCounter textCounter;
     // Enemy Behaviour State
@@ -82,7 +101,7 @@ public class EnemyBehaviour : MonoBehaviour
     private void Awake()
     {
         // Get the player as target
-        target = GameObject.Find("player").transform;
+        target = GameObject.FindGameObjectWithTag("player").transform;
         rb = GetComponent<Rigidbody>();
 
         // Rigidbody and rays
@@ -102,6 +121,12 @@ public class EnemyBehaviour : MonoBehaviour
         healthSlider = healthBar.GetComponent<Slider>();
         healthSlider.maxValue = health;
         healthSlider.value = health;
+
+        // Attack Timer
+        attack_timer = attack_cooldown;
+
+        // Shoot Cooldown
+        shoot_timer = shoot_cooldown;
     }
 
     // Start is called before the first frame update
@@ -116,14 +141,7 @@ public class EnemyBehaviour : MonoBehaviour
         // Downward ray cast to check its sides
         drop_check = drop_cast_dist;
 
-        // Attack Timer
-        attack_timer = attack_duration;
-
-        // Shoot Cooldown
-        shoot_timer = shoot_cooldown;
-
-        // Animator
-        
+     
     }
 
     // Update is called once per frame
@@ -139,27 +157,29 @@ public class EnemyBehaviour : MonoBehaviour
             ray.origin = transform.position;
         }
 
-        ray.direction = transform.right;
+        ray.direction = transform.forward;
         Debug.DrawRay(ray.origin, ray.direction, Color.green);
 
-        // Is target within attack range
-        if (attackRange())
-        {
-            behaviour = STATE.ATTACK;
-        }
 
         // Has detected player but is not within attack range
         if (detectionZone())
         {
             if (Physics.Raycast(ray.origin, target.position - transform.position, out hit, detection_range, attack_layer.value))
             {
+                // Is the player isn't in melee range
                 if (!attackRange())
                 {
                     behaviour = STATE.SHOOT;
                 }
                 else
+                {
                     behaviour = STATE.ATTACK;
+                }
             }
+        }
+        else
+        {
+            behaviour = STATE.WALKING;
         }
 
         //// Check state to determine actions
@@ -171,25 +191,31 @@ public class EnemyBehaviour : MonoBehaviour
             case (STATE)1: // Chasing
                 moveToPlayer();
                 break;
-            case (STATE)2: // Attacking
+            case (STATE)2:
                 attack();
                 break;
-            case (STATE)3: // Shoot
-                shoot();
-                break;
             default:
-                behaviour = STATE.WALKING;
                 break;
         }
 
-        if (lineOfSight(ray))
-        {
-            behaviour = STATE.CHASING;
-        }
+        // Check in front of itself for obstacles or player
+        lineOfSight(ray);
 
+        // If it has no health points
         if (health <= 0.0f)
         {
             die();
+        }
+
+        // If the enemy has already attacked
+        if (!can_shoot)
+        {
+            shoot_timer -= 1 * Time.deltaTime;
+            if (shoot_timer <= 0.0f)
+            {
+                shoot_timer = shoot_cooldown;
+                can_shoot = true;
+            }
         }
     }
 
@@ -198,46 +224,51 @@ public class EnemyBehaviour : MonoBehaviour
     /// </summary>
     void shoot()
     {
-        if (!is_shooting && shoot_timer == shoot_cooldown)
+        if (ray_centre != null)
+            Instantiate(bullet, ray_centre.position + transform.forward, transform.rotation);
+        else
+            Instantiate(bullet, transform.position + transform.forward, transform.rotation);   
+    }
+
+    // For the animator events to reset shooting timer
+    void isShooting()
+    {
+        is_shooting = false;
+    }
+
+    public bool shootTimer()
+    {
+        if (shoot_timer == shoot_cooldown)
         {
-            is_shooting = true;
-            if (ray_centre != null)
-                Instantiate(bullet, ray_centre.position + transform.right, transform.rotation);
-            else
-                Instantiate(bullet, transform.position + transform.right, transform.rotation);
+            return true;
         }
+        return false;
     }
 
     /// <summary>
     /// The attacks when the player is within striking distance
     /// </summary>
-    /// <returns></returns>
     void attack()
     {
-        if (!is_attacking)
-        {
-            is_attacking = true;
-        }
-
         if (is_attacking)
         {
-            attack_timer -= 1.0f * Time.deltaTime;
+          // Check it it hits the player
+          if (Physics.SphereCast(hit_box.position, hit_range, hit_box.forward, out hit, hit_range, attack_layer))
+          {
+                GameObject player = hit.collider.gameObject;
+                Rigidbody player_rb = player.GetComponent<Rigidbody>();
 
-            // When it hit's something
-            if (Physics.SphereCast(hit_transform.position, hit_range, hit_transform.right, out hit, hit_range, attack_layer.value))
-            {
-                // Is it the player?
-                if (hit.collider.gameObject.layer == 8)
-                {
-                    hit.collider.gameObject.GetComponent<Rigidbody>().AddForce(transform.right * 5.0f);
-                }
-            }
+                player_rb.AddForce((player.transform.up + -player.transform.forward) * knockback, ForceMode.Impulse);
+
+                Debug.Log("Enemy has hit");
+          }
         }
-        else if (!is_attacking || attack_timer <= 0.0f)
-        {
-            is_attacking = false;
-            attack_timer = attack_duration;
-        }
+    }
+
+    // Allow animator to disable attack
+    void setAttack()
+    {
+           is_attacking = false;
     }
 
     /// <summary>
@@ -259,11 +290,10 @@ public class EnemyBehaviour : MonoBehaviour
                     /* Will add State change later */
                     return true;
                 case 9:
-
                     if ((hit.point - transform.position).magnitude < min_dist && behaviour == STATE.WALKING)
                     {
-                        transform.right *= -1; // Turn around
-                        a_ray.direction = transform.right;
+                        transform.forward *= -1; // Turn around
+                        a_ray.direction = transform.forward;
                     }
                     return false;
                 default:
@@ -286,11 +316,10 @@ public class EnemyBehaviour : MonoBehaviour
 
         if (distance_to_player < detect_distance)
         {
-            transform.right = new Vector3((target.position - transform.position).x, 0, 0).normalized;
+            transform.forward = new Vector3((target.position - transform.position).x, 0, 0).normalized;
             behaviour = STATE.CHASING;
             return true;
         }
-        behaviour = STATE.WALKING;
         return false;
     }
 
@@ -311,9 +340,9 @@ public class EnemyBehaviour : MonoBehaviour
     {
         // Update the downwards cast
         if (ray_centre != null)
-            ledge_ray.origin = ray_centre.position + (transform.right * ray_offset);
+            ledge_ray.origin = ray_centre.position + (transform.forward * ray_offset);
         else
-            ledge_ray.origin = transform.position + (transform.right * ray_offset);
+            ledge_ray.origin = transform.position + (transform.forward * ray_offset);
 
         // In case ledge ray isn't pointing down
         // ledge_ray.direction = -transform.up;
@@ -321,10 +350,10 @@ public class EnemyBehaviour : MonoBehaviour
         // If it doesn't hit anything
         if (!Physics.Raycast(ledge_ray, out hit, drop_cast_dist))
         {
-            transform.right *= -1;
+            transform.forward *= -1;
         }
 
-        rb.AddForce(transform.right * speed * Time.deltaTime, ForceMode.VelocityChange);
+        rb.AddForce(transform.forward * speed * Time.deltaTime, ForceMode.VelocityChange);
     }
 
     /// <summary>
@@ -338,7 +367,7 @@ public class EnemyBehaviour : MonoBehaviour
 
     void die()
     {
-        textCounter.subtract();
+        // textCounter.subtract();
         Destroy(gameObject);
     }
 
@@ -351,14 +380,14 @@ public class EnemyBehaviour : MonoBehaviour
     // For the attack radius
     private void OnDrawGizmosSelected()
     {
-        Gizmos.DrawWireSphere(hit_transform.position, hit_range);
+        Gizmos.DrawWireSphere(hit_box.transform.position, hit_range);
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "swordBlade")
         {
-            rb.AddForce(other.gameObject.transform.forward * knockback, ForceMode.Impulse);
+            rb.AddForce(-transform.forward  * knockback, ForceMode.Impulse);
             health--;
             healthSlider.value = health;
         }
@@ -368,7 +397,38 @@ public class EnemyBehaviour : MonoBehaviour
     {
         get { return behaviour; }
     }
+
+    // Return the shoot available
+    public bool canShoot
+    {
+        get { return can_shoot; }
+    }
+
+    // When the A.I triggers the shooting animation trigger
+    public bool IsShooting
+    {
+         get { return is_shooting; }
+        set { is_shooting = value; }
+    }
+
+    // Return the shooting cooldown 
+    public float shootCooldown
+    {
+        get { return shoot_timer; }
+    }
+
+    // Can the A.I attacking
+    public bool canAttack
+    {
+        get { return can_attack; }
+    }
     
+    // Is it attacking?
+    public bool isAttacking
+    {
+        get { return is_attacking; }
+        set { is_attacking = value; }
+    }
 
     public enum STATE
     {

@@ -30,11 +30,27 @@ public class AnimationSwitch : MonoBehaviour
         switch (state.State)
         {
             case EnemyBehaviour.STATE.SHOOT:
-                
-                animation.SetTrigger("Shoot");
+                // Check the shooting trigger
+                if (state.canShoot)
+                {
+                    if (!state.IsShooting)
+                    {
+                        state.isAttacking = false;
+                        state.IsShooting = true;
+                        animation.SetTrigger("Shoot");
+                    }
+                }
                 break;
             case EnemyBehaviour.STATE.ATTACK:
-                    animation.SetTrigger("Attack");
+                if (state.canAttack)
+                {
+                    if (!state.isAttacking)
+                    {
+                        state.isAttacking = true;
+                        state.IsShooting = false;
+                        animation.SetTrigger("Attack");
+                    }
+                }
                 break;
             case EnemyBehaviour.STATE.CHASING:
                     animation.SetBool("Walk", true);
@@ -48,4 +64,6 @@ public class AnimationSwitch : MonoBehaviour
                 break;
         }
     }
+
+
 }
