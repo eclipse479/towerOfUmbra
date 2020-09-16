@@ -95,7 +95,12 @@ public class EnemyBehaviour : MonoBehaviour
     // Enemy Behaviour State
     STATE behaviour = STATE.WALKING;
 
-    Animator animator;
+    // Stun values
+    [Header("Stun settings")]
+    public float stun_duration = 2.0f;
+    public float stun_recovery = 2.0f;
+    bool is_stunned = true;
+    float stun_time;
 
     // Things that need to be loaded before first frame
     private void Awake()
@@ -127,6 +132,9 @@ public class EnemyBehaviour : MonoBehaviour
 
         // Shoot Cooldown
         shoot_timer = shoot_cooldown;
+
+        // Stun duration
+        stun_time = stun_duration;
     }
 
     // Start is called before the first frame update
@@ -160,61 +168,74 @@ public class EnemyBehaviour : MonoBehaviour
         ray.direction = transform.forward;
         Debug.DrawRay(ray.origin, ray.direction, Color.green);
 
-
-        // Has detected player but is not within attack range
-        if (detectionZone())
+        // As long as the enemy isn't stunned, do it's thing.
+        if (!is_stunned)
         {
-            if (Physics.Raycast(ray.origin, target.position - transform.position, out hit, detection_range, attack_layer.value))
-            {
-                // Is the player isn't in melee range
-                if (!attackRange())
-                {
-                    behaviour = STATE.SHOOT;
-                }
-                else
-                {
-                    behaviour = STATE.ATTACK;
-                }
-            }
+              // Has detected player but is not within attack range
+              if (detectionZone())
+              {
+                  if (Physics.Raycast(ray.origin, target.position - transform.position, out hit, detection_range, attack_layer.value))
+                  {
+                      // Is the player isn't in melee range
+                      if (!attackRange())
+                      {
+                          behaviour = STATE.SHOOT;
+                      }
+                      else
+                      {
+                          behaviour = STATE.ATTACK;
+                      }
+                  }
+              }
+              else
+              {
+                  behaviour = STATE.WALKING;
+              }
+
+              //// Check state to determine actions
+              switch (behaviour)
+              {
+                  case 0: // Walking or patroling
+                      walkForNothing();
+                      break;
+                  case (STATE)1: // Chasing
+                      moveToPlayer();
+                      break;
+                  case (STATE)2:
+                      attack();
+                      break;
+                  default:
+                      break;
+              }
+
+              // Check in front of itself for obstacles or player
+              lineOfSight(ray);
+
+              // If it has no health points
+              if (health <= 0.0f)
+              {
+                  die();
+              }
+
+              // If the enemy has already attacked
+              if (!can_shoot)
+              {
+                  shoot_timer -= 1 * Time.deltaTime;
+                  if (shoot_timer <= 0.0f)
+                  {
+                      shoot_timer = shoot_cooldown;
+                      can_shoot = true;
+                  }
+              }
         }
         else
         {
-            behaviour = STATE.WALKING;
-        }
-
-        //// Check state to determine actions
-        switch (behaviour)
-        {
-            case 0: // Walking or patroling
-                walkForNothing();
-                break;
-            case (STATE)1: // Chasing
-                moveToPlayer();
-                break;
-            case (STATE)2:
-                attack();
-                break;
-            default:
-                break;
-        }
-
-        // Check in front of itself for obstacles or player
-        lineOfSight(ray);
-
-        // If it has no health points
-        if (health <= 0.0f)
-        {
-            die();
-        }
-
-        // If the enemy has already attacked
-        if (!can_shoot)
-        {
-            shoot_timer -= 1 * Time.deltaTime;
-            if (shoot_timer <= 0.0f)
+            stun_time -= stun_recovery * Time.deltaTime;
+            // Return to normal when recovered
+            if (stun_time <= 0.0f)
             {
-                shoot_timer = shoot_cooldown;
-                can_shoot = true;
+                is_stunned = false;
+                stun_time = stun_duration;
             }
         }
     }
@@ -367,7 +388,7 @@ public class EnemyBehaviour : MonoBehaviour
 
     void die()
     {
-        // textCounter.subtract();
+        textCounter.subtract();
         Destroy(gameObject);
     }
 
@@ -387,6 +408,7 @@ public class EnemyBehaviour : MonoBehaviour
     {
         if (other.gameObject.tag == "swordBlade")
         {
+            is_stunned = true;
             rb.AddForce(-transform.forward  * knockback, ForceMode.Impulse);
             health--;
             healthSlider.value = health;
@@ -428,6 +450,11 @@ public class EnemyBehaviour : MonoBehaviour
     {
         get { return is_attacking; }
         set { is_attacking = value; }
+    }
+
+    public bool isStunned
+    {
+        get { return is_stunned; }
     }
 
     public enum STATE
