@@ -3266,56 +3266,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3570303979611336460, guid: b27c32ed6fcf4504a9cae0f4ec758833,
         type: 3}
-      propertyPath: maxHealth
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 3570303979611336460, guid: b27c32ed6fcf4504a9cae0f4ec758833,
-        type: 3}
-      propertyPath: verticalKnockBackAmount
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3570303979611336460, guid: b27c32ed6fcf4504a9cae0f4ec758833,
-        type: 3}
-      propertyPath: horizontalKnockBackAmount
-      value: 150
-      objectReference: {fileID: 0}
-    - target: {fileID: 3570303979611336460, guid: b27c32ed6fcf4504a9cae0f4ec758833,
-        type: 3}
-      propertyPath: swordSpeed
-      value: 780
-      objectReference: {fileID: 0}
-    - target: {fileID: 3570303979611336460, guid: b27c32ed6fcf4504a9cae0f4ec758833,
-        type: 3}
-      propertyPath: speed
-      value: 200000
-      objectReference: {fileID: 0}
-    - target: {fileID: 3570303979611336460, guid: b27c32ed6fcf4504a9cae0f4ec758833,
-        type: 3}
-      propertyPath: playerMaxMovementSpeed
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3570303979611336460, guid: b27c32ed6fcf4504a9cae0f4ec758833,
-        type: 3}
-      propertyPath: jumpForce
-      value: 14
-      objectReference: {fileID: 0}
-    - target: {fileID: 3570303979611336460, guid: b27c32ed6fcf4504a9cae0f4ec758833,
-        type: 3}
-      propertyPath: doubleJumpForce
-      value: 0.72
-      objectReference: {fileID: 0}
-    - target: {fileID: 3570303979611336460, guid: b27c32ed6fcf4504a9cae0f4ec758833,
-        type: 3}
-      propertyPath: antiSlopeBumpForce
-      value: 2.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3570303979611336460, guid: b27c32ed6fcf4504a9cae0f4ec758833,
-        type: 3}
-      propertyPath: gravityIncrease
-      value: 1.45
-      objectReference: {fileID: 0}
-    - target: {fileID: 3570303979611336460, guid: b27c32ed6fcf4504a9cae0f4ec758833,
-        type: 3}
       propertyPath: healthText
       value: 
       objectReference: {fileID: 1122824237}
@@ -3324,11 +3274,6 @@ PrefabInstance:
       propertyPath: healthBar
       value: 
       objectReference: {fileID: 1722320613}
-    - target: {fileID: 3570303979611336460, guid: b27c32ed6fcf4504a9cae0f4ec758833,
-        type: 3}
-      propertyPath: swordBase
-      value: 
-      objectReference: {fileID: 1648167214}
     - target: {fileID: 3570303979611336460, guid: b27c32ed6fcf4504a9cae0f4ec758833,
         type: 3}
       propertyPath: comboCounter
@@ -12379,11 +12324,6 @@ PrefabInstance:
       propertyPath: playerCamera
       value: 
       objectReference: {fileID: 1117791315}
-    - target: {fileID: 1744011395892868420, guid: 42e61a815c4f1fe44bd93c13b7c61904,
-        type: 3}
-      propertyPath: baseHeightIncrease
-      value: 0.76
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 42e61a815c4f1fe44bd93c13b7c61904, type: 3}
 --- !u!1001 &718416721
@@ -13300,7 +13240,7 @@ PrefabInstance:
     - target: {fileID: 1663090885067405995, guid: f34abdccfa0acac42823717c102758b1,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1663090885067405998, guid: f34abdccfa0acac42823717c102758b1,
         type: 3}
@@ -29537,12 +29477,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1648167214 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3570303980339778755, guid: b27c32ed6fcf4504a9cae0f4ec758833,
-    type: 3}
-  m_PrefabInstance: {fileID: 169579798}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1679034914
 PrefabInstance:
   m_ObjectHideFlags: 0
