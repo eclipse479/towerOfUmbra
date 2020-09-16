@@ -27,41 +27,44 @@ public class AnimationSwitch : MonoBehaviour
     void Update()
     {
         // Check to see which actions are being performed
-        switch (state.State)
+        if (!state.isStunned)
         {
-            case EnemyBehaviour.STATE.SHOOT:
-                // Check the shooting trigger
-                if (state.canShoot)
-                {
-                    if (!state.IsShooting)
+            switch (state.State)
+            {
+                case EnemyBehaviour.STATE.SHOOT:
+                    // Check the shooting trigger
+                    if (state.canShoot)
                     {
-                        state.isAttacking = false;
-                        state.IsShooting = true;
-                        animation.SetTrigger("Shoot");
+                        if (!state.IsShooting)
+                        {
+                            state.isAttacking = false;
+                            state.IsShooting = true;
+                            animation.SetTrigger("Shoot");
+                        }
                     }
-                }
-                break;
-            case EnemyBehaviour.STATE.ATTACK:
-                if (state.canAttack)
-                {
-                    if (!state.isAttacking)
+                    break;
+                case EnemyBehaviour.STATE.ATTACK:
+                    if (state.canAttack)
                     {
-                        state.isAttacking = true;
-                        state.IsShooting = false;
-                        animation.SetTrigger("Attack");
+                        if (!state.isAttacking)
+                        {
+                            state.isAttacking = true;
+                            state.IsShooting = false;
+                            animation.SetTrigger("Attack");
+                        }
                     }
-                }
-                break;
-            case EnemyBehaviour.STATE.CHASING:
-                    animation.SetBool("Walk", true);
-                break;
-            case EnemyBehaviour.STATE.WALKING:
-                    animation.SetBool("Walk", true);
-                break;
-            default:
-                animation.SetBool("Walk", false);
-                animation.SetBool("Idle", true);
-                break;
+                    break;
+                case EnemyBehaviour.STATE.CHASING:
+                        animation.SetBool("Walk", true);
+                    break;
+                case EnemyBehaviour.STATE.WALKING:
+                        animation.SetBool("Walk", true);
+                    break;
+                default:
+                    animation.SetBool("Walk", false);
+                    animation.SetBool("Idle", true);
+                    break;
+            }
         }
     }
 
