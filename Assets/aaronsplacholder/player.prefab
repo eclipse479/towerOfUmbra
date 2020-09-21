@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 686632258312999862}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 87.764, y: -2.755, z: 0.25}
-  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 686632259239732011}
   - {fileID: 3570303979714495599}
@@ -80,26 +80,26 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   healthText: {fileID: 0}
-  maxHealth: 100
+  maxHealth: 20
   currentHealth: 20
   healthBar: {fileID: 0}
-  verticalKnockBackAmount: 100
-  horizontalKnockBackAmount: 100
+  verticalKnockBackAmount: 10
+  horizontalKnockBackAmount: 150
   swordBase: {fileID: 3570303979714495596}
-  swordSpeed: 720
+  swordSpeed: 780
   maxCounterResetTimer: 3
   comboCounter: {fileID: 0}
   pauseScreen: {fileID: 0}
   gameplayMenu: {fileID: 0}
   deathScreen: {fileID: 0}
-  speed: 5000
-  playerMaxMovementSpeed: 7
-  jumpForce: 7
+  speed: 200000
+  playerMaxMovementSpeed: 1.5
+  jumpForce: 14
   airMovementMultiplier: 0.75
-  doubleJumpForce: 1
+  doubleJumpForce: 0.72
   maxGroundedDelay: 0.2
-  antiSlopeBumpForce: 0.5
-  gravityIncrease: 0
+  antiSlopeBumpForce: 2.5
+  gravityIncrease: 1.45
   boxCastMaxDistance: 1
   deleteThisLater: {fileID: 0}
 --- !u!1 &686632259239378601
@@ -1845,7 +1845,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3570303979714495599
 Transform:
   m_ObjectHideFlags: 0
@@ -1854,7 +1854,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3570303979714495596}
   m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}
-  m_LocalPosition: {x: -0.071, y: 0.837, z: 0.2}
+  m_LocalPosition: {x: -0.071, y: 0.837, z: 0.487}
   m_LocalScale: {x: 0.714286, y: 0.71428573, z: 0.714286}
   m_Children:
   - {fileID: 3570303980339778754}
