@@ -4,16 +4,10 @@ using UnityEngine;
 
 public class animationTest : MonoBehaviour
 {
-    public GameObject cobe;
     public BoxCollider handBox;
     public void PrintEvent(string s)
     {
         Debug.Log("PrintEvent: " + s + " called at: " + Time.time);
-    }
-
-    public void createCobe()
-    {
-        Instantiate(cobe, transform.position, transform.rotation);
     }
 
     public void handOn()

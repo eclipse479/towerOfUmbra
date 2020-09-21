@@ -26,8 +26,6 @@ public class grapplingHook : MonoBehaviour
     public float grappleDistFromPlayer;
     
     private GameObject parent;
-    //tip of the grappling hook(holds the enemy)
-    private GameObject tip;
 
     public float baseHeightIncrease;
 
@@ -57,14 +55,13 @@ public class grapplingHook : MonoBehaviour
     {
         parent = gameObject.transform.parent.gameObject;
         lRend = transform.GetComponent<LineRenderer>();
+        collide = gameObject.GetComponent<Collider>();
         rb = transform.GetComponent<Rigidbody>();
         playerRB = player.GetComponent<Rigidbody>();
-        collide = gameObject.GetComponent<Collider>();
         collide.enabled = false;
-        tip = gameObject.transform.GetChild(0).gameObject;
+        isEnemyGrabbed = false;
         extending = false;
         active = false;
-        isEnemyGrabbed = false;
         parent.transform.position = player.transform.position;
     }
 
@@ -76,11 +73,27 @@ public class grapplingHook : MonoBehaviour
         //sets the line renderer to draw between the hook and parent
         lRend.SetPosition(0, parent.transform.position);
         lRend.SetPosition(1, transform.position);
+
         //the distance from the parent to the hook
         Vector3 distanceParentToPointVec = parent.transform.position - transform.position;
         float distanceFormParentToPointFloat = distanceParentToPointVec.magnitude;
 
-        if (!active)
+        //if the grapple is active
+        if (active)
+        {
+            if (extending) // growing
+            {
+                //rb.MovePosition(transform.position + (transform.right * extendRate * Time.deltaTime));
+                transform.position += parent.transform.forward * extendRate * Time.deltaTime;
+            }
+            else if (!extending)//shrinking
+            {
+
+                //rb.MovePosition(transform.position - (transform.right * extendRate * Time.deltaTime));
+                transform.position -= parent.transform.forward * extendRate * Time.deltaTime;
+            }
+        }
+        else if (!active)
         {
             //gets a new spot to shoot a grapple towards
             if (Input.GetMouseButtonDown(1))
@@ -105,13 +118,13 @@ public class grapplingHook : MonoBehaviour
         {
             extending = false;
             collide.enabled = false;
-            //Debug.Log("extending too far"); 
-            //Debug.Log(hold);
         }
-        else if (!extending)
+        
+        if (!extending)
         {
             rb.isKinematic = true;
             Vector3 toTarget = (parent.transform.position - transform.position).normalized;
+            //if(Vector2.Dot(new Vector2(parent.transform.position.x, parent.transform.position.y), new Vector2(transform.position.x, transform.position.y)) > 0)
             if (Vector3.Dot(toTarget, transform.right) > 0) // checks if the parents position is in front of the hook
             {
                 Debug.Log("parent is in front of this game object.");
@@ -120,43 +133,8 @@ public class grapplingHook : MonoBehaviour
                 active = false;
                 transform.position = parent.transform.position;
             }
-                //rb.MovePosition(parent.transform.position);
+               
         }
-        //is a grapple currently being shot out
-        //grapple exists
-
-        //grabbing enemy/wall
-        if (!extending)//if shrinking
-        {
-            if (isEnemyGrabbed)
-            {
-                //pulls object to player
-                pullEnemy(grabbedEnemy);
-            }
-            else if (wallGrabbed)
-            {
-                //pulls player to wall
-                playerPullToWall();
-            }
-        }
-    }
-    private void FixedUpdate()
-    {
-        if (active)
-        {
-            if (extending) // growing
-            {
-                //rb.MovePosition(transform.position + (transform.right * extendRate * Time.deltaTime));
-                transform.position += parent.transform.forward * extendRate * Time.deltaTime;
-            }
-            else if (!extending)//shrinking
-            {
-
-                //rb.MovePosition(transform.position - (transform.right * extendRate * Time.deltaTime));
-                transform.position -= parent.transform.forward * extendRate * Time.deltaTime;
-            }
-        }
-
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -169,6 +147,7 @@ public class grapplingHook : MonoBehaviour
             grabbedEnemy = collision.gameObject;
             isEnemyGrabbed = true;
             extending = false;
+            pullEnemy(grabbedEnemy);
         }
         else if (collision.gameObject.tag == "grappleTarget" && !wallGrabbed && !isEnemyGrabbed && extending)
         {
@@ -177,9 +156,10 @@ public class grapplingHook : MonoBehaviour
             isEnemyGrabbed = false;
             wallGrabbed = true;
             extending = false;
-            forceDirection = (new Vector3(tip.gameObject.transform.position.x, tip.gameObject.transform.position.y,player.gameObject.transform.position.z) - player.gameObject.transform.position);
-            hold = forceDirection.magnitude;
+            forceDirection = (new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, player.gameObject.transform.position.z) - player.gameObject.transform.position);
+            hold = forceDirection.magnitude;//length
             forceDirection.Normalize();
+            playerPullToWall();
         }
         else 
         {
@@ -197,13 +177,13 @@ public class grapplingHook : MonoBehaviour
         Vector3 enemyDirection = (player.transform.position - thingToPull.transform.position);
         float distance = enemyDirection.magnitude;
         enemyDirection.Normalize();
-        enemyBody.AddForce(enemyDirection * CalculateJumpForce(distance,9.8f) * grapplePullEnemyForce, ForceMode.Impulse);
+        enemyBody.AddForce(enemyDirection * CalculateJumpForce(distance,9.8f) * grapplePullEnemyForce, ForceMode.VelocityChange);
     }
     public void playerPullToWall()
     {
         collide.enabled = false;
         wallGrabbed = false;
-        playerRB.AddForce(forceDirection * CalculateJumpForce(hold, 9.8f) * grapplePullToWallForce, ForceMode.Impulse);
+        playerRB.AddForce(forceDirection * CalculateJumpForce(hold, 9.8f) * grapplePullToWallForce, ForceMode.VelocityChange);
     }
 
     private float CalculateJumpForce(float jumpHeight, float gravity)

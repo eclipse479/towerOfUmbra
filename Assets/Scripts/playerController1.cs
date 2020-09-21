@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.Assertions.Must;
 using UnityEngine.UI;
 
@@ -29,6 +30,14 @@ public class playerController1 : MonoBehaviour
     [Tooltip("How far the player is knocked when hit")]
     public float horizontalKnockBackAmount;
 
+    public SkinnedMeshRenderer playerRend;
+    [Header("INVINCIBILITY FRAMES")]
+    [Tooltip("How many times the player will flash")]
+    [Min(0)]
+    public int numOfFlashes; 
+    [Tooltip("How long each flash is")]
+    public float flashLength;
+
     [Header("SWORD SETTINGS")]
     //the sword
     [Tooltip("the base of the players sword")]
@@ -36,15 +45,7 @@ public class playerController1 : MonoBehaviour
     [Tooltip("how fast the sword swings")]
     public float swordSpeed;    // how fast the sword moves
     private bool swordSwinging; // is sword swinging
-                          
-    [Header("COMBO COUNTER")]
-    [Tooltip("timer for the combo counter")]
-    public float maxCounterResetTimer;
-    private float comboCounterResetTimer;
-    private int hitCounter;
-    [Tooltip("combo counter text")]
-    public Text comboCounter;
-
+                        
     //pausing
     private bool paused;
     [Header("UIS")]
@@ -71,6 +72,7 @@ public class playerController1 : MonoBehaviour
     [Tooltip("movement force multiplier when the player is not grounded")]
     [Range(0,1)]
     public float airMovementMultiplier = 0.75f;
+
     [Tooltip("Force multiplier for the double jump, min - 0")]
     [Min(0)]
     public float doubleJumpForce;
@@ -95,6 +97,7 @@ public class playerController1 : MonoBehaviour
     //timer for how long the force is applied
     private float maxAntiBumpForceTimer = 0.3f;
     private float antiBumpForceTimer;
+
     [Header("OTHER")]
     [Tooltip("increase in gravity 0 -> normal 1 -> double")]
     public float gravityIncrease = 0;
@@ -132,8 +135,6 @@ public class playerController1 : MonoBehaviour
         grounded = true;
         //sword is not swinging
         swordSwinging = false;
-        //combo counter
-        comboCounterResetTimer = maxCounterResetTimer;
 
         //health bar values
         healthbarImage = healthBar.transform.GetChild(1).gameObject.GetComponent<Image>();
@@ -142,7 +143,26 @@ public class playerController1 : MonoBehaviour
     }
     void FixedUpdate()
     {
+        //increase in gravity for th eplayer
         rb.AddForce(Physics.gravity * rb.mass * gravityIncrease);
+
+        //movement
+        if (Input.GetKey(KeyCode.RightArrow) && !swordSwinging || Input.GetKey(KeyCode.D) && !swordSwinging)
+        {
+            //move player
+            if (grounded)
+                rb.AddForce(transform.forward * speed * Time.deltaTime, ForceMode.Force);
+            else
+                rb.AddForce(transform.forward * speed * Time.deltaTime * airMovementMultiplier, ForceMode.Force);
+        }
+        if (Input.GetKey(KeyCode.LeftArrow) && !swordSwinging || Input.GetKey(KeyCode.A) && !swordSwinging)
+        {
+            //move player
+            if (grounded)//player movement on the ground
+                rb.AddForce(transform.forward * speed * Time.deltaTime, ForceMode.Force);
+            else // slower acceleration while in the air
+                rb.AddForce(transform.forward * speed * Time.deltaTime * airMovementMultiplier, ForceMode.Force);
+        }
     }
     // Update is called once per frame
     void Update()
@@ -172,16 +192,6 @@ public class playerController1 : MonoBehaviour
             //make sure game isn't paused for logic
             if (!paused)
             {
-                //timer for the combo counter
-                if (comboCounterResetTimer > 0)
-                {
-                    comboCounterResetTimer -= Time.deltaTime;
-                }
-                else if (comboCounterResetTimer < 0)
-                {
-                    hitCounter = 0;
-                    comboCounter.text = "Combo: " + hitCounter;
-                }
                 //keeps the player speed in check
                 speedCheck();
                 //input for the player movement
@@ -191,11 +201,6 @@ public class playerController1 : MonoBehaviour
                     removeFriction();
                     //change player facing direction
                     transform.eulerAngles = new Vector3(0, -90, 0);
-                    //move player
-                    if (grounded)
-                        rb.AddForce(transform.forward * speed * Time.deltaTime, ForceMode.Force);
-                    else
-                        rb.AddForce(transform.forward * speed * Time.deltaTime * airMovementMultiplier, ForceMode.Force);
                 }
                 if (Input.GetKey(KeyCode.LeftArrow) && !swordSwinging || Input.GetKey(KeyCode.A) && !swordSwinging)
                 {
@@ -203,11 +208,6 @@ public class playerController1 : MonoBehaviour
                     removeFriction();
                     //change player facing direction
                     transform.eulerAngles = new Vector3(0, 90, 0);
-                    //move player
-                    if (grounded)//player movement on the ground
-                        rb.AddForce(transform.forward * speed * Time.deltaTime,ForceMode.Force);
-                    else // slower acceleration while in the air
-                        rb.AddForce(transform.forward * speed * Time.deltaTime * airMovementMultiplier, ForceMode.Force);
                 }
 
                 //check if falling
@@ -218,6 +218,7 @@ public class playerController1 : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.Space) && grounded) //jumps
                 {
+
                     //removes current vertical velocity
                     ani.SetTrigger("jumped"); // jump animation
                     Vector3 velocityKill = rb.velocity;
@@ -231,7 +232,6 @@ public class playerController1 : MonoBehaviour
                 }
                 else if (Input.GetKeyDown(KeyCode.Space) && doubleJump) //jumps if in the air (double jump)
                 {
-                    //removes current vertical velocity
                     Vector3 velocityKill = rb.velocity;
                     velocityKill.y = 0;
                     rb.velocity = velocityKill;
@@ -242,6 +242,13 @@ public class playerController1 : MonoBehaviour
                     groundedDelay = maxGroundedDelay;
                 }
                 
+                //controlled jumping -> allows short hops when button is tapped and large jumps when held
+                if(Input.GetKeyUp(KeyCode.Space) && rb.velocity.y > 0)
+                {
+                    rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y * 0.5f, rb.velocity.z);
+                }
+
+
                 //when movement keys are released
                 if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
                 {
@@ -268,14 +275,14 @@ public class playerController1 : MonoBehaviour
                     {
                         jumping = false;
                     }
-                    if (boxHit.collider.gameObject.tag == "Finish")
+                    if (boxHit.collider.gameObject.tag == "Finish") //debugging, allows certain platforms to turn red when touching
                     {
                         //slope testing purposes
                         Renderer rend = boxHit.collider.gameObject.GetComponent<Renderer>();
                         rend.material.color = Color.red;
                     }
                 }
-                else
+                else // not on the ground
                 {
                     grounded = false;
                     ani.SetBool("grounded", false);
@@ -323,6 +330,7 @@ public class playerController1 : MonoBehaviour
     /// <summary>
     /// swings the sword
     /// </summary>
+    /// </summary>e
     private void swingSword()
     {
         //activates the sword
@@ -347,16 +355,18 @@ public class playerController1 : MonoBehaviour
     {
         if (collision.gameObject.tag == "enemy" || collision.gameObject.tag == "bullet")
         {
-            //reduce health
-            currentHealth--;
-            healthText.text = "Health: " + currentHealth;
-            knockBack(collision.gameObject);
-            //move health bar health
-            healthbarImage.fillAmount = currentHealth / maxHealth;
-            if (currentHealth <= 0)
-            {
-                dead = true;
-            }
+                Debug.Log("hit");
+                //reduce health
+                currentHealth--;
+                healthText.text = "Health: " + currentHealth;
+                knockBack(collision.gameObject);
+                //move health bar health
+                healthbarImage.fillAmount = currentHealth / maxHealth;
+                StartCoroutine(Flasher());
+                if (currentHealth <= 0)
+                {
+                    dead = true;
+                }
         }
     }
 
@@ -385,39 +395,35 @@ public class playerController1 : MonoBehaviour
     /// </summary>
     public void swordCollision()
     {
-        hitCounter++;
-        comboCounterResetTimer = maxCounterResetTimer;
-        comboCounter.text = "Combo: " + hitCounter;
+        Debug.Log("sword hit a thing");
     }
     /// <summary>
     /// knockback applied to the player when colliding with an enemy
     /// </summary>
     /// <param name="enemy"></param>
+
     private void knockBack(GameObject enemy)
     {
+        float xDirection = horizontalKnockBackAmount;
         //determines direction to knock back
         float enemyX = enemy.transform.position.x;
         float playerX = transform.position.x;
-        Vector3 direction = new Vector3(playerX - enemyX, 0, 0);
-
-        direction.Normalize();
 
         //remove current velocity then knocks back player
         rb.velocity = Vector3.zero;
 
-        if(playerX - enemyX > 0)
+        if (playerX - enemyX < 0)
         {
-
+            xDirection *= -1; //makes sure the player is always knocked in away from the thing they hit
         }
-
-        Vector3 knockBackDirection = new Vector3(horizontalKnockBackAmount, verticalKnockBackAmount, 0);
-        //get off ground so friction wont be taken into account
         if (grounded)
         {
             rb.AddForce(transform.up * 0.1f, ForceMode.VelocityChange);
         }
-        rb.AddForce(knockBackDirection, ForceMode.VelocityChange);
+        rb.AddForce(new Vector3(xDirection,verticalKnockBackAmount,0), ForceMode.VelocityChange);
     }
+
+
     /// <summary>
     /// player has run out of health and has died
     /// should play death animation ect.
@@ -456,10 +462,10 @@ public class playerController1 : MonoBehaviour
     /// </summary>
     private void addFriction()
     {
-            //resets friction on player
-            collide.material.dynamicFriction = 1.0f;
-            collide.material.staticFriction = 1.0f;
-            collide.material.frictionCombine = PhysicMaterialCombine.Maximum;
+        //resets friction on player
+        collide.material.dynamicFriction = 1.0f;
+        collide.material.staticFriction = 1.0f;
+        collide.material.frictionCombine = PhysicMaterialCombine.Maximum;
     }
     private void removeFriction()
     {
@@ -469,23 +475,6 @@ public class playerController1 : MonoBehaviour
         collide.material.frictionCombine = PhysicMaterialCombine.Minimum;
     }
 
-    /// <summary>
-    /// checks the floor directally beneth the player
-    /// </summary>
-    private void floorCheck()
-    {
-        if (Physics.Raycast(transform.position + new Vector3(0, -0.4f, 0), -transform.up, out floorCheckRay, 0.2f, platformLayerMask))
-        {
-            Debug.DrawRay(transform.position + new Vector3(0, -0.4f, 0), -transform.up * floorCheckRay.distance, Color.blue);
-        }
-        else
-        {
-            Debug.DrawRay(transform.position + new Vector3(0, -0.4f, 0), -transform.up * 0.2f, Color.blue);
-        }
-        ///---------------------------------------------------------------------------------------------------------
-        //deleteThisLater.text = "Normal X: " + slopeCheckRay.normal.x + " Normal Y: " + slopeCheckRay.normal.y + " Normal Z: " + slopeCheckRay.normal.z;
-        ///---------------------------------------------------------------------------------------------------------
-    }
 
     /// <summary>
     /// applies a force downwards when enter/exiting a slope to keep the player on the ground
@@ -509,6 +498,24 @@ public class playerController1 : MonoBehaviour
             else
                 Debug.DrawRay(transform.position + new Vector3(0, -0.45f, 0), transform.forward * forwardRay.distance, Color.black);
         }
+    }
+
+    /// <summary>
+    /// checks the floor directally beneth the player
+    /// </summary>
+    private void floorCheck()
+    {
+        if (Physics.Raycast(transform.position + new Vector3(0, -0.4f, 0), -transform.up, out floorCheckRay, 0.2f, platformLayerMask))
+        {
+            Debug.DrawRay(transform.position + new Vector3(0, -0.4f, 0), -transform.up * floorCheckRay.distance, Color.blue);
+        }
+        else
+        {
+            Debug.DrawRay(transform.position + new Vector3(0, -0.4f, 0), -transform.up * 0.2f, Color.blue);
+        }
+        ///---------------------------------------------------------------------------------------------------------
+        //deleteThisLater.text = "Normal X: " + slopeCheckRay.normal.x + " Normal Y: " + slopeCheckRay.normal.y + " Normal Z: " + slopeCheckRay.normal.z;
+        ///---------------------------------------------------------------------------------------------------------
     }
 
     /// <summary>
@@ -544,4 +551,19 @@ public class playerController1 : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// player flash to signify Iframes
+    /// </summary>
+    IEnumerator Flasher()
+    {
+        gameObject.layer = 15;
+        for (int i = 0; i < numOfFlashes; i++)
+        {
+            playerRend.enabled = false;
+            yield return new WaitForSeconds(flashLength);
+            playerRend.enabled = true;
+            yield return new WaitForSeconds(flashLength);
+        }
+        gameObject.layer = 8;
+    }
 }
