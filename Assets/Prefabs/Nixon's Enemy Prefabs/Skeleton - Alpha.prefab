@@ -4257,7 +4257,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_TargetDisplay: 0
 --- !u!114 &4060964907465234578
 MonoBehaviour:
@@ -9199,8 +9199,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbada98a83564724692a353c1652693e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  knockback: 20
-  health: 10
+  knockback: 100
+  health: 5
   hit_box: {fileID: 4060964908483461610}
   hit_range: 0.32
   attack_layer:
@@ -9220,6 +9220,8 @@ MonoBehaviour:
   bullet: {fileID: 7091955269792678419, guid: bb59f89fb9312114ca0153b3160eeca7, type: 3}
   shoot_cooldown: 2
   enemiesLeftText: {fileID: 0}
+  stun_duration: 2
+  stun_recovery: 2
 --- !u!54 &4060964908431939433
 Rigidbody:
   m_ObjectHideFlags: 0
