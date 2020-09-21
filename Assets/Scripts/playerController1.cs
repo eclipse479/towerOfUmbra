@@ -45,15 +45,7 @@ public class playerController1 : MonoBehaviour
     [Tooltip("how fast the sword swings")]
     public float swordSpeed;    // how fast the sword moves
     private bool swordSwinging; // is sword swinging
-                          
-    [Header("COMBO COUNTER")]
-    [Tooltip("timer for the combo counter")]
-    public float maxCounterResetTimer;
-    private float comboCounterResetTimer;
-    private int hitCounter;
-    [Tooltip("combo counter text")]
-    public Text comboCounter;
-
+                        
     //pausing
     private bool paused;
     [Header("UIS")]
@@ -143,8 +135,6 @@ public class playerController1 : MonoBehaviour
         grounded = true;
         //sword is not swinging
         swordSwinging = false;
-        //combo counter
-        comboCounterResetTimer = maxCounterResetTimer;
 
         //health bar values
         healthbarImage = healthBar.transform.GetChild(1).gameObject.GetComponent<Image>();
@@ -202,16 +192,6 @@ public class playerController1 : MonoBehaviour
             //make sure game isn't paused for logic
             if (!paused)
             {
-                //timer for the combo counter
-                if (comboCounterResetTimer > 0)
-                {
-                    comboCounterResetTimer -= Time.deltaTime;
-                }
-                else if (comboCounterResetTimer < 0)
-                {
-                    hitCounter = 0;
-                    comboCounter.text = "Combo: " + hitCounter;
-                }
                 //keeps the player speed in check
                 speedCheck();
                 //input for the player movement
@@ -415,9 +395,7 @@ public class playerController1 : MonoBehaviour
     /// </summary>
     public void swordCollision()
     {
-        hitCounter++;
-        comboCounterResetTimer = maxCounterResetTimer;
-        comboCounter.text = "Combo: " + hitCounter;
+        Debug.Log("sword hit a thing");
     }
     /// <summary>
     /// knockback applied to the player when colliding with an enemy
