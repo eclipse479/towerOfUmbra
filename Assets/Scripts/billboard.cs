@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class billboard : MonoBehaviour
 {
-    GameObject cam;
+    private GameObject cam;
     // Start is called before the first frame update
     void Start()
     {
