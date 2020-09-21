@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class bulletScript : MonoBehaviour
 {
-    public float bulletSpeed;
+    public float bulletSpeed = 10;
     public float lifeTime = 7;
 
     // Identify player
@@ -16,8 +16,7 @@ public class bulletScript : MonoBehaviour
     // Rigidbody
     Rigidbody bullet_rb;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
         // Layer to damage
         player = 8;
@@ -27,8 +26,7 @@ public class bulletScript : MonoBehaviour
         bullet_rb = GetComponent<Rigidbody>();
         Vector3 direction = (target.position - transform.position).normalized;
 
-        bullet_rb.AddForce(direction * bulletSpeed * Time.deltaTime, ForceMode.VelocityChange);
-        // bulletSpeed = 8;
+        bullet_rb.AddForce(direction * bulletSpeed * Time.deltaTime, ForceMode.Impulse);
     }
 
     // Update is called once per frame
@@ -36,7 +34,6 @@ public class bulletScript : MonoBehaviour
     {
         lifeTime -= Time.deltaTime;
         // bullet_rb.AddForce(transform.right * bulletSpeed * Time.deltaTime, ForceMode.Force);
-
 
         if (lifeTime < 0)
         {
@@ -51,6 +48,10 @@ public class bulletScript : MonoBehaviour
         if (hit.layer == player)
         {
             hit.GetComponent<Rigidbody>().AddForce(bullet_rb.velocity * 5, ForceMode.Impulse);
+            Destroy(gameObject);
+        }
+        else if (hit.layer != player && hit.layer != gameObject.layer)
+        {
             Destroy(gameObject);
         }
     }
