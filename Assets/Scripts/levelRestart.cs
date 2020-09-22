@@ -7,20 +7,16 @@ public class levelRestart : MonoBehaviour
     public Text restartTimerText;
     public float maxRestartTimer;
     private float currentRestartTimer;
-    private GameObject player;
-    private playerController1 pc;
     // Start is called before the first frame update
     void Start()
     {
         currentRestartTimer = maxRestartTimer;
-        player = GameObject.FindGameObjectWithTag("player");
-        pc = player.GetComponent<playerController1>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (pc.currentHealth <= 0) // check the players health
+        if (playerStats.health <= 0) // check the players health
         {
             currentRestartTimer -= Time.deltaTime; 
             string timeLeft = currentRestartTimer.ToString("F2");
