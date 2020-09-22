@@ -5001,6 +5001,11 @@ PrefabInstance:
       propertyPath: volumeTrigger
       value: 
       objectReference: {fileID: 1830109700}
+    - target: {fileID: 3761536094206801009, guid: d8ad71e5e536b464ba14165a7b24a283,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d8ad71e5e536b464ba14165a7b24a283, type: 3}
 --- !u!43 &366299367
@@ -7001,6 +7006,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 686632258312999861, guid: b27c32ed6fcf4504a9cae0f4ec758833,
+        type: 3}
+      propertyPath: m_Mass
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 686632258312999862, guid: b27c32ed6fcf4504a9cae0f4ec758833,
         type: 3}
       propertyPath: m_Name
@@ -7044,13 +7054,33 @@ PrefabInstance:
     - target: {fileID: 3570303979611336460, guid: b27c32ed6fcf4504a9cae0f4ec758833,
         type: 3}
       propertyPath: flashLength
-      value: 5
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 3570303979611336460, guid: b27c32ed6fcf4504a9cae0f4ec758833,
         type: 3}
       propertyPath: verticalKnockBackAmount
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 3570303979611336460, guid: b27c32ed6fcf4504a9cae0f4ec758833,
+        type: 3}
+      propertyPath: horizontalKnockBackAmount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3570303979611336460, guid: b27c32ed6fcf4504a9cae0f4ec758833,
+        type: 3}
+      propertyPath: speed
+      value: 15.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3570303979611336460, guid: b27c32ed6fcf4504a9cae0f4ec758833,
+        type: 3}
+      propertyPath: playerMaxMovementSpeed
+      value: 24.69
+      objectReference: {fileID: 0}
+    - target: {fileID: 3570303979611336460, guid: b27c32ed6fcf4504a9cae0f4ec758833,
+        type: 3}
+      propertyPath: playerRend
+      value: 
+      objectReference: {fileID: 1182455984}
     - target: {fileID: 3570303980339778755, guid: b27c32ed6fcf4504a9cae0f4ec758833,
         type: 3}
       propertyPath: m_IsActive
@@ -7059,7 +7089,7 @@ PrefabInstance:
     - target: {fileID: 6207523608204772447, guid: b27c32ed6fcf4504a9cae0f4ec758833,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b27c32ed6fcf4504a9cae0f4ec758833, type: 3}
@@ -12307,6 +12337,12 @@ PrefabInstance:
       objectReference: {fileID: 1335667483}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bd0236785729d0c439eb211b4ba4c595, type: 3}
+--- !u!137 &1182455984 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 686632259244651019, guid: b27c32ed6fcf4504a9cae0f4ec758833,
+    type: 3}
+  m_PrefabInstance: {fileID: 650344921}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1190978500
 PrefabInstance:
   m_ObjectHideFlags: 0
