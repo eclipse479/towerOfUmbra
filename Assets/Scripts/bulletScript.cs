@@ -21,7 +21,7 @@ public class bulletScript : MonoBehaviour
         // Layer to damage
         player = 8;
 
-        target = GameObject.Find("player").transform;
+        target = GameObject.FindGameObjectWithTag("player").transform;
 
         bullet_rb = GetComponent<Rigidbody>();
         Vector3 direction = (target.position - transform.position).normalized;
@@ -47,7 +47,6 @@ public class bulletScript : MonoBehaviour
 
         if (hit.layer == player)
         {
-            hit.GetComponent<Rigidbody>().AddForce(bullet_rb.velocity * 5, ForceMode.Impulse);
             Destroy(gameObject);
         }
         else if (hit.layer != player && hit.layer != gameObject.layer)
