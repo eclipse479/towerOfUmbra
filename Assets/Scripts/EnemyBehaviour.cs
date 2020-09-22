@@ -74,8 +74,8 @@ public class EnemyBehaviour : MonoBehaviour
     bool can_attack = true;
     float attack_timer;
     [Header("Attack Settings")]
-    public float attack_cooldown = 2.0f;
-    public float attack_range = 0.8f;
+    public float attack_cooldown = 2.0f; [Tooltip("Timer before it can attack again")]
+    public float attack_range = 0.8f; [Tooltip("Close-range attack area")]
 
     // Shooting needs
     [Header("Shooting Settings")]
@@ -168,6 +168,12 @@ public class EnemyBehaviour : MonoBehaviour
         ray.direction = transform.forward;
         Debug.DrawRay(ray.origin, ray.direction, Color.green);
 
+        // If it has no health points
+        if (health <= 0.0f)
+        {
+            die();
+        }
+
         // As long as the enemy isn't stunned, do it's thing.
         if (!is_stunned)
         {
@@ -210,12 +216,6 @@ public class EnemyBehaviour : MonoBehaviour
 
               // Check in front of itself for obstacles or player
               lineOfSight(ray);
-
-              // If it has no health points
-              if (health <= 0.0f)
-              {
-                  die();
-              }
 
               // If the enemy has already attacked
               if (!can_shoot)
@@ -409,6 +409,10 @@ public class EnemyBehaviour : MonoBehaviour
         if (other.gameObject.tag == "swordBlade")
         {
             is_stunned = true;
+
+            // Reset Enemy velocity
+            rb.velocity = Vector3.zero;
+
             rb.AddForce(-transform.forward  * knockback, ForceMode.Impulse);
             health--;
             healthSlider.value = health;
