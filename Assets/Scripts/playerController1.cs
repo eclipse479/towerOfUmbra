@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.Assertions.Must;
 using UnityEngine.UI;
@@ -29,6 +30,9 @@ public class playerController1 : MonoBehaviour
     public float verticalKnockBackAmount;
     [Tooltip("How far the player is knocked when hit")]
     public float horizontalKnockBackAmount;
+    [Tooltip("how long after getting hit can the player not move")]
+    public float maxKnockBackNoMovementTimer;
+    private float knockBackNoMovementTimer;
 
     [Header("INVINCIBILITY FRAMES")]
     [Tooltip("How many times the player will flash")]
@@ -167,51 +171,53 @@ public class playerController1 : MonoBehaviour
     void FixedUpdate()
     {
         //increase in gravity for th eplayer
-        rb.AddForce(Physics.gravity * rb.mass * gravityIncrease);
-
-        //movement
-        if (Input.GetKey(KeyCode.RightArrow) && !swordSwinging || Input.GetKey(KeyCode.D) && !swordSwinging)
+        rb.AddForce(Physics.gravity * rb.mass * gravityIncrease, ForceMode.Force);
+        if (!dead && knockBackNoMovementTimer <= 0)
         {
-            //move player
-            if (grounded)
-                rb.AddForce(transform.forward * speed * Time.deltaTime, ForceMode.VelocityChange);
-            else
-                rb.AddForce(transform.forward * speed * Time.deltaTime * airMovementMultiplier, ForceMode.VelocityChange);
-        }
-        if (Input.GetKey(KeyCode.LeftArrow) && !swordSwinging || Input.GetKey(KeyCode.A) && !swordSwinging)
-        {
-            //move player
-            if (grounded)//player movement on the ground
-                rb.AddForce(transform.forward * speed * Time.deltaTime, ForceMode.VelocityChange);
-            else // slower acceleration while in the air
-                rb.AddForce(transform.forward * speed * Time.deltaTime * airMovementMultiplier, ForceMode.VelocityChange);
-        }
-        if(jumpHoldTime >= 0 && jumpBuffer >= 0)
-        {
-            //removes current vertical velocity
-            ani.SetTrigger("jumped"); // jump animation
-            Vector3 velocityKill = rb.velocity;
-            velocityKill.y = 0;
-            rb.velocity = velocityKill;
-            //jumps
-            rb.AddForce(transform.up * jumpForce, ForceMode.VelocityChange);
-            jumping = true;
-            antiBumpForceTimer = -1;
-            groundedDelay = maxGroundedDelay;
-            jumpHoldTime = -1;  // -> not grounded
-            jumpBuffer = -1;   // -> hasn't pressed the key
-        }
-        else if(jumpBuffer > 0 && doubleJump)
-        {
-            Vector3 velocityKill = rb.velocity;
-            velocityKill.y = 0;
-            rb.velocity = velocityKill;
-            rb.AddForce(transform.up * jumpForce * doubleJumpForce, ForceMode.VelocityChange);//jump half as high
-            doubleJump = false;
-            jumping = true;
-            antiBumpForceTimer = -1;
-            groundedDelay = maxGroundedDelay;
-            jumpBuffer = -1;
+            //movement
+            if (Input.GetKey(KeyCode.RightArrow) && !swordSwinging || Input.GetKey(KeyCode.D) && !swordSwinging)
+            {
+                //move player
+                if (grounded)
+                    rb.AddForce(transform.forward * speed * Time.deltaTime, ForceMode.VelocityChange);
+                else
+                    rb.AddForce(transform.forward * speed * Time.deltaTime * airMovementMultiplier, ForceMode.VelocityChange);
+            }
+            if (Input.GetKey(KeyCode.LeftArrow) && !swordSwinging || Input.GetKey(KeyCode.A) && !swordSwinging)
+            {
+                //move player
+                if (grounded)//player movement on the ground
+                    rb.AddForce(transform.forward * speed * Time.deltaTime, ForceMode.VelocityChange);
+                else // slower acceleration while in the air
+                    rb.AddForce(transform.forward * speed * Time.deltaTime * airMovementMultiplier, ForceMode.VelocityChange);
+            }
+            if (jumpHoldTime >= 0 && jumpBuffer >= 0)
+            {
+                //removes current vertical velocity
+                ani.SetTrigger("jumped"); // jump animation
+                Vector3 velocityKill = rb.velocity;
+                velocityKill.y = 0;
+                rb.velocity = velocityKill;
+                //jumps
+                rb.AddForce(transform.up * jumpForce, ForceMode.VelocityChange);
+                jumping = true;
+                antiBumpForceTimer = -1;
+                groundedDelay = maxGroundedDelay;
+                jumpHoldTime = -1;  // -> not grounded
+                jumpBuffer = -1;   // -> hasn't pressed the key
+            }
+            else if (jumpBuffer > 0 && doubleJump)
+            {
+                Vector3 velocityKill = rb.velocity;
+                velocityKill.y = 0;
+                rb.velocity = velocityKill;
+                rb.AddForce(transform.up * jumpForce * doubleJumpForce, ForceMode.VelocityChange);//jump half as high
+                doubleJump = false;
+                jumping = true;
+                antiBumpForceTimer = -1;
+                groundedDelay = maxGroundedDelay;
+                jumpBuffer = -1;
+            }
         }
     }
     // Update is called once per frame
@@ -242,47 +248,52 @@ public class playerController1 : MonoBehaviour
             //make sure game isn't paused for logic
             if (!paused)
             {
-                jumpTimersUpdate();
+                timersUpdate();
                 //keeps the player speed in check
                 deleteThisLater.text = rb.velocity.x.ToString();
                 speedCheck();
                 //input for the player movement
-                if (Input.GetKey(KeyCode.RightArrow) && !swordSwinging || Input.GetKey(KeyCode.D) && !swordSwinging)
-                {
-                    //remove friction when running
-                    removeFriction();
-                    //change player facing direction
-                    transform.eulerAngles = new Vector3(0, -90, 0);
-                }
-                if (Input.GetKey(KeyCode.LeftArrow) && !swordSwinging || Input.GetKey(KeyCode.A) && !swordSwinging)
-                {
-                    //remove friction when running
-                    removeFriction();
-                    //change player facing direction
-                    transform.eulerAngles = new Vector3(0, 90, 0);
-                }
-
+               
+                    if (Input.GetKey(KeyCode.RightArrow) && !swordSwinging || Input.GetKey(KeyCode.D) && !swordSwinging)
+                    {
+                        if (Input.GetKeyDown(KeyCode.D) && rb.velocity.x > 0)
+                        {
+                            //insert turn around animation call
+                            rb.velocity = new Vector3(rb.velocity.x * 0.3f, rb.velocity.y, rb.velocity.z);
+                        }
+                        //remove friction when running
+                        removeFriction();
+                        //change player facing direction
+                        transform.eulerAngles = new Vector3(0, -90, 0);
+                    }
+                    if (Input.GetKey(KeyCode.LeftArrow) && !swordSwinging || Input.GetKey(KeyCode.A) && !swordSwinging)
+                    {
+                        if (Input.GetKeyDown(KeyCode.A) && rb.velocity.x < 0)
+                        {
+                            //insert turn around animation call
+                            rb.velocity = new Vector3(rb.velocity.x * 0.3f, rb.velocity.y, rb.velocity.z);
+                        }
+                        //remove friction when running
+                        removeFriction();
+                        //change player facing direction
+                        transform.eulerAngles = new Vector3(0, 90, 0);
+                    }
+                    if (Input.GetKeyDown(KeyCode.Space)) //jumps
+                    {
+                        jumpBuffer = maxJumpBuffer;
+                    }
                 //check if falling
                 if (!grounded && rb.velocity.y < 0)
                 {
                     ani.SetBool("falling", true);
                 }
 
-                if (Input.GetKeyDown(KeyCode.Space)) //jumps
-                {
-                    jumpBuffer = maxJumpBuffer;
-                }
-               // else if (Input.GetKeyDown(KeyCode.Space) && doubleJump) //jumps if in the air (double jump)
-               // {
-               //     jumpBuffer = maxJumpBuffer;
-               // }
-                
                 //controlled jumping -> allows short hops when button is tapped and large jumps when held
                 if(Input.GetKeyUp(KeyCode.Space) && rb.velocity.y > 0)
                 {
                     rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y * 0.5f, rb.velocity.z);
                 }
-
+                
 
                 //when movement keys are released
                 if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
@@ -449,7 +460,7 @@ public class playerController1 : MonoBehaviour
         //determines direction to knock back
         float enemyX = enemy.transform.position.x;
         float playerX = transform.position.x;
-
+        knockBackNoMovementTimer = maxKnockBackNoMovementTimer;
         //remove current velocity then knocks back player
         rb.velocity = Vector3.zero;
 
@@ -464,12 +475,14 @@ public class playerController1 : MonoBehaviour
         rb.AddForce(new Vector3(xDirection,verticalKnockBackAmount,0), ForceMode.VelocityChange);
     }
 
-    private void jumpTimersUpdate()
+    private void timersUpdate()
     {
         if(jumpHoldTime > 0)
-        jumpHoldTime -= Time.deltaTime;
+            jumpHoldTime -= Time.deltaTime;
         if(jumpBuffer > 0)
-        jumpBuffer -= Time.deltaTime;
+            jumpBuffer -= Time.deltaTime;
+        if(knockBackNoMovementTimer > 0)
+            knockBackNoMovementTimer -= Time.deltaTime;
     }
     /// <summary>
     /// player has run out of health and has died
@@ -495,7 +508,7 @@ public class playerController1 : MonoBehaviour
         {
             rb.velocity = new Vector3(-playerMaxMovementSpeed, rb.velocity.y, rb.velocity.z);
         }
-
+        //set value for idle/walking/running animation(they have been blended together)
         float currentSpeed = rb.velocity.x;
         if (currentSpeed < 0)
         {
@@ -513,6 +526,10 @@ public class playerController1 : MonoBehaviour
         collide.material.dynamicFriction = 1.0f;
         collide.material.staticFriction = 1.0f;
         collide.material.frictionCombine = PhysicMaterialCombine.Maximum;
+        if(rb.velocity.x > 3 || rb.velocity.x < -3)
+        {
+            rb.velocity = new Vector3(rb.velocity.x * 0.8f, rb.velocity.y, rb.velocity.z);
+        }
     }
     private void removeFriction()
     {
