@@ -24,36 +24,37 @@ public class EnemyBehaviour : MonoBehaviour
     public float knockback = 20.0f;
     private Transform healthBar;
     private Slider healthSlider;
+
     [Header("Health Points")]
     public int health;
 
     // Where the hit box is
     [Header("Attack Area and Settings")]
-    public Transform hit_box;
-    public float hit_range = 0.5f;
-    public LayerMask attack_layer;
+    [Tooltip("The Gameobject used to attack the player")]public Transform hit_box;
+    [Tooltip("How much area can the attack cover")] public float hit_range = 0.5f;
+    [Tooltip("Set to player, no questions")] public LayerMask attack_layer;
     RaycastHit hit;
 
     // Detecting obstacles and player
     [Header("Enemy Detection Settings")]
-    public float detection_range = 5.0f; // How far the enemy can detect the player
-    public float max_ray_dist = 10.0f; // When enemy can has seen the player.
-    float current_ray_dist;
+    [Tooltip("The detection range of the enemy")]public float detection_range = 5.0f; // How far the enemy can detect the player
+    [Tooltip("Max line of sight")] public float max_ray_dist = 10.0f; // When enemy can has seen the player.
+    float current_ray_dist; // Used as a dynamic raycast distance variable
     
     [Header("Movement Speed")]
     public float speed = 5.0f;
 
     [Header("Target to chase")]
-    public Transform target; // The player
+    [Tooltip("The target enemy chases")] public Transform target; // The player
 
     Rigidbody rb;
     Ray ray;
 
     [Header("Centre of Enemy")]
-    public Transform ray_centre;
+    [Tooltip("Either the root node or whatever object is called the ray centre")] public Transform ray_centre;
 
     // Keep track of the player
-    public float detect_distance = 5.0f;
+    [Tooltip("How far the enemy can see the player")] public float detect_distance = 5.0f;
     float distance_to_player;
 
     // Rays to check on each side
@@ -61,26 +62,26 @@ public class EnemyBehaviour : MonoBehaviour
     const int num_of_rays = 2; // There will only ever be two
 
     [Header("Ledge detection")]
-    public float ray_offset = 3.0f; // How far apart the rays are from the Player
-    public float drop_cast_dist = 1.5f; // The 
+    [Tooltip("How far the check for a ledge is placed in front of itself")] public float ray_offset = 3.0f; // How far apart the rays are from the Player
+    [Tooltip("How far down it checks for when there's drop or not")] public float drop_cast_dist = 1.5f; // The 
 
     // Distance check for an obstacle
     [Header("Obstacle Check Distance")]
-    public float min_dist = 1.0f;
-    float drop_check;
+    [Tooltip("The minimum distance the enemy can see in front of them")]public float min_dist = 1.0f;
+   
 
     // Attacking
     bool is_attacking = false;
     bool can_attack = true;
     float attack_timer;
     [Header("Attack Settings")]
-    public float attack_cooldown = 2.0f; [Tooltip("Timer before it can attack again")]
-    public float attack_range = 0.8f; [Tooltip("Close-range attack area")]
+    [Tooltip("Timer before it can attack again")]  public float attack_cooldown = 2.0f;
+    [Tooltip("Close-range attack area")]  public float attack_range = 0.8f; 
 
     // Shooting needs
     [Header("Shooting Settings")]
     public GameObject bullet;
-    public float shoot_cooldown = 2.0f;
+    [Tooltip("Timer before enemy can shoot again")]public float shoot_cooldown = 2.0f;
     bool is_shooting = false;
     bool can_shoot = true;
     float shoot_timer;
@@ -97,8 +98,8 @@ public class EnemyBehaviour : MonoBehaviour
 
     // Stun values
     [Header("Stun settings")]
-    public float stun_duration = 2.0f;
-    public float stun_recovery = 2.0f;
+    [Tooltip("How long the enemy is stunned")] public float stun_duration = 2.0f;
+    [Tooltip("Rate of stun recovery")]public float stun_recovery = 2.0f;
     bool is_stunned = true;
     float stun_time;
 
@@ -345,12 +346,22 @@ public class EnemyBehaviour : MonoBehaviour
     }
 
     /// <summary>
+    /// If there is any obstacle in front, jump over it
+    /// </summary>
+    void jump()
+    {
+        
+    }
+
+    /// <summary>
     /// Move towards the player
     /// </summary>
     void moveToPlayer()
     {
-        Vector2 move_velocity = (target.position - transform.position).normalized;
+        Vector3 move_velocity = (target.position - transform.position).normalized;
+        move_velocity = new Vector3(move_velocity.x, 0.0f, 0.0f);
 
+        // Wherever  the player is, move towards them on the x-axis
         rb.AddForce(move_velocity * speed * Time.deltaTime, ForceMode.VelocityChange);
     }
 
@@ -412,8 +423,9 @@ public class EnemyBehaviour : MonoBehaviour
 
             // Reset Enemy velocity
             rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
 
-            rb.AddForce(-transform.forward  * knockback, ForceMode.Impulse);
+            rb.AddForce((-transform.forward + transform.up) * knockback, ForceMode.VelocityChange);
             health--;
             healthSlider.value = health;
         }
