@@ -139,7 +139,6 @@ public class grapplingHook : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log(collision.gameObject);
         //collisions with various objects with tags
         if(collision.gameObject.tag == "enemy" && !isEnemyGrabbed && !wallGrabbed && extending)
         {
