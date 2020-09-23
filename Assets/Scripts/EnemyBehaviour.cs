@@ -64,7 +64,7 @@ public class EnemyBehaviour : MonoBehaviour
     [Header("Ledge detection")]
     [Tooltip("How far the check for a ledge is placed in front of itself")] public float ray_offset = 3.0f; // How far apart the rays are from the Player
     [Tooltip("How far down it checks for when there's drop or not")] public float drop_cast_dist = 1.5f; // The 
-
+    float drop_check;
     // Distance check for an obstacle
     [Header("Obstacle Check Distance")]
     [Tooltip("The minimum distance the enemy can see in front of them")]public float min_dist = 1.0f;
