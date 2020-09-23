@@ -8,7 +8,7 @@ public class BlurControl : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		value = 0.0f;
-		transform.renderer.material.SetFloat("_blurSizeXY",value);
+		transform.GetComponent<Renderer>().material.SetFloat("_blurSizeXY",value);
 	}
 	
 	// Update is called once per frame
@@ -17,13 +17,13 @@ public class BlurControl : MonoBehaviour {
 		{
 			value = value + Time.deltaTime;
 			if (value>20f) value = 20f;
-			transform.renderer.material.SetFloat("_blurSizeXY",value);
+			transform.GetComponent<Renderer>().material.SetFloat("_blurSizeXY",value);
 		}
 		else if(Input.GetButton("Down"))
 		{
 			value = (value - Time.deltaTime) % 20.0f;
 			if (value<0f) value = 0f;
-			transform.renderer.material.SetFloat("_blurSizeXY",value);
+			transform.GetComponent<Renderer>().material.SetFloat("_blurSizeXY",value);
 		}		
 	}
 	
