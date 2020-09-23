@@ -3,11 +3,14 @@
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
     <CscToolPath>D:\Unity\Unity 2018 3.8f1\Unity\Editor\Data\Tools\RoslynScripts</CscToolPath>
 =======
     <CscToolPath>C:\Program Files\Unity\Hub\Editor\2019.2.17f1\Editor\Data\Tools\RoslynScripts</CscToolPath>
 >>>>>>> master
     <CscToolExe>unity_csc.bat</CscToolExe>
+>>>>>>> master
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -64,11 +67,14 @@
   <ItemGroup>
     <Reference Include="UnityEngine">
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
       <HintPath>D:\Unity\Unity 2018 3.8f1\Unity\Editor\Data\Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor">
       <HintPath>D:\Unity\Unity 2018 3.8f1\Unity\Editor\Data\Managed/UnityEditor.dll</HintPath>
 =======
+>>>>>>> master
       <HintPath>C:\Program Files\Unity\Hub\Editor\2019.2.17f1\Editor\Data\Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor">
@@ -119,6 +125,12 @@
     <Compile Include="Assets\Scripts\Waves.cs" />
     <Compile Include="Assets\WavingGrass\Scripts\GrassController.cs" />
     <Compile Include="Assets\WavingGrass\Scripts\Player.cs" />
+<<<<<<< HEAD
+    <None Include="Assets\WavingGrass\Shader\GrassWind.shader" />
+    <None Include="Assets\WavingGrass\readme.txt" />
+    <Reference Include="Unity.Timeline.Editor">
+      <HintPath>C:/Users/Aaron/Desktop/towerOfUmbra/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
+=======
     <None Include="Assets\Shaders\WaterBlurFinal.shader" />
     <None Include="Assets\WavingGrass\Shader\GrassWind.shader" />
     <None Include="Assets\WavingGrass\readme.txt" />
@@ -168,6 +180,7 @@
       <HintPath>W:/projects/end of year/towerOfUmbra/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
 =======
       <HintPath>D:/Owner/My Documents/Adams stuff/Video game Design and devolopment/SVN/Umbra/towerOfUmbra/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
+>>>>>>> master
     </Reference>
     <Reference Include="Unity.VSCode.Editor">
       <HintPath>D:/Owner/My Documents/Adams stuff/Video game Design and devolopment/SVN/Umbra/towerOfUmbra/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
@@ -206,7 +219,11 @@
       <HintPath>D:/Owner/My Documents/Adams stuff/Video game Design and devolopment/SVN/Umbra/towerOfUmbra/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.UI">
+<<<<<<< HEAD
+      <HintPath>C:/Users/Aaron/Desktop/towerOfUmbra/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+=======
       <HintPath>D:/Owner/My Documents/Adams stuff/Video game Design and devolopment/SVN/Umbra/towerOfUmbra/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+>>>>>>> master
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>D:/Unity/Unity 2018 3.8f1/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
@@ -383,13 +400,21 @@
       <HintPath>D:/Unity/Unity 2018 3.8f1/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.WindModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.XRModule">
+<<<<<<< HEAD
+      <HintPath>C:/Program Files/Unity/Hub/Editor/2019.2.17f1/Editor/Data/Managed/UnityEngine/UnityEngine.XRModule.dll</HintPath>
+=======
       <HintPath>D:/Unity/Unity 2018 3.8f1/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.XRModule.dll</HintPath>
+>>>>>>> master
     </Reference>
     <Reference Include="UnityEditor.iOS.Extensions.Xcode">
       <HintPath>D:/Unity/Unity 2018 3.8f1/Unity/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.iOS.Extensions.Common">
+<<<<<<< HEAD
+      <HintPath>C:/Program Files/Unity/Hub/Editor/2019.2.17f1/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Common.dll</HintPath>
+=======
       <HintPath>D:/Unity/Unity 2018 3.8f1/Unity/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Common.dll</HintPath>
+>>>>>>> master
     </Reference>
     <Reference Include="netstandard">
       <HintPath>D:/Unity/Unity 2018 3.8f1/Unity/Editor/Data/NetStandard/ref/2.0.0/netstandard.dll</HintPath>
@@ -734,6 +759,9 @@
       <HintPath>D:/Unity/Unity 2018 3.8f1/Unity/Editor/Data/NetStandard/compat/2.0.0/shims/netfx/System.Xml.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Serialization">
+<<<<<<< HEAD
+      <HintPath>C:/Program Files/Unity/Hub/Editor/2019.2.17f1/Editor/Data/NetStandard/compat/2.0.0/shims/netfx/System.Xml.Serialization.dll</HintPath>
+=======
       <HintPath>D:/Unity/Unity 2018 3.8f1/Unity/Editor/Data/NetStandard/compat/2.0.0/shims/netfx/System.Xml.Serialization.dll</HintPath>
 >>>>>>> master
 =======
@@ -1300,6 +1328,7 @@
     </Reference>
     <Reference Include="System.Xml.Serialization">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.2.17f1/Editor/Data/NetStandard/compat/2.0.0/shims/netfx/System.Xml.Serialization.dll</HintPath>
+>>>>>>> master
 >>>>>>> master
     </Reference>
   </ItemGroup>

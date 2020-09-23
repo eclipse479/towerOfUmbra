@@ -135,15 +135,10 @@ public class grapplingHook : MonoBehaviour
             }
                
         }
-        if (Input.GetKeyDown(KeyCode.N))
-        {
-            Debug.Log(transform.position);
-        }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log(collision.gameObject);
         //collisions with various objects with tags
         if(collision.gameObject.tag == "enemy" && !isEnemyGrabbed && !wallGrabbed && extending)
         {
@@ -163,7 +158,6 @@ public class grapplingHook : MonoBehaviour
             forceDirection = (new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, player.gameObject.transform.position.z) - player.gameObject.transform.position);
             hold = forceDirection.magnitude;//length
             forceDirection.Normalize();
-            Debug.Log("direction: " + forceDirection);
             playerPullToWall();
         }
         else 
@@ -189,7 +183,6 @@ public class grapplingHook : MonoBehaviour
         collide.enabled = false;
         wallGrabbed = false;
         playerRB.AddForce(forceDirection * CalculateJumpForce(hold, 9.8f) * grapplePullToWallForce, ForceMode.VelocityChange);
-        Debug.Log("Force: " + forceDirection * CalculateJumpForce(hold, 9.8f) * grapplePullToWallForce);
     }
 
     private float CalculateJumpForce(float jumpHeight, float gravity)
