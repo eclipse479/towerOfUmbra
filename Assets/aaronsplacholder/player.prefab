@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 686632258312999819}
   - component: {fileID: 686632258312999861}
-  - component: {fileID: 686632258312999818}
   - component: {fileID: 3570303979611336460}
+  - component: {fileID: 1463891477}
   m_Layer: 8
   m_Name: player
   m_TagString: player
@@ -51,19 +51,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 120
   m_CollisionDetection: 0
---- !u!65 &686632258312999818
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 686632258312999862}
-  m_Material: {fileID: 13400000, guid: 1a1fd942151dd3a4e976a828374ba1ab, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1.7787383, z: 0.2498385}
-  m_Center: {x: -1.4727752e-18, y: 0.8936461, z: 0.0008729249}
 --- !u!114 &3570303979611336460
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -85,6 +72,7 @@ MonoBehaviour:
   healthBar: {fileID: 0}
   verticalKnockBackAmount: 5
   horizontalKnockBackAmount: 3
+  maxKnockBackNoMovementTimer: 3
   numOfFlashes: 3
   flashLength: 0.4
   playerRend: {fileID: 686632259244651019}
@@ -103,8 +91,22 @@ MonoBehaviour:
   maxJumpHoldTime: 0
   maxJumpBuffer: 0
   gravityIncrease: 1.45
-  boxCastMaxDistance: 1
+  boxCastMaxDistance: 1.33
   deleteThisLater: {fileID: 0}
+--- !u!136 &1463891477
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 686632258312999862}
+  m_Material: {fileID: 13400000, guid: 1a1fd942151dd3a4e976a828374ba1ab, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.15804856
+  m_Height: 1.8463552
+  m_Direction: 1
+  m_Center: {x: 3.1100535e-17, y: 0.8912629, z: 0.010001004}
 --- !u!1 &686632259239378601
 GameObject:
   m_ObjectHideFlags: 0
