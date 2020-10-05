@@ -129,7 +129,6 @@ public class playerController1 : MonoBehaviour
     {
         //health bar values
         healthbarImage = healthBar.transform.GetChild(1).gameObject.GetComponent<Image>();
-        Debug.Log("first" + playerStats.health);
         if(playerStats.health <= 0 && !dead)
         {
            playerStats.health = maxHealth;
@@ -139,7 +138,6 @@ public class playerController1 : MonoBehaviour
            currentHealth = playerStats.health;
            healthbarImage.fillAmount = playerStats.health / maxHealth;
         }
-        Debug.Log("second" + playerStats.health);
     }
     void Start()
     {
@@ -248,7 +246,6 @@ public class playerController1 : MonoBehaviour
             {
                 timersUpdate();
                 //keeps the player speed in check
-                deleteThisLater.text = rb.velocity.x.ToString();
                 speedCheck();
                 //input for the player movement
                
@@ -524,9 +521,12 @@ public class playerController1 : MonoBehaviour
         collide.material.dynamicFriction = 1.0f;
         collide.material.staticFriction = 1.0f;
         collide.material.frictionCombine = PhysicMaterialCombine.Maximum;
-        if(rb.velocity.x > 3 || rb.velocity.x < -3)
+        if (Input.GetKeyUp(KeyCode.A) && grounded && !Input.GetKey(KeyCode.D) || Input.GetKeyUp(KeyCode.D) && grounded && !Input.GetKey(KeyCode.A))
         {
-            rb.velocity = new Vector3(rb.velocity.x * 0.8f, rb.velocity.y, rb.velocity.z);
+            if (rb.velocity.x > 3 || rb.velocity.x < -3)
+            {
+                rb.velocity = new Vector3(rb.velocity.x * 0.8f, rb.velocity.y, rb.velocity.z);
+            }
         }
     }
     private void removeFriction()
@@ -554,7 +554,7 @@ public class playerController1 : MonoBehaviour
             if (!Physics.Raycast(transform.position + new Vector3(0, -0.45f, 0), transform.forward, out forwardRay, 1.0f, platformLayerMask))
             {
                 Debug.DrawRay(transform.position + new Vector3(0, -0.45f, 0), transform.forward, Color.black);
-                //deleteThisLater.text = "APPLY THE FORCE!!! time left: " + antiBumpForceTimer;
+                deleteThisLater.text = "APPLY THE FORCE!!! time left: " + antiBumpForceTimer;
                 rb.AddForce(-Vector3.up * antiSlopeBumpForce, ForceMode.VelocityChange);
             }
             else
@@ -603,12 +603,12 @@ public class playerController1 : MonoBehaviour
             }
             else
             {
-                //deleteThisLater.text = "sameGround";
+                deleteThisLater.text = "sameGround";
             }
         }
         else
         {
-            //deleteThisLater.text = "nothing in front";
+            deleteThisLater.text = "nothing in front";
             Debug.DrawRay(rayCastPos, -transform.up * length, Color.gray);
         }
     }
