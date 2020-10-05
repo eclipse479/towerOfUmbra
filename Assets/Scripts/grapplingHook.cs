@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using UnityEngine.Animations;
 
 public class grapplingHook : MonoBehaviour
 {
@@ -40,7 +40,7 @@ public class grapplingHook : MonoBehaviour
     //vector for pulling direction player -> wall
     [HideInInspector]
     public Vector3 forceDirection;
-    private float hold;
+    private float distanceToWall;
 
     private Collider collide;
     [Header("FORCE MULTIPLIERS")]
@@ -156,7 +156,7 @@ public class grapplingHook : MonoBehaviour
             wallGrabbed = true;
             extending = false;
             forceDirection = (new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, player.gameObject.transform.position.z) - player.gameObject.transform.position);
-            hold = forceDirection.magnitude;//length
+            distanceToWall = forceDirection.magnitude;//length
             forceDirection.Normalize();
             playerPullToWall();
         }
@@ -177,18 +177,21 @@ public class grapplingHook : MonoBehaviour
         float distance = enemyDirection.magnitude;
         enemyDirection.Normalize();
         enemyBody.AddForce(enemyDirection * CalculateJumpForce(distance,9.8f) * grapplePullEnemyForce, ForceMode.VelocityChange);
+        
     }
     public void playerPullToWall()
     {
         collide.enabled = false;
         wallGrabbed = false;
-        playerRB.AddForce(forceDirection * CalculateJumpForce(hold, 9.8f) * grapplePullToWallForce, ForceMode.VelocityChange);
+        playerRB.AddForce(forceDirection * CalculateJumpForce(distanceToWall, 9.8f) * grapplePullToWallForce, ForceMode.VelocityChange);
+        Debug.Log("force multiplier: " + CalculateJumpForce(distanceToWall, 9.8f));
     }
 
     private float CalculateJumpForce(float jumpHeight, float gravity)
     {
+        float playerGravity = gravity + (gravity * player.GetComponent<playerController1>().gravityIncrease);
         //jumpheight -> distance to target to jump to
-        return Mathf.Sqrt(2 * jumpHeight * gravity);
+        return Mathf.Sqrt(2 * jumpHeight * playerGravity);
     }
 
 

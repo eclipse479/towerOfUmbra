@@ -732,7 +732,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 136642176}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 19.1, y: 37.6, z: 0.3}
+  m_LocalPosition: {x: 46.2, y: 16.5, z: 0.3}
   m_LocalScale: {x: 27.020699, y: 3, z: 13.908974}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1629,7 +1629,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 8d2b21b1ee87246438b85c713ef29c44, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4854,7 +4854,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8aa3a0123b90fc841b3085a6f48edcc6, type: 2}
+  - {fileID: 2100000, guid: 852a0795d376eed46b46e8f73af516cb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6481,7 +6481,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8aa3a0123b90fc841b3085a6f48edcc6, type: 2}
+  - {fileID: 2100000, guid: 852a0795d376eed46b46e8f73af516cb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7365,7 +7365,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1409387142}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 27.74, y: 0.41, z: 3}
+  m_LocalPosition: {x: 25.85, y: 2.34, z: 3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1457903990}
@@ -8277,6 +8277,7 @@ MonoBehaviour:
   healthBar: {fileID: 1672281969}
   verticalKnockBackAmount: 5
   horizontalKnockBackAmount: 5
+  maxKnockBackNoMovementTimer: 0
   numOfFlashes: 0
   flashLength: 0
   playerRend: {fileID: 0}
@@ -10577,7 +10578,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8aa3a0123b90fc841b3085a6f48edcc6, type: 2}
+  - {fileID: 2100000, guid: 852a0795d376eed46b46e8f73af516cb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -11487,6 +11488,12 @@ PrefabInstance:
       propertyPath: grapplePullEnemyForce
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1744011395892868420, guid: 42e61a815c4f1fe44bd93c13b7c61904,
+        type: 3}
+      propertyPath: DeleteThisLater
+      value: 
+      objectReference: {fileID: 5889262516109780478, guid: c8054d6df42ba9c4a8b19c66a424499b,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 42e61a815c4f1fe44bd93c13b7c61904, type: 3}
 --- !u!1001 &3570303980549543365
@@ -11499,12 +11506,12 @@ PrefabInstance:
     - target: {fileID: 686632258312999819, guid: b27c32ed6fcf4504a9cae0f4ec758833,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 100.2
+      value: 102.18
       objectReference: {fileID: 0}
     - target: {fileID: 686632258312999819, guid: b27c32ed6fcf4504a9cae0f4ec758833,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 686632258312999819, guid: b27c32ed6fcf4504a9cae0f4ec758833,
         type: 3}
@@ -11634,7 +11641,7 @@ PrefabInstance:
     - target: {fileID: 3570303979611336460, guid: b27c32ed6fcf4504a9cae0f4ec758833,
         type: 3}
       propertyPath: numOfFlashes
-      value: 2
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3570303979611336460, guid: b27c32ed6fcf4504a9cae0f4ec758833,
         type: 3}
@@ -11659,7 +11666,7 @@ PrefabInstance:
     - target: {fileID: 3570303979611336460, guid: b27c32ed6fcf4504a9cae0f4ec758833,
         type: 3}
       propertyPath: gravityIncrease
-      value: 0
+      value: 1.42
       objectReference: {fileID: 0}
     - target: {fileID: 3570303979611336460, guid: b27c32ed6fcf4504a9cae0f4ec758833,
         type: 3}
@@ -11676,12 +11683,18 @@ PrefabInstance:
       propertyPath: playerMaxMovementSpeed
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 3570303979611336460, guid: b27c32ed6fcf4504a9cae0f4ec758833,
+        type: 3}
+      propertyPath: maxKnockBackNoMovementTimer
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 3570303979714495596, guid: b27c32ed6fcf4504a9cae0f4ec758833,
         type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 686632258312999818, guid: b27c32ed6fcf4504a9cae0f4ec758833, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: b27c32ed6fcf4504a9cae0f4ec758833, type: 3}
 --- !u!1 &4038370880789907059 stripped
 GameObject:
@@ -11689,6 +11702,20 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 3570303980549543365}
   m_PrefabAsset: {fileID: 0}
+--- !u!136 &4038370880789907061
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4038370880789907059}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.3617677
+  m_Height: 1.7894946
+  m_Direction: 1
+  m_Center: {x: -0.0038969815, y: 0.9085848, z: -1.3170039e-19}
 --- !u!1001 &7743204379494230487
 PrefabInstance:
   m_ObjectHideFlags: 0
