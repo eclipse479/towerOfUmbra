@@ -99,13 +99,50 @@ public class EnemyBehaviour : MonoBehaviour
     // Stun values
     [Header("Stun settings")]
     [Tooltip("How long the enemy is stunned")] public float stun_duration = 2.0f;
-    [Tooltip("Rate of stun recovery")]public float stun_recovery = 2.0f;
+    [Tooltip("Rate of stun recovery")] public float stun_recovery = 2.0f;
     bool is_stunned = true;
     float stun_time;
+
+    // Navigation rays
+    struct PathRays
+    {
+        public Ray ray;
+        public bool path_open;
+    }
+
+    PathRays[] nav_rays = new PathRays[8]; // The amount we're using in 8-directions
+    // PathRays[] open_rays = new PathRays[8]; // This stores the rays that are open
+
+    List<PathRays> open_rays;
+
 
     // Things that need to be loaded before first frame
     private void Awake()
     {
+        // From the forward ray all the way around
+        //                6
+        //             5  ^  7
+        //              \ | /
+        //         4  <- ( ) ->  0
+        //              / | \
+        //             3  v  1
+        //                2
+        for (int i = 0; i < nav_rays.Length; i++)
+        {
+            // From a starting point of 45 degrees
+            float angle = 0.785398f * i;
+
+            if (i == 0)
+            {
+                nav_rays[i].ray = new Ray(ray_centre.position, transform.forward);
+            }
+            else 
+            {
+                nav_rays[i].ray = new Ray(ray_centre.position, new Vector3(Mathf.Cos(angle), -Mathf.Sin(angle), 0)); 
+            }
+            nav_rays[i].path_open = false; // By default
+        }
+
         // Get the player as target
         target = GameObject.FindGameObjectWithTag("player").transform;
         rb = GetComponent<Rigidbody>();
@@ -168,6 +205,13 @@ public class EnemyBehaviour : MonoBehaviour
 
         ray.direction = transform.forward;
         Debug.DrawRay(ray.origin, ray.direction, Color.green);
+
+        // Set the Nav Rays' origins each frame.
+        for (int i = 0; i < nav_rays.Length; i++)
+        {
+            nav_rays[i].ray.origin = ray_centre.position;
+            Debug.DrawRay(nav_rays[i].ray.origin, nav_rays[i].ray.direction, Color.yellow);
+        }
 
         // If it has no health points
         if (health <= 0.0f)
@@ -345,12 +389,34 @@ public class EnemyBehaviour : MonoBehaviour
         return false;
     }
 
+
+    void pathCheck(PathRays[] paths)
+    {
+        for (int i = 0; i < paths.Length; i++)
+        {
+            if (Physics.Raycast(paths[i].ray, out hit, detection_range))
+            {
+                // As long as it ain't itself.
+                if (hit.collider.gameObject == gameObject)
+                    paths[i].path_open = false;
+            }
+            else
+            {
+                // If this path is open, add it to the open path's array.
+                paths[i].path_open = true;
+                open_rays.Add(paths[i]);
+            }
+        }
+    }
+
     /// <summary>
     /// If there is any obstacle in front, jump over it
     /// </summary>
     void jump()
     {
-        
+        float jump_angle = Mathf.Deg2Rad * -45.0f;
+        Vector3 jump_dir = transform.forward + new Vector3(Mathf.Cos(jump_angle), -Mathf.Sin(jump_angle), 0);
+        rb.AddForce(jump_dir * 10.0f, ForceMode.VelocityChange);
     }
 
     /// <summary>
