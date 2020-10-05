@@ -1,7 +1,5 @@
 ﻿using System.Collections;
-using UnityEditorInternal;
 using UnityEngine;
-using UnityEngine.Assertions.Must;
 using UnityEngine.UI;
 
 public class playerController1 : MonoBehaviour
