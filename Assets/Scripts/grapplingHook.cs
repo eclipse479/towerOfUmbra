@@ -55,7 +55,6 @@ public class grapplingHook : MonoBehaviour
     private Vector3 grappleStartingPos;
     private float lerpPercent = 0;
     private Vector3 maxExtendedPoint;
-    public GameObject deleteThissoon;
 
     private bool retracting;
     // Start is called before the first frame update
@@ -192,7 +191,6 @@ public class grapplingHook : MonoBehaviour
         collide.enabled = false;        //collider turned off
         rb.isKinematic = true;          //kinematic to stop physics
         maxExtendedPoint = transform.position;
-        Instantiate(deleteThissoon, maxExtendedPoint, Quaternion.identity);
         while (retracting)
         {
             //retract the grappling hook
