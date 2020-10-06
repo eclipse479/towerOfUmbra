@@ -244,7 +244,6 @@ public class playerController1 : MonoBehaviour
             //make sure game isn't paused for logic
             if (!paused)
             {
-                deleteThisLater.text = rb.velocity.x.ToString();
                 timersUpdate();
                 //keeps the player speed in check
                 speedCheck();
@@ -278,7 +277,6 @@ public class playerController1 : MonoBehaviour
                     {
                         jumpBuffer = maxJumpBuffer;
                     }
-
                 //check if falling
                 if (!grounded && rb.velocity.y < 0)
                 {
@@ -363,13 +361,12 @@ public class playerController1 : MonoBehaviour
             deleteThisLater.color = Color.yellow;
         else if (antiBumpForceTimer > 0 && !jumping)
         {
-            deleteThisLater.color = Color.blue;
+            deleteThisLater.color = Color.red;
         }
         else
         {
-            deleteThisLater.color = Color.black;
+            deleteThisLater.color = Color.cyan;
         }
-
     }
 
 
@@ -554,17 +551,14 @@ public class playerController1 : MonoBehaviour
         if (antiBumpForceTimer > 0 && !jumping /*&& grounded*/)
         {
             RaycastHit forwardRay;
-            //if (!Physics.Raycast(transform.position + new Vector3(0, -0.45f, 0), transform.forward, out forwardRay, 1.0f, platformLayerMask))
-            if (!Physics.Raycast(transform.position + new Vector3(0, 0, 0), transform.forward, out forwardRay, 1.0f, platformLayerMask))
+            if (!Physics.Raycast(transform.position + new Vector3(0, -0.45f, 0), transform.forward, out forwardRay, 1.0f, platformLayerMask))
             {
-                //Debug.DrawRay(transform.position + new Vector3(0, -0.45f, 0), transform.forward, Color.black);
-                Debug.DrawRay(transform.position + new Vector3(0, 0, 0), transform.forward, Color.black);
-                //deleteThisLater.text = "APPLY THE FORCE!!! time left: " + antiBumpForceTimer;
+                Debug.DrawRay(transform.position + new Vector3(0, -0.45f, 0), transform.forward, Color.black);
+                deleteThisLater.text = "APPLY THE FORCE!!! time left: " + antiBumpForceTimer;
                 rb.AddForce(-Vector3.up * antiSlopeBumpForce, ForceMode.VelocityChange);
             }
             else
-                //Debug.DrawRay(transform.position + new Vector3(0, -0.45f, 0), transform.forward * forwardRay.distance, Color.black);
-                Debug.DrawRay(transform.position + new Vector3(0, 0, 0), transform.forward * forwardRay.distance, Color.black);
+                Debug.DrawRay(transform.position + new Vector3(0, -0.45f, 0), transform.forward * forwardRay.distance, Color.black);
         }
     }
 
@@ -573,13 +567,13 @@ public class playerController1 : MonoBehaviour
     /// </summary>
     private void floorCheck()
     {
-        if (Physics.Raycast(transform.position, -transform.up, out floorCheckRay, 0.2f, platformLayerMask))
+        if (Physics.Raycast(transform.position + new Vector3(0, -0.4f, 0), -transform.up, out floorCheckRay, 0.2f, platformLayerMask))
         {
-            Debug.DrawRay(transform.position, -transform.up * floorCheckRay.distance, Color.yellow);
+            Debug.DrawRay(transform.position + new Vector3(0, -0.4f, 0), -transform.up * floorCheckRay.distance, Color.blue);
         }
         else
         {
-            Debug.DrawRay(transform.position, -transform.up * 0.2f, Color.yellow);
+            Debug.DrawRay(transform.position + new Vector3(0, -0.4f, 0), -transform.up * 0.2f, Color.blue);
         }
         ///---------------------------------------------------------------------------------------------------------
         //deleteThisLater.text = "Normal X: " + slopeCheckRay.normal.x + " Normal Y: " + slopeCheckRay.normal.y + " Normal Z: " + slopeCheckRay.normal.z;
@@ -592,16 +586,16 @@ public class playerController1 : MonoBehaviour
     /// <returns></returns>
     private void groundCheck()
     {
+        //check directally beneth the player
+        floorCheck();
         
 
         //check the ground slightly in front of the player
-        Vector3 rayCastPos = transform.position + new Vector3(0, 0.25f, 0) + (transform.forward * 0.5f);
-        //check directally beneth the player
-        floorCheck();
-        float length = 0.62f;
+        Vector3 rayCastPos = transform.position + new Vector3(0, -0.4f, 0) + (transform.forward * 0.5f);
+        float length = 0.4f;
         if (Physics.Raycast(rayCastPos, -transform.up, out inFrontOfPlayer, length, platformLayerMask))
         {
-            Debug.DrawRay(rayCastPos, -transform.up * inFrontOfPlayer.distance, Color.blue);
+            Debug.DrawRay(rayCastPos, -transform.up * inFrontOfPlayer.distance, Color.cyan);
             //if the spot in front of the player hits ground and the normal is not the same as the normal the player is on
             if (floorCheckRay.normal.y != inFrontOfPlayer.normal.y && floorCheckRay.normal.y != 0 && inFrontOfPlayer.normal.y != 0)
             {
@@ -609,13 +603,13 @@ public class playerController1 : MonoBehaviour
             }
             else
             {
-                //deleteThisLater.text = "sameGround";
+                deleteThisLater.text = "sameGround";
             }
         }
         else
         {
-            //deleteThisLater.text = "nothing in front";
-            Debug.DrawRay(rayCastPos, -transform.up * length, Color.blue);
+            deleteThisLater.text = "nothing in front";
+            Debug.DrawRay(rayCastPos, -transform.up * length, Color.gray);
         }
     }
 
