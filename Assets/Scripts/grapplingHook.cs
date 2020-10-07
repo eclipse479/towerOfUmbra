@@ -1,5 +1,5 @@
+using System.Collections;
 using UnityEngine;
-using UnityEngine.Animations;
 
 public class grapplingHook : MonoBehaviour
 {
@@ -50,6 +50,13 @@ public class grapplingHook : MonoBehaviour
     public float grapplePullEnemyForce;
 
     private LineRenderer lRend;
+
+    //improved extending and retracting
+    private Vector3 grappleStartingPos;
+    private float lerpPercent = 0;
+    private Vector3 maxExtendedPoint;
+
+    private bool retracting;
     // Start is called before the first frame update
     void Start()
     {
@@ -68,32 +75,16 @@ public class grapplingHook : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        grappleStartingPos = new Vector3(player.transform.position.x, player.transform.position.y + baseHeightIncrease, player.transform.position.z) + (playerCamera.transform.forward * grappleDistFromPlayer);
+        
         //moves grapple to player position
-        parent.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + baseHeightIncrease, player.transform.position.z) + (playerCamera.transform.forward * grappleDistFromPlayer);
+        parent.transform.position = grappleStartingPos;
+
         //sets the line renderer to draw between the hook and parent
-        lRend.SetPosition(0, parent.transform.position);
+        lRend.SetPosition(0, grappleStartingPos);
         lRend.SetPosition(1, transform.position);
 
-        //the distance from the parent to the hook
-        Vector3 distanceParentToPointVec = parent.transform.position - transform.position;
-        float distanceFormParentToPointFloat = distanceParentToPointVec.magnitude;
-
-        //if the grapple is active
-        if (active)
-        {
-            if (extending) // growing
-            {
-                //rb.MovePosition(transform.position + (transform.right * extendRate * Time.deltaTime));
-                transform.position += parent.transform.forward * extendRate * Time.deltaTime;
-            }
-            else if (!extending)//shrinking
-            {
-
-                //rb.MovePosition(transform.position - (transform.right * extendRate * Time.deltaTime));
-                transform.position -= parent.transform.forward * extendRate * Time.deltaTime;
-            }
-        }
-        else if (!active)
+        if (!active)
         {
             //gets a new spot to shoot a grapple towards
             if (Input.GetMouseButtonDown(1))
@@ -109,31 +100,9 @@ public class grapplingHook : MonoBehaviour
                     collide.enabled = true;
                     active = true; // grapple exists
                     extending = true; // grapple is extending
-                    rb.isKinematic = false;
+                    StartCoroutine(extend());
                 }
             }
-        }
-
-        if (distanceFormParentToPointFloat > maxLength)
-        {
-            extending = false;
-            collide.enabled = false;
-        }
-        
-        if (!extending)
-        {
-            rb.isKinematic = true;
-            Vector3 toTarget = (parent.transform.position - transform.position).normalized;
-            //if(Vector2.Dot(new Vector2(parent.transform.position.x, parent.transform.position.y), new Vector2(transform.position.x, transform.position.y)) > 0)
-            if (Vector3.Dot(toTarget, transform.right) > 0) // checks if the parents position is in front of the hook
-            {
-                Debug.Log("parent is in front of this game object.");
-                isEnemyGrabbed = false;
-                wallGrabbed = false; 
-                active = false;
-                transform.position = parent.transform.position;
-            }
-               
         }
     }
 
@@ -144,15 +113,14 @@ public class grapplingHook : MonoBehaviour
         {
             //grapple the enemy
             grabbedEnemy = collision.gameObject;
-            isEnemyGrabbed = true;
             extending = false;
+            isEnemyGrabbed = true;
             pullEnemy(grabbedEnemy);
         }
         else if (collision.gameObject.tag == "grappleTarget" && !wallGrabbed && !isEnemyGrabbed && extending)
         {
             //grapple the wall
             playerRB.velocity = Vector3.zero;
-            isEnemyGrabbed = false;
             wallGrabbed = true;
             extending = false;
             forceDirection = (new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, player.gameObject.transform.position.z) - player.gameObject.transform.position);
@@ -184,7 +152,6 @@ public class grapplingHook : MonoBehaviour
         collide.enabled = false;
         wallGrabbed = false;
         playerRB.AddForce(forceDirection * CalculateJumpForce(distanceToWall, 9.8f) * grapplePullToWallForce, ForceMode.VelocityChange);
-        Debug.Log("force multiplier: " + CalculateJumpForce(distanceToWall, 9.8f));
     }
 
     private float CalculateJumpForce(float jumpHeight, float gravity)
@@ -194,5 +161,51 @@ public class grapplingHook : MonoBehaviour
         return Mathf.Sqrt(2 * jumpHeight * playerGravity);
     }
 
+    IEnumerator extend()
+    {
+        StopCoroutine(retract());
+        rb.isKinematic = false;
+        Vector3 startPos = parent.transform.position;
+        maxExtendedPoint = parent.transform.position + (gameObject.transform.right * maxLength);
+        while(extending)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, maxExtendedPoint, extendRate * Time.deltaTime);
+            //transform.position = Vector3.Lerp(startPos, maxExtendedPoint, lerpPercent);
+            lerpPercent +=  extendRate * Time.deltaTime;
 
+            if(lerpPercent > maxLength)
+            {
+                extending = false;
+            }
+            yield return null;
+        }
+        lerpPercent = 0;                                //resest the lerp timer
+        extending = false;                              //will now start to retract
+        yield return StartCoroutine(retract());         //start retracting when extending has been completed
+    }
+
+    IEnumerator retract()
+    {
+        StopCoroutine(extend());
+        retracting = true;
+        collide.enabled = false;        //collider turned off
+        rb.isKinematic = true;          //kinematic to stop physics
+        maxExtendedPoint = transform.position;
+        while (retracting)
+        {
+            //retract the grappling hook
+            //parent.transform.LookAt(gameObject.transform.position); // makes the hook face away from the player when retracting
+            Vector3 endPos = parent.transform.position;
+            //transform.position = Vector3.Lerp(maxExtendedPoint, endPos, lerpPercent);
+            transform.position = Vector3.MoveTowards(transform.position, endPos, extendRate * Time.deltaTime);
+            lerpPercent += extendRate * Time.deltaTime;
+            if(lerpPercent > maxLength)
+            {
+                retracting = false;
+                active = false;
+            }
+            yield return null;
+        }
+        lerpPercent = 0;                //reset the lerp value
+    }
 }
