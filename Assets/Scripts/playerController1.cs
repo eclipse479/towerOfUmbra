@@ -124,7 +124,7 @@ public class playerController1 : MonoBehaviour
     
     //animations
     private Animator ani;
-
+    private SoundManager soundManager;
     private void Awake()
     {
         //health bar values
@@ -138,6 +138,10 @@ public class playerController1 : MonoBehaviour
            currentHealth = playerStats.health;
            healthbarImage.fillAmount = playerStats.health / maxHealth;
         }
+        soundManager = FindObjectOfType<SoundManager>();
+        
+        //line to play a sound from anywhere
+        //FindObjectOfType<SoundManager>().playSound("soundName");
     }
     void Start()
     {
@@ -385,6 +389,7 @@ public class playerController1 : MonoBehaviour
         if (currentX < 90)
         {
             //swing sword
+            soundManager.playSound("swordSwing"); // plays sound from sound manager
             swordBase.transform.Rotate(new Vector3(swordSpeed, 0, 0) * Time.deltaTime);
         }
         //reset sword to inactive state
