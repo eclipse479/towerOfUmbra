@@ -360,16 +360,16 @@ public class EnemyBehaviour : MonoBehaviour
     {
         if (is_attacking)
         {
-          // Check it it hits the player
-          if (Physics.SphereCast(hit_box.position, hit_range, hit_box.forward, out hit, hit_range, attack_layer))
-          {
+            // Check it it hits the player
+            if (Physics.SphereCast(hit_box.position, hit_range, hit_box.forward, out hit, hit_range, attack_layer))
+            {
                 GameObject player = hit.collider.gameObject;
                 Rigidbody player_rb = player.GetComponent<Rigidbody>();
 
                 player_rb.AddForce((player.transform.up + -player.transform.forward) * knockback_horizontal, ForceMode.Impulse);
 
                 Debug.Log("Enemy has hit");
-          }
+            }
         }
     }
 
