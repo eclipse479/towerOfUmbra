@@ -817,7 +817,11 @@ GameObject:
   - component: {fileID: 5895739707913376014}
   - component: {fileID: 3579584547152006280}
   - component: {fileID: 3559888727952849731}
+<<<<<<< Updated upstream
   - component: {fileID: 1979795972}
+=======
+  - component: {fileID: 8235300046037287567}
+>>>>>>> Stashed changes
   m_Layer: 11
   m_Name: Spider - Beta
   m_TagString: enemy
@@ -854,8 +858,8 @@ Animator:
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 4d291e5ae9232a44bbbe6c137b1b62e1, type: 3}
   m_Controller: {fileID: 9100000, guid: af62ea715984adf40be357bdc5a45f55, type: 2}
-  m_CullingMode: 1
-  m_UpdateMode: 1
+  m_CullingMode: 0
+  m_UpdateMode: 0
   m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
@@ -874,8 +878,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbada98a83564724692a353c1652693e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< Updated upstream
   knockback: 2.5
   health: 3
+=======
+  knockback: 20
+  health: 10
+>>>>>>> Stashed changes
   hit_box: {fileID: 6090886090307311063}
   hit_range: 0.32
   attack_layer:
@@ -883,7 +892,11 @@ MonoBehaviour:
     m_Bits: 256
   detection_range: 5
   max_ray_dist: 10
+<<<<<<< Updated upstream
   speed: 200
+=======
+  speed: 50
+>>>>>>> Stashed changes
   target: {fileID: 0}
   ray_centre: {fileID: 5841490337520571013}
   detect_distance: 4.05
@@ -897,6 +910,10 @@ MonoBehaviour:
   enemiesLeftText: {fileID: 0}
   stun_duration: 2
   stun_recovery: 2
+  path_choice_cooldown: 3
+  jump_force: 10
+  ground_check_offset: 0.49
+  ground_check_radius: 0.48
 --- !u!136 &3579584547152006280
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -927,7 +944,11 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 120
   m_CollisionDetection: 0
+<<<<<<< Updated upstream
 --- !u!114 &1979795972
+=======
+--- !u!114 &8235300046037287567
+>>>>>>> Stashed changes
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
