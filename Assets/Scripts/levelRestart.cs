@@ -25,8 +25,15 @@ public class levelRestart : MonoBehaviour
      
         if (currentRestartTimer < 0)//reloads current scene
         {
-            Scene scene = SceneManager.GetActiveScene(); 
-            SceneManager.LoadScene(scene.name);
+            Scene scene = SceneManager.GetActiveScene();
+            if (scene.name == "TutorialLevel")
+            { 
+                SceneManager.LoadScene(0); 
+            }
+            else
+            {
+                SceneManager.LoadScene(1);
+            }
         }
         
     }

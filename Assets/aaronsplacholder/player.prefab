@@ -85,8 +85,8 @@ MonoBehaviour:
   playerMaxMovementSpeed: 9.5
   airMovementMultiplier: 0.75
   antiSlopeBumpForce: 2.5
-  jumpForce: 14
-  doubleJumpForce: 0.72
+  jumpForce: 12
+  doubleJumpForce: 0.01
   maxGroundedDelay: 0.2
   maxJumpHoldTime: 0
   maxJumpBuffer: 0
@@ -1858,7 +1858,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3570303979714495596}
   m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}
-  m_LocalPosition: {x: -0.071, y: 0.837, z: 0.487}
+  m_LocalPosition: {x: -0.071, y: 0.837, z: -0.042}
   m_LocalScale: {x: 0.714286, y: 0.71428573, z: 0.714286}
   m_Children:
   - {fileID: 3570303980339778754}
@@ -1876,6 +1876,7 @@ GameObject:
   - component: {fileID: 3570303980339778754}
   - component: {fileID: 3570303980339778764}
   - component: {fileID: 3570303980339778765}
+  - component: {fileID: 1817300082}
   m_Layer: 8
   m_Name: sword
   m_TagString: swordBlade
@@ -1923,6 +1924,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 946c260af193c0a419bb645a59e629f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!54 &1817300082
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3570303980339778755}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1001 &2667363271554293078
 PrefabInstance:
   m_ObjectHideFlags: 0
