@@ -13,6 +13,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,7 +22,8 @@ public class EnemyBehaviour : MonoBehaviour
 {
     // Knockback
     [Header("Knockback to self")]
-    public float knockback = 20.0f;
+    public float knockback_horizontal = 20.0f;
+    public float knockback_vertical = 10.0f;
     private Transform healthBar;
     private Slider healthSlider;
 
@@ -110,10 +112,16 @@ public class EnemyBehaviour : MonoBehaviour
         public bool path_open;
     }
 
+    [Header("Pathway decision")]
     PathRays[] nav_rays = new PathRays[8]; // The amount we're using in 8-directions
-    // PathRays[] open_rays = new PathRays[8]; // This stores the rays that are open
+    [Tooltip("THe cooldown before enemy decides where to go")] public float path_choice_cooldown = 3.0f;
+    [Tooltip("How much force the enemy jumps with")] public float jump_force = 10.0f;
+    float nav_cooldown;
 
-    List<PathRays> open_rays;
+    [Header("Ground Check")]
+    public float ground_check_offset = 2.0f;
+    public float ground_check_radius = 1.0f;
+    bool is_grounded;
 
 
     // Things that need to be loaded before first frame
@@ -142,6 +150,15 @@ public class EnemyBehaviour : MonoBehaviour
             }
             nav_rays[i].path_open = false; // By default
         }
+
+        // Cooldown timer for Path navigation
+        nav_cooldown = path_choice_cooldown;
+
+        // On ground
+        is_grounded = true;
+
+        Random.InitState(System.DateTime.UtcNow.Second);
+        
 
         // Get the player as target
         target = GameObject.FindGameObjectWithTag("player").transform;
@@ -173,21 +190,22 @@ public class EnemyBehaviour : MonoBehaviour
 
         // Stun duration
         stun_time = stun_duration;
+
+       
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        // Text Counter
         textCounter = enemiesLeftText.GetComponent<EnemiesLeftCounter>();
         textCounter.add();
-      
+
         // A Forward Raycast to see in front of itself
         current_ray_dist = max_ray_dist;
 
         // Downward ray cast to check its sides
         drop_check = drop_cast_dist;
-
-     
     }
 
     // Update is called once per frame
@@ -202,6 +220,21 @@ public class EnemyBehaviour : MonoBehaviour
         {
             ray.origin = transform.position;
         }
+
+        // Look for the ground
+        if (Physics.SphereCast(ray.origin - new Vector3(0, ground_check_offset, 0), ground_check_radius, -transform.up, out hit, ground_check_radius))
+        {
+            // As long as it isn't itself
+            if (hit.collider.gameObject != gameObject)
+            {
+                is_grounded = true;
+            }
+        }
+        else
+        {
+            is_grounded = false;
+        }
+     
 
         ray.direction = transform.forward;
         Debug.DrawRay(ray.origin, ray.direction, Color.green);
@@ -242,6 +275,15 @@ public class EnemyBehaviour : MonoBehaviour
               {
                   behaviour = STATE.WALKING;
               }
+
+              // Countdown the random timer
+              if (nav_cooldown > 0.0f)
+              {
+                 nav_cooldown -= 1 * Time.deltaTime;
+              }
+
+              // Continuously look for an open path
+              pathCheck(nav_rays);
 
               //// Check state to determine actions
               switch (behaviour)
@@ -324,7 +366,7 @@ public class EnemyBehaviour : MonoBehaviour
                 GameObject player = hit.collider.gameObject;
                 Rigidbody player_rb = player.GetComponent<Rigidbody>();
 
-                player_rb.AddForce((player.transform.up + -player.transform.forward) * knockback, ForceMode.Impulse);
+                player_rb.AddForce((player.transform.up + -player.transform.forward) * knockback_horizontal, ForceMode.Impulse);
 
                 Debug.Log("Enemy has hit");
           }
@@ -396,15 +438,12 @@ public class EnemyBehaviour : MonoBehaviour
         {
             if (Physics.Raycast(paths[i].ray, out hit, detection_range))
             {
-                // As long as it ain't itself.
-                if (hit.collider.gameObject == gameObject)
                     paths[i].path_open = false;
             }
             else
             {
                 // If this path is open, add it to the open path's array.
                 paths[i].path_open = true;
-                open_rays.Add(paths[i]);
             }
         }
     }
@@ -414,9 +453,25 @@ public class EnemyBehaviour : MonoBehaviour
     /// </summary>
     void jump()
     {
-        float jump_angle = Mathf.Deg2Rad * -45.0f;
-        Vector3 jump_dir = transform.forward + new Vector3(Mathf.Cos(jump_angle), -Mathf.Sin(jump_angle), 0);
-        rb.AddForce(jump_dir * 10.0f, ForceMode.VelocityChange);
+        int random_choice = Random.Range(0, nav_rays.Length);
+
+        if (nav_rays[random_choice].path_open)
+        {
+            // If the direction of the ray points up in anyway.
+            if (Vector3.Dot(nav_rays[random_choice].ray.direction, transform.up) > 0.0f)
+            {
+                rb.AddForce(nav_rays[random_choice].ray.direction * jump_force, ForceMode.VelocityChange);
+            }
+            else if (nav_rays[random_choice].ray.direction == new Vector3(0.7f, -0.7f, 0.0f)) // If it's slightly facing forward down
+            {
+                rb.AddForce(nav_rays[random_choice].ray.direction * (jump_force * 0.5f), ForceMode.VelocityChange);
+            }
+            else if (nav_rays[random_choice].ray.direction == new Vector3(-0.7f, -0.7f, 0.0f)) // If it's slightly facing backwards down
+            {
+                rb.AddForce(nav_rays[random_choice].ray.direction * (jump_force * 0.5f), ForceMode.VelocityChange);
+            }
+            nav_cooldown = path_choice_cooldown;
+        }
     }
 
     /// <summary>
@@ -442,16 +497,11 @@ public class EnemyBehaviour : MonoBehaviour
         else
             ledge_ray.origin = transform.position + (transform.forward * ray_offset);
 
-        // In case ledge ray isn't pointing down
-        // ledge_ray.direction = -transform.up;
-
-        // If it doesn't hit anything
-        if (!Physics.Raycast(ledge_ray, out hit, drop_cast_dist))
-        {
-            transform.forward *= -1;
-        }
-
-        rb.AddForce(transform.forward * speed * Time.deltaTime, ForceMode.VelocityChange);
+         if (!Physics.Raycast(ledge_ray, out hit, drop_cast_dist))
+         {
+             transform.forward *= -1;
+         }
+         rb.AddForce(transform.forward * speed * Time.deltaTime, ForceMode.VelocityChange);
     }
 
     /// <summary>
@@ -473,6 +523,7 @@ public class EnemyBehaviour : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(transform.position, detection_range);
+        Gizmos.DrawWireSphere(ray.origin - new Vector3(0, ground_check_offset, 0), ground_check_radius);
     }
 
     // For the attack radius
@@ -491,7 +542,7 @@ public class EnemyBehaviour : MonoBehaviour
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
 
-            rb.AddForce((-transform.forward + transform.up) * knockback, ForceMode.VelocityChange);
+            rb.AddForce((transform.up * knockback_vertical) + (-transform.forward * knockback_horizontal), ForceMode.VelocityChange);
             health--;
             healthSlider.value = health;
         }
