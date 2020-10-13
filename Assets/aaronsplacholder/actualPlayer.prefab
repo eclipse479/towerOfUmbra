@@ -1,5 +1,22 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &478443646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2857351125251828716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b34607101b5507d4183f0d639e994572, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackPoint: {fileID: 0}
+  attackRange: 3
+  enemyLayers:
+    serializedVersion: 2
+    m_Bits: 2048
 --- !u!1 &8000305087382959413
 GameObject:
   m_ObjectHideFlags: 0
@@ -58,7 +75,7 @@ MonoBehaviour:
   maxKnockBackNoMovementTimer: 0.6
   numOfFlashes: 3
   flashLength: 0.4
-  maxComboDelay: 0
+  maxComboDelay: 0.2
   swordSpeed: 780
   pauseScreen: {fileID: 0}
   gameplayMenu: {fileID: 0}
@@ -178,6 +195,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 83580e526066f2a4c9a75cc04da9884f, type: 3}
+--- !u!1 &2857351125251828716 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: 83580e526066f2a4c9a75cc04da9884f,
+    type: 3}
+  m_PrefabInstance: {fileID: 6090754161681232613}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1295911262213134847 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 83580e526066f2a4c9a75cc04da9884f,

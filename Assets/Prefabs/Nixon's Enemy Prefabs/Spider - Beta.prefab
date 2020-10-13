@@ -1988,7 +1988,7 @@ GameObject:
   - component: {fileID: 9196819208811733586}
   - component: {fileID: 9196819208811733593}
   m_Layer: 11
-  m_Name: Spider - Beta 1
+  m_Name: Spider - Beta
   m_TagString: enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2047,7 +2047,7 @@ MonoBehaviour:
   knockback_vertical: 10
   knockback_to_player_horizontal: 20
   knockback_to_player_vertical: 10
-  health: 10
+  health: 2
   hit_box: {fileID: 9196819207215386850}
   hit_range: 1
   damage_to_player: 1
@@ -2065,7 +2065,7 @@ MonoBehaviour:
   min_dist: 1
   attack_cooldown: 2
   attack_range: 0.8
-  bullet: {fileID: 0}
+  bullet: {fileID: 7091955269792678419, guid: 39fbe86a4b47bfe468477d03ddfb5373, type: 3}
   shoot_cooldown: 2
   enemiesLeftText: {fileID: 0}
   stun_duration: 2
@@ -2085,8 +2085,8 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.8590212
-  m_Height: 2.3820856
-  m_Direction: 2
+  m_Height: 2.79
+  m_Direction: 0
   m_Center: {x: 0, y: 0.6744833, z: 0.08636224}
 --- !u!54 &9196819208811733586
 Rigidbody:
