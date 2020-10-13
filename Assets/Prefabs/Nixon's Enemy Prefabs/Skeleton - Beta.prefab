@@ -164,7 +164,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   knockback_horizontal: 20
-  knockback_vertical: 10
+  knockback_vertical: 2
   knockback_to_player_horizontal: 20
   knockback_to_player_vertical: 10
   health: 3
@@ -176,7 +176,7 @@ MonoBehaviour:
     m_Bits: 256
   detection_range: 5
   max_ray_dist: 10
-  speed: 20
+  speed: 100
   target: {fileID: 0}
   ray_centre: {fileID: 2312264040567953524}
   detect_distance: 5
@@ -185,7 +185,7 @@ MonoBehaviour:
   min_dist: 1
   attack_cooldown: 2
   attack_range: 3
-  bullet: {fileID: 7091955269792678419, guid: bb59f89fb9312114ca0153b3160eeca7, type: 3}
+  bullet: {fileID: 7091955269792678419, guid: 39fbe86a4b47bfe468477d03ddfb5373, type: 3}
   shoot_cooldown: 2
   enemiesLeftText: {fileID: 0}
   stun_duration: 2
@@ -220,7 +220,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.63
+  m_Radius: 0.68
   m_Height: 2.02
   m_Direction: 0
   m_Center: {x: 4.4017973e-17, y: 0.8766806, z: 0.065597475}
