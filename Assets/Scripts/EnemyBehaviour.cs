@@ -24,16 +24,24 @@ public class EnemyBehaviour : MonoBehaviour
     [Header("Knockback to self")]
     public float knockback_horizontal = 20.0f;
     public float knockback_vertical = 10.0f;
+
+
+    [Header("Knockback to Sword")]
+    public float knockback_to_player_horizontal = 20.0f;
+    public float knockback_to_player_vertical = 10.0f;
+
     private Transform healthBar;
     private Slider healthSlider;
 
     [Header("Health Points")]
     public int health;
+    int max_health;
 
     // Where the hit box is
     [Header("Attack Area and Settings")]
     [Tooltip("The Gameobject used to attack the player")]public Transform hit_box;
     [Tooltip("How much area can the attack cover")] public float hit_range = 0.5f;
+    [Tooltip("Damage value against player each hit")]public float damage_to_player = 1.0f;
     [Tooltip("Set to player, no questions")] public LayerMask attack_layer;
     RaycastHit hit;
 
@@ -102,7 +110,7 @@ public class EnemyBehaviour : MonoBehaviour
     [Header("Stun settings")]
     [Tooltip("How long the enemy is stunned")] public float stun_duration = 2.0f;
     [Tooltip("Rate of stun recovery")] public float stun_recovery = 2.0f;
-    bool is_stunned = true;
+    bool is_stunned;
     float stun_time;
 
     // Navigation rays
@@ -178,8 +186,11 @@ public class EnemyBehaviour : MonoBehaviour
 
         Transform healthBarCanvas = gameObject.transform.Find("healthBarCanvas");
         healthBar = healthBarCanvas.gameObject.transform.Find("healthBar");
+
+        max_health = health;
+
         healthSlider = healthBar.GetComponent<Slider>();
-        healthSlider.maxValue = health;
+        healthSlider.maxValue = max_health;
         healthSlider.value = health;
 
         // Attack Timer
@@ -294,12 +305,21 @@ public class EnemyBehaviour : MonoBehaviour
                   case (STATE)1: // Chasing
                       moveToPlayer();
                       break;
-                  case (STATE)2:
-                      attack();
-                      break;
                   default:
                       break;
               }
+
+              // For offensive actions
+              switch (behaviour)
+              {
+                  case (STATE)2: // Attack
+                    attack();
+                      break;
+                  case (STATE)3: // Shoot
+                      break;
+                default:
+                    break;
+            }
 
               // Check in front of itself for obstacles or player
               lineOfSight(ray);
@@ -360,16 +380,17 @@ public class EnemyBehaviour : MonoBehaviour
     {
         if (is_attacking)
         {
-            // Check it it hits the player
-            if (Physics.SphereCast(hit_box.position, hit_range, hit_box.forward, out hit, hit_range, attack_layer))
+            Collider[] hits = Physics.OverlapSphere(hit_box.position, hit_range, attack_layer.value);
+
+            foreach (Collider hit in hits)
             {
-                GameObject player = hit.collider.gameObject;
+                GameObject player = hit.gameObject;
                 Rigidbody player_rb = player.GetComponent<Rigidbody>();
 
-                player_rb.AddForce((player.transform.up + -player.transform.forward) * knockback_horizontal, ForceMode.Impulse);
-
-                Debug.Log("Enemy has hit");
+                player_rb.AddForce(transform.forward * knockback_to_player_horizontal + player.transform.up * knockback_to_player_vertical, ForceMode.VelocityChange);
+                player.GetComponent<playerController1>().currentHealth -= damage_to_player;
             }
+            setAttack();
         }
     }
 
@@ -378,6 +399,11 @@ public class EnemyBehaviour : MonoBehaviour
     {
            is_attacking = false;
     }
+
+    void activateAttack()
+    {
+        is_attacking = true;
+    }    
 
     /// <summary>
     /// Look in front of itself
@@ -546,6 +572,33 @@ public class EnemyBehaviour : MonoBehaviour
             health--;
             healthSlider.value = health;
         }
+        if (other.gameObject.layer == 10)
+        {
+            is_stunned = true;
+            // Reset Enemy velocity
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+    }
+
+    public void enemyHealthDown(int damage)
+    {
+        health -= damage;
+        healthSlider.value = health;
+    }
+
+
+    public int Health
+    {
+        get { return health; }
+        set { health = value; }
+    }
+
+
+
+    void resetStun()
+    {
+        is_stunned = false;
     }
 
     public STATE State
