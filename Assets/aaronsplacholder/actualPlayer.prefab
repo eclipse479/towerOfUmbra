@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6730093160646667984}
   - component: {fileID: 5600749127471954166}
+  - component: {fileID: 868598636}
+  - component: {fileID: 868598635}
   m_Layer: 8
   m_Name: actualPlayer
   m_TagString: player
@@ -48,15 +50,15 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   healthText: {fileID: 0}
-  maxHealth: 3
+  maxHealth: 40
   currentHealth: 20
   healthBar: {fileID: 0}
-  verticalKnockBackAmount: 3
-  horizontalKnockBackAmount: 3
-  maxKnockBackNoMovementTimer: 0.2
-  numOfFlashes: 10
-  flashLength: 0.5
-  maxComboDelay: 0.2
+  verticalKnockBackAmount: 5
+  horizontalKnockBackAmount: 50
+  maxKnockBackNoMovementTimer: 0.6
+  numOfFlashes: 3
+  flashLength: 0.4
+  maxComboDelay: 0
   swordSpeed: 780
   pauseScreen: {fileID: 0}
   gameplayMenu: {fileID: 0}
@@ -65,13 +67,43 @@ MonoBehaviour:
   playerMaxMovementSpeed: 9.5
   airMovementMultiplier: 0.75
   antiSlopeBumpForce: 2.5
-  jumpForce: 12
-  doubleJumpForce: 1
-  maxJumpHoldTime: 0.2
-  maxJumpBuffer: 0.2
-  gravityIncrease: 1.42
+  jumpForce: 16
+  doubleJumpForce: 0.13
+  maxJumpHoldTime: 0
+  maxJumpBuffer: 0
+  gravityIncrease: 1.45
   boxCastMaxDistance: 1.33
   deleteThisLater: {fileID: 0}
+--- !u!54 &868598636
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8000305087382959413}
+  serializedVersion: 2
+  m_Mass: 11
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 120
+  m_CollisionDetection: 0
+--- !u!136 &868598635
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8000305087382959413}
+  m_Material: {fileID: 13400000, guid: 1a1fd942151dd3a4e976a828374ba1ab, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.15804856
+  m_Height: 1.8463552
+  m_Direction: 1
+  m_Center: {x: 3.1100535e-17, y: 0.8912629, z: 0.010001004}
 --- !u!1001 &6090754161681232613
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -79,6 +111,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6730093160646667984}
     m_Modifications:
+    - target: {fileID: -6057140222963153312, guid: 83580e526066f2a4c9a75cc04da9884f,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 3432743f75cf00b4e9077bada34373a1, type: 2}
     - target: {fileID: -4216859302048453862, guid: 83580e526066f2a4c9a75cc04da9884f,
         type: 3}
       propertyPath: m_LocalPosition.x
