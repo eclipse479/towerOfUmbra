@@ -32,7 +32,7 @@ public class animationTest : MonoBehaviour
         {
             Debug.Log("Hit: " + enemy.transform.name);
             EnemyBehaviour behaviour = enemy.GetComponent<EnemyBehaviour>();
-            behaviour.health--;
+            behaviour.enemyHealthDown(1);
         }
     }
 }
