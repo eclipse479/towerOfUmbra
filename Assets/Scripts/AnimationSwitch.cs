@@ -35,6 +35,7 @@ public class AnimationSwitch : MonoBehaviour
                     // Check the shooting trigger
                     if (state.canShoot)
                     {
+                        state.canShoot = false;
                         if (!state.IsShooting)
                         {
                             state.isAttacking = false;

@@ -560,18 +560,6 @@ public class EnemyBehaviour : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "swordBlade")
-        {
-            is_stunned = true;
-
-            // Reset Enemy velocity
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-
-            rb.AddForce((transform.up * knockback_vertical) + (-transform.forward * knockback_horizontal), ForceMode.VelocityChange);
-            health--;
-            healthSlider.value = health;
-        }
         if (other.gameObject.layer == 10)
         {
             is_stunned = true;
@@ -581,8 +569,17 @@ public class EnemyBehaviour : MonoBehaviour
         }
     }
 
+    // Damage function with knockback.
     public void enemyHealthDown(int damage)
     {
+        is_stunned = true;
+
+        // Reset Enemy velocity
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
+        rb.AddForce((transform.up * knockback_vertical) + (-transform.forward * knockback_horizontal), ForceMode.VelocityChange);
+
         health -= damage;
         healthSlider.value = health;
     }
@@ -610,6 +607,7 @@ public class EnemyBehaviour : MonoBehaviour
     public bool canShoot
     {
         get { return can_shoot; }
+        set { can_shoot = value; }
     }
 
     // When the A.I triggers the shooting animation trigger

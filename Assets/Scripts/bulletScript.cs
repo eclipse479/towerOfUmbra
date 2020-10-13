@@ -26,7 +26,7 @@ public class bulletScript : MonoBehaviour
         bullet_rb = GetComponent<Rigidbody>();
         Vector3 direction = (target.position - transform.position).normalized;
 
-        bullet_rb.AddForce(direction * bulletSpeed * Time.deltaTime, ForceMode.Impulse);
+        bullet_rb.AddForce(direction * bulletSpeed, ForceMode.VelocityChange);
     }
 
     // Update is called once per frame
@@ -49,7 +49,7 @@ public class bulletScript : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        else if (hit.layer != player && hit.layer != gameObject.layer)
+        else if (hit.layer != player && hit.layer != 11)
         {
             Destroy(gameObject);
         }
