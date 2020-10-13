@@ -4,21 +4,35 @@ using UnityEngine;
 
 public class animationTest : MonoBehaviour
 {
-    public BoxCollider handBox;
+    public GameObject attackPoint;
+    public float attackRange;
+    public LayerMask enemyLayers;
     public void PrintEvent(string s)
     {
         Debug.Log("PrintEvent: " + s + " called at: " + Time.time);
     }
 
-    public void handOn()
-    {
-        Debug.Log("HandisOn");
-        handBox.enabled = true;
+    public void swordOn()
+    {     
     }
 
-    public void handOff()
+    public void swordOff()
     {
-        Debug.Log("HandisOff");
-        handBox.enabled = false;
+    }
+    public void playSwordSwingSound()
+    {
+        FindObjectOfType<SoundManager>().playSound("swordSwing");
+    }
+
+    public void createHitBox()
+    {
+        Collider[] enemiesHit = Physics.OverlapSphere(attackPoint.transform.position, attackRange, enemyLayers);
+        
+        foreach(Collider enemy in enemiesHit)
+        {
+            Debug.Log("Hit: " + enemy.transform.name);
+            EnemyBehaviour behaviour = enemy.GetComponent<EnemyBehaviour>();
+            behaviour.health--;
+        }
     }
 }

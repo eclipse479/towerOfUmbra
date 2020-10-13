@@ -38,16 +38,19 @@ public class playerController1 : MonoBehaviour
     public int numOfFlashes; 
     [Tooltip("How long each flash is")]
     public float flashLength;
-    public SkinnedMeshRenderer playerRend;
+    private GameObject playerRend;
 
-    [Header("SWORD SETTINGS")]
-    //the sword
-    [Tooltip("the base of the players sword")]
-    public GameObject swordBase;
+    [Header("ATTACK SETTINGS")]
+    [Tooltip("the maximum amount of time between attack clicks to do the next attack")]
+    public float maxComboDelay;
+    private float currentComboDelay;
+
+    private int attackNumber = 1;
+
     [Tooltip("how fast the sword swings")]
     public float swordSpeed;    // how fast the sword moves
-    private bool swordSwinging; // is sword swinging
-                        
+
+
     //pausing
     private bool paused;
     [Header("UIS")]
@@ -80,8 +83,6 @@ public class playerController1 : MonoBehaviour
     [Tooltip("Force multiplier for the double jump, min - 0")]
     [Min(0)]
     public float doubleJumpForce;
-    [Tooltip("how long until the player can be grounded again after jumping")]
-    public float maxGroundedDelay = 0.2f;
     [Tooltip("Time when the player can jump after falling off a platform withour using double jump")]
     [Min(0.1f)]
     public float maxJumpHoldTime;
@@ -120,11 +121,11 @@ public class playerController1 : MonoBehaviour
     //temp player speed text
     [Tooltip("Text used for debugging")]
     public Text deleteThisLater;
-    
-    
+
+
     //animations
     private Animator ani;
-    private SoundManager soundManager;
+    //private SoundManager soundManager;
     private void Awake()
     {
         //health bar values
@@ -138,7 +139,9 @@ public class playerController1 : MonoBehaviour
            currentHealth = playerStats.health;
            healthbarImage.fillAmount = playerStats.health / maxHealth;
         }
-        soundManager = FindObjectOfType<SoundManager>();
+
+        playerRend = gameObject.transform.GetChild(0).transform.GetChild(0).gameObject;
+        //soundManager = FindObjectOfType<SoundManager>();
         
         //line to play a sound from anywhere
         //FindObjectOfType<SoundManager>().playSound("soundName");
@@ -163,7 +166,6 @@ public class playerController1 : MonoBehaviour
         //is grounded
         grounded = true;
         //sword is not swinging
-        swordSwinging = false;
 
 
         ani = GetComponentInChildren<Animator>();
@@ -175,7 +177,7 @@ public class playerController1 : MonoBehaviour
         if (!dead && knockBackNoMovementTimer <= 0)
         {
             //movement
-            if (Input.GetKey(KeyCode.RightArrow) && !swordSwinging || Input.GetKey(KeyCode.D) && !swordSwinging)
+            if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
             {
                 //move player
                 if (grounded)
@@ -183,7 +185,7 @@ public class playerController1 : MonoBehaviour
                 else
                     rb.AddForce(transform.forward * speed * Time.deltaTime * airMovementMultiplier, ForceMode.VelocityChange);
             }
-            if (Input.GetKey(KeyCode.LeftArrow) && !swordSwinging || Input.GetKey(KeyCode.A) && !swordSwinging)
+            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
             {
                 //move player
                 if (grounded)//player movement on the ground
@@ -202,11 +204,10 @@ public class playerController1 : MonoBehaviour
                 rb.AddForce(transform.up * jumpForce, ForceMode.VelocityChange);
                 jumping = true;
                 antiBumpForceTimer = -1;
-                groundedDelay = maxGroundedDelay;
                 jumpHoldTime = -1;  // -> not grounded
                 jumpBuffer = -1;   // -> hasn't pressed the key
             }
-            else if (jumpBuffer > 0 && doubleJump)
+            else if (jumpBuffer >= 0 && doubleJump)
             {
                 Vector3 velocityKill = rb.velocity;
                 velocityKill.y = 0;
@@ -215,7 +216,6 @@ public class playerController1 : MonoBehaviour
                 doubleJump = false;
                 jumping = true;
                 antiBumpForceTimer = -1;
-                groundedDelay = maxGroundedDelay;
                 jumpBuffer = -1;
             }
         }
@@ -253,7 +253,7 @@ public class playerController1 : MonoBehaviour
                 speedCheck();
                 //input for the player movement
                
-                    if (Input.GetKey(KeyCode.RightArrow) && !swordSwinging || Input.GetKey(KeyCode.D) && !swordSwinging)
+                    if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
                     {
                         if (Input.GetKeyDown(KeyCode.D) && rb.velocity.x > 0)
                         {
@@ -265,7 +265,7 @@ public class playerController1 : MonoBehaviour
                         //change player facing direction
                         transform.eulerAngles = new Vector3(0, -90, 0);
                     }
-                    if (Input.GetKey(KeyCode.LeftArrow) && !swordSwinging || Input.GetKey(KeyCode.A) && !swordSwinging)
+                    if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
                     {
                         if (Input.GetKeyDown(KeyCode.A) && rb.velocity.x < 0)
                         {
@@ -341,18 +341,41 @@ public class playerController1 : MonoBehaviour
                 ///---------------------------------------------------------------------------------------------------------------------------
 
                 //swing sword
-                if (Input.GetMouseButtonDown(0) && !swordSwinging)
+                if (Input.GetMouseButtonDown(0))
                 {
-                    swordBase.transform.rotation = Quaternion.identity;
-                    swordSwinging = true;
-                    swordBase.SetActive(true);
-                    swordBase.transform.eulerAngles = gameObject.transform.eulerAngles;
-                    ani.SetTrigger("attack"); // attack animation
+                    currentComboDelay = maxComboDelay; // check if animation is playing
+                    
+                        if(attackNumber < 3)// which animation to play
+                            attackNumber++;
+                        else // loop animations
+                            attackNumber = 1;
+                        //which attack animation plays
+                    if (attackNumber == 1)
+                    {
+                        swingSword("attack1");//lay animation
+                        Debug.Log("attack 1");
+                    }  
+                    else if (attackNumber == 2)
+                    {
+                        swingSword("attack2");//lay animation
+                        Debug.Log("attack 2");
+                    }  
+                    else if (attackNumber == 3)
+                    {
+                        swingSword("attack3");//lay animation
+                        Debug.Log("attack 3");
+                    }
                 }
-                if (swordSwinging)
+                if(currentComboDelay >= 0)
                 {
-                    swingSword();
+                    currentComboDelay -= Time.deltaTime; //count frames
                 }
+                if(currentComboDelay < 0)
+                {
+                    attackNumber = 0;//reset attack when no more frames
+                    ani.SetBool("attacking", false);
+                }
+                deleteThisLater.text = attackNumber.ToString();
             }
         }
         else if (dead)
@@ -361,6 +384,8 @@ public class playerController1 : MonoBehaviour
         }
         //debug ray to check if a ramp is infront of the player
         Debug.DrawRay(transform.position + new Vector3(0, -0.45f, 0), transform.forward * 0.25f, Color.green);
+        
+        
         if (jumping)
             deleteThisLater.color = Color.yellow;
         else if (antiBumpForceTimer > 0 && !jumping)
@@ -378,31 +403,18 @@ public class playerController1 : MonoBehaviour
     /// swings the sword
     /// </summary>
     /// </summary>e
-    private void swingSword()
+    private void swingSword(string attackName)
     {
-        //activates the sword
-        float currentX = swordBase.transform.rotation.eulerAngles.z; // x axis
-        //should be replaced with swinging sword animation and turning on sword collider
-        if (currentX < 90)
-        {
-            //swing sword
-            soundManager.playSound("swordSwing"); // plays sound from sound manager
-            swordBase.transform.Rotate(new Vector3(swordSpeed, 0, 0) * Time.deltaTime);
-        }
-        //reset sword to inactive state
-        else if (currentX > 90)
-        {
-            //swordBase.transform.rotation = Quaternion.identity;
-            swordBase.transform.eulerAngles = new Vector3(0, -90, 0);
-            swordSwinging = false;
-            swordBase.SetActive(false);
-        }
+        ani.SetBool("attacking", true);
+        
+        ani.SetTrigger(attackName); // attack animation
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "enemy" || collision.gameObject.tag == "bullet")
         {
+            Debug.Log(collision.gameObject.name);
             //reduce health
             playerStats.health--;
             healthText.text = "Health: " + playerStats.health;
@@ -413,7 +425,12 @@ public class playerController1 : MonoBehaviour
             if (playerStats.health <= 0)
             {
                 //*insert death animation*
-                dead = true;
+                if(!dead)
+                {
+                    ani.SetTrigger("dead");
+                    dead = true;
+                }
+                gameObject.layer = 19;
             }
             else
             {
@@ -477,11 +494,11 @@ public class playerController1 : MonoBehaviour
 
     private void timersUpdate()
     {
-        if(jumpHoldTime > 0)
+        if(jumpHoldTime >= 0)
             jumpHoldTime -= Time.deltaTime;
-        if(jumpBuffer > 0)
+        if(jumpBuffer >= 0)
             jumpBuffer -= Time.deltaTime;
-        if(knockBackNoMovementTimer > 0)
+        if(knockBackNoMovementTimer >= 0)
             knockBackNoMovementTimer -= Time.deltaTime;
     }
     /// <summary>
@@ -559,7 +576,7 @@ public class playerController1 : MonoBehaviour
             if (!Physics.Raycast(transform.position + new Vector3(0, -0.45f, 0), transform.forward, out forwardRay, 1.0f, platformLayerMask))
             {
                 Debug.DrawRay(transform.position + new Vector3(0, -0.45f, 0), transform.forward, Color.black);
-                deleteThisLater.text = "APPLY THE FORCE!!! time left: " + antiBumpForceTimer;
+                //deleteThisLater.text = "APPLY THE FORCE!!! time left: " + antiBumpForceTimer;
                 rb.AddForce(-Vector3.up * antiSlopeBumpForce, ForceMode.VelocityChange);
             }
             else
@@ -608,12 +625,12 @@ public class playerController1 : MonoBehaviour
             }
             else
             {
-                deleteThisLater.text = "sameGround";
+               // deleteThisLater.text = "sameGround";
             }
         }
         else
         {
-            deleteThisLater.text = "nothing in front";
+            //deleteThisLater.text = "nothing in front";
             Debug.DrawRay(rayCastPos, -transform.up * length, Color.gray);
         }
     }
@@ -623,12 +640,12 @@ public class playerController1 : MonoBehaviour
     /// </summary>
     IEnumerator Flasher()
     {
-        gameObject.layer = 15;
+        gameObject.layer = 19;
         for (int i = 0; i < numOfFlashes; i++)
         {
-            playerRend.enabled = false;
+            playerRend.SetActive(false);
             yield return new WaitForSeconds(flashLength);
-            playerRend.enabled = true;
+            playerRend.SetActive(true);
             yield return new WaitForSeconds(flashLength);
         }
         gameObject.layer = 8;

@@ -75,8 +75,7 @@ MonoBehaviour:
   maxKnockBackNoMovementTimer: 0.6
   numOfFlashes: 3
   flashLength: 0.4
-  playerRend: {fileID: 686632259244651019}
-  swordBase: {fileID: 3570303979714495596}
+  maxComboDelay: 0
   swordSpeed: 780
   pauseScreen: {fileID: 0}
   gameplayMenu: {fileID: 0}
@@ -87,7 +86,6 @@ MonoBehaviour:
   antiSlopeBumpForce: 2.5
   jumpForce: 12
   doubleJumpForce: 0.01
-  maxGroundedDelay: 0.2
   maxJumpHoldTime: 0
   maxJumpBuffer: 0
   gravityIncrease: 1.45
@@ -519,7 +517,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b34607101b5507d4183f0d639e994572, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  handBox: {fileID: 686632258307570556}
+  swordCollider: {fileID: 0}
 --- !u!1 &686632259239378701
 GameObject:
   m_ObjectHideFlags: 0
