@@ -1,19 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class animationTest : MonoBehaviour
 {
     public GameObject attackPoint;
     public float attackRange;
     public LayerMask enemyLayers;
-    public void PrintEvent(string s)
-    {
-        Debug.Log("PrintEvent: " + s + " called at: " + Time.time);
-    }
+
 
     public void swordOn()
     {     
+
     }
 
     public void swordOff()
