@@ -20,6 +20,8 @@ using UnityEngine.UI;
 
 public class EnemyBehaviour : MonoBehaviour
 {
+    private Animator animator;
+
     // Knockback
     [Header("Knockback to self")]
     public float knockback_horizontal = 20.0f;
@@ -53,6 +55,7 @@ public class EnemyBehaviour : MonoBehaviour
     
     [Header("Movement Speed")]
     public float speed = 5.0f;
+    [Tooltip("Adjust so the enemy can or can't move faster than a certain pace")] public float max_speed = 10.0f; 
 
     [Header("Target to chase")]
     [Tooltip("The target enemy chases")] public Transform target; // The player
@@ -113,6 +116,9 @@ public class EnemyBehaviour : MonoBehaviour
     bool is_stunned;
     float stun_time;
 
+    // Death trigger
+    bool is_dead = false;
+
     // Navigation rays
     struct PathRays
     {
@@ -135,6 +141,9 @@ public class EnemyBehaviour : MonoBehaviour
     // Things that need to be loaded before first frame
     private void Awake()
     {
+        animator = GetComponent<Animator>();
+
+
         // From the forward ray all the way around
         //                6
         //             5  ^  7
@@ -187,6 +196,8 @@ public class EnemyBehaviour : MonoBehaviour
         Transform healthBarCanvas = gameObject.transform.Find("healthBarCanvas");
         healthBar = healthBarCanvas.gameObject.transform.Find("healthBar");
 
+       
+
         max_health = health;
 
         healthSlider = healthBar.GetComponent<Slider>();
@@ -201,8 +212,6 @@ public class EnemyBehaviour : MonoBehaviour
 
         // Stun duration
         stun_time = stun_duration;
-
-       
     }
 
     // Start is called before the first frame update
@@ -258,94 +267,90 @@ public class EnemyBehaviour : MonoBehaviour
         }
 
         // If it has no health points
-        if (health <= 0.0f)
+        if (health <= 0.0f && !is_dead)
         {
-            die();
+            is_dead = true;
+            animator.SetTrigger("Death");
         }
-
-        // As long as the enemy isn't stunned, do it's thing.
-        if (!is_stunned)
+        
+        if (!is_dead)
         {
-              // Has detected player but is not within attack range
-              if (detectionZone())
-              {
-                  if (Physics.Raycast(ray.origin, target.position - transform.position, out hit, detection_range, attack_layer.value))
-                  {
-                      // Is the player isn't in melee range
-                      if (!attackRange())
-                      {
-                          behaviour = STATE.SHOOT;
-                      }
-                      else
-                      {
-                          behaviour = STATE.ATTACK;
-                      }
-                  }
-              }
-              else
-              {
-                  behaviour = STATE.WALKING;
-              }
-
-              // Countdown the random timer
-              if (nav_cooldown > 0.0f)
-              {
-                 nav_cooldown -= 1 * Time.deltaTime;
-              }
-
-              // Continuously look for an open path
-              pathCheck(nav_rays);
-
-              //// Check state to determine actions
-              switch (behaviour)
-              {
-                  case 0: // Walking or patroling
-                      walkForNothing();
-                      break;
-                  case (STATE)1: // Chasing
-                      moveToPlayer();
-                      break;
-                  default:
-                      break;
-              }
-
-              // For offensive actions
-              switch (behaviour)
-              {
-                  case (STATE)2: // Attack
-                    attack();
-                      break;
-                  case (STATE)3: // Shoot
-                      break;
-                default:
-                    break;
-            }
-
-              // Check in front of itself for obstacles or player
-              lineOfSight(ray);
-
-              // If the enemy has already attacked
-              if (!can_shoot)
-              {
-                  shoot_timer -= 1 * Time.deltaTime;
-                  if (shoot_timer <= 0.0f)
-                  {
-                      shoot_timer = shoot_cooldown;
-                      can_shoot = true;
-                  }
-              }
-        }
-        else
-        {
-            stun_time -= stun_recovery * Time.deltaTime;
-            // Return to normal when recovered
-            if (stun_time <= 0.0f)
+            // As long as the enemy isn't stunned, do it's thing.
+            if (!is_stunned)
             {
-                is_stunned = false;
-                stun_time = stun_duration;
+                  // Has detected player but is not within attack range
+                  if (detectionZone())
+                  {
+                      if (Physics.Raycast(ray.origin, target.position - transform.position, out hit, detection_range, attack_layer.value))
+                      {
+                          // Is the player isn't in melee range
+                          if (!attackRange())
+                          {
+                              behaviour = STATE.SHOOT;
+                          }
+                          else
+                          {
+                              behaviour = STATE.ATTACK;
+                          }
+                      }
+                  }
+                  else
+                  {
+                      behaviour = STATE.WALKING;
+                  }
+
+                  // Countdown the random timer
+                  if (nav_cooldown > 0.0f)
+                  {
+                     nav_cooldown -= 1 * Time.deltaTime;
+                  }
+
+                  // Continuously look for an open path
+                  pathCheck(nav_rays);
+
+                  //// Check state to determine actions
+                  switch (behaviour)
+                  {
+                      case 0: // Walking or patroling
+                          walkForNothing();
+                          break;
+                      case (STATE)1: // Chasing
+                          moveToPlayer();
+                          break;
+                      default:
+                          break;
+                  }
+
+                  // For offensive actions
+                  switch (behaviour)
+                  {
+                      case (STATE)2: // Attack
+                        attack();
+                          break;
+                      case (STATE)3: // Shoot
+                          break;
+                    default:
+                        break;
+                }
+
+                  // Check in front of itself for obstacles or player
+                  lineOfSight(ray);
+
+                  // If the enemy has already attacked
+                  if (!can_shoot)
+                  {
+                      shoot_timer -= 1 * Time.deltaTime;
+                      if (shoot_timer <= 0.0f)
+                      {
+                          shoot_timer = shoot_cooldown;
+                          can_shoot = true;
+                      }
+                  }
             }
         }
     }
+
+
 
     /// <summary>
     /// Play shooting animation the fire
@@ -542,7 +547,8 @@ public class EnemyBehaviour : MonoBehaviour
     void die()
     {
         textCounter.subtract();
-        Destroy(gameObject);
+        this.enabled = false;
+        // Destroy(gameObject);
     }
 
     // For the enemy's search zone
@@ -560,18 +566,6 @@ public class EnemyBehaviour : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "swordBlade")
-        {
-            is_stunned = true;
-
-            // Reset Enemy velocity
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-
-            rb.AddForce((transform.up * knockback_vertical) + (-transform.forward * knockback_horizontal), ForceMode.VelocityChange);
-            health--;
-            healthSlider.value = health;
-        }
         if (other.gameObject.layer == 10)
         {
             is_stunned = true;
@@ -581,20 +575,31 @@ public class EnemyBehaviour : MonoBehaviour
         }
     }
 
+    // Damage function with knockback.
     public void enemyHealthDown(int damage)
     {
+        is_stunned = true;
+
+        // Reset Enemy velocity
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
+        rb.AddForce((transform.up * knockback_vertical) + (-transform.forward * knockback_horizontal), ForceMode.VelocityChange);
+
         health -= damage;
         healthSlider.value = health;
     }
 
+    public bool IsDead
+    {
+        get { return is_dead; }
+    }
 
     public int Health
     {
         get { return health; }
         set { health = value; }
     }
-
-
 
     void resetStun()
     {
@@ -610,6 +615,7 @@ public class EnemyBehaviour : MonoBehaviour
     public bool canShoot
     {
         get { return can_shoot; }
+        set { can_shoot = value; }
     }
 
     // When the A.I triggers the shooting animation trigger
@@ -641,6 +647,7 @@ public class EnemyBehaviour : MonoBehaviour
     public bool isStunned
     {
         get { return is_stunned; }
+        set { is_stunned = value; }
     }
 
     public enum STATE

@@ -100,7 +100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1a5d0773b331a9499276172235a74b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletSpeed: 250
+  bulletSpeed: 4
   lifeTime: 5
   target: {fileID: 4060964908431939438, guid: b0e354fd5cccb59438acb6783ca0b1b4, type: 3}
 --- !u!54 &-6884136199967551150
@@ -117,7 +117,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 72
+  m_Constraints: 120
   m_CollisionDetection: 0
 --- !u!136 &1716869139873782672
 CapsuleCollider:
@@ -368,22 +368,22 @@ PrefabInstance:
     - target: {fileID: 180264149028270564, guid: 46088571cf511774ab69068d2bb753ef,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.009523189
+      value: -0.02066244
       objectReference: {fileID: 0}
     - target: {fileID: 180264149028270564, guid: 46088571cf511774ab69068d2bb753ef,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.99935514
+      value: 0.00018500662
       objectReference: {fileID: 0}
     - target: {fileID: 180264149028270564, guid: 46088571cf511774ab69068d2bb753ef,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.020404503
+      value: -0.008951495
       objectReference: {fileID: 0}
     - target: {fileID: 180264149028270564, guid: 46088571cf511774ab69068d2bb753ef,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.027970249
+      value: -0.99974644
       objectReference: {fileID: 0}
     - target: {fileID: 180264149028270564, guid: 46088571cf511774ab69068d2bb753ef,
         type: 3}
@@ -398,7 +398,7 @@ PrefabInstance:
     - target: {fileID: 180264149028270564, guid: 46088571cf511774ab69068d2bb753ef,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -183.185
+      value: -360
       objectReference: {fileID: 0}
     - target: {fileID: 180264149028270564, guid: 46088571cf511774ab69068d2bb753ef,
         type: 3}
