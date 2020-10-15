@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: 50a56cc20760f4348b09e2087261dd2f
+guid: a85ea47c008bed6449e8b11e97b16554
 ModelImporter:
   serializedVersion: 26
   internalIDToNameTable:
   - first:
-      74: 8400381565642774532
-    second: ANIM_Enemy_Skeleton_KnockbackBlockout
+      74: 3220015064274301178
+    second: ANIM_Enemy_Spider_DeathBlockout_2
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -35,11 +35,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: ANIM_Enemy_Skeleton_KnockbackBlockout
-      takeName: ANIM_Enemy_Skeleton_KnockbackBlockout
+      name: ANIM_Enemy_Spider_DeathBlockout_2
+      takeName: ANIM_Enemy_Spider_DeathBlockout_2
       internalID: 0
       firstFrame: 0
-      lastFrame: 15
+      lastFrame: 21
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -60,7 +60,7 @@ ModelImporter:
       curves: []
       events:
       - time: 1
-        functionName: resetStun
+        functionName: die
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
@@ -88,8 +88,8 @@ ModelImporter:
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
-    skinWeightsMode: 1
-    maxBonesPerVertex: 32
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
     minBoneWeight: 0.001
     meshOptimizationFlags: -1
     indexFormat: 0
@@ -108,7 +108,7 @@ ModelImporter:
     normalSmoothingSource: 0
   referencedClips: []
   importAnimation: 1
-  copyAvatar: 1
+  copyAvatar: 0
   humanDescription:
     serializedVersion: 3
     human: []
@@ -125,8 +125,7 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 9db2e404b5a7a4f4c96ce730f65e4514,
-    type: 3}
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 2
   humanoidOversampling: 1
   additionalBone: 0
