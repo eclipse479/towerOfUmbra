@@ -45,7 +45,8 @@ public class playerController1 : MonoBehaviour
     public float maxComboDelay;
     private float currentComboDelay;
 
-    private int attackNumber = 1;
+    [HideInInspector]
+    public int attackNumber;
 
     [Tooltip("how fast the sword swings")]
     public float swordSpeed;    // how fast the sword moves
@@ -157,6 +158,7 @@ public class playerController1 : MonoBehaviour
         {
             swordSpeed = 1;
         }
+        attackNumber = 0;
         //the rigidbody
         rb = GetComponent<Rigidbody>();
         //the collider
@@ -343,39 +345,28 @@ public class playerController1 : MonoBehaviour
                 //swing sword
                 if (Input.GetMouseButtonDown(0))
                 {
-                    currentComboDelay = maxComboDelay; // check if animation is playing
-                    
-                        if(attackNumber < 3)// which animation to play
-                            attackNumber++;
-                        else // loop animations
-                            attackNumber = 1;
-                        //which attack animation plays
-                    if (attackNumber == 1)
+                    if(attackNumber < 3)
                     {
-                        swingSword("attack1");//lay animation
-                        Debug.Log("attack 1");
-                    }  
-                    else if (attackNumber == 2)
+                        currentComboDelay = maxComboDelay; // check if animation is playing
+                    }
+                    attackNumber++;
+                    if(attackNumber == 1) //starts the first attack the rest should occur automatically if clicked again
                     {
-                        swingSword("attack2");//lay animation
-                        Debug.Log("attack 2");
-                    }  
-                    else if (attackNumber == 3)
-                    {
-                        swingSword("attack3");//lay animation
-                        Debug.Log("attack 3");
+                        swingSword("firstAttack");
+                        Debug.Log("start");
                     }
                 }
                 if(currentComboDelay >= 0)
                 {
                     currentComboDelay -= Time.deltaTime; //count frames
                 }
-                if(currentComboDelay < 0)
+                else if(currentComboDelay < 0)
                 {
-                    attackNumber = 0;//reset attack when no more frames
                     ani.SetBool("attacking", false);
+                    if(attackNumber == 1 || attackNumber == 2)
+                    attackNumber = 0;//reset attack when no more frames
                 }
-                deleteThisLater.text = attackNumber.ToString();
+                //deleteThisLater.text = attackNumber.ToString();
             }
         }
         else if (dead)
@@ -384,8 +375,7 @@ public class playerController1 : MonoBehaviour
         }
         //debug ray to check if a ramp is infront of the player
         Debug.DrawRay(transform.position + new Vector3(0, -0.45f, 0), transform.forward * 0.25f, Color.green);
-        
-        
+        deleteThisLater.text = attackNumber.ToString();
         if (jumping)
             deleteThisLater.color = Color.yellow;
         else if (antiBumpForceTimer > 0 && !jumping)
@@ -397,7 +387,7 @@ public class playerController1 : MonoBehaviour
             deleteThisLater.color = Color.cyan;
         }
     }
-
+    
 
     /// <summary>
     /// swings the sword
@@ -407,7 +397,7 @@ public class playerController1 : MonoBehaviour
     {
         ani.SetBool("attacking", true);
         
-        ani.SetTrigger(attackName); // attack animation
+        ani.SetBool(attackName, true); // attack animation
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -446,7 +436,7 @@ public class playerController1 : MonoBehaviour
         {
             Gizmos.color = Color.green;
             //Draw a cube that extends to where the hit exists 
-            Gizmos.DrawWireCube(transform.position - transform.up * boxHit.distance, new Vector3(0.125f, 0.1f, 0.125f) * 2);
+            Gizmos.DrawWireCube(transform.position - (transform.up * boxHit.distance) + new Vector3(0,1.1f,0), new Vector3(0.125f, 0.1f, 0.125f) * 2);
         }
         //If there hasn't been a hit yet, draw the ray at the maximum distance 
         else
@@ -455,7 +445,8 @@ public class playerController1 : MonoBehaviour
             //Draw a Ray forward from GameObject toward the maximum distance 
             Gizmos.DrawRay(transform.position, -transform.up * 0.22f);
             //Draw a cube at the maximum distance 
-            Gizmos.DrawWireCube(transform.position - transform.up * boxCastMaxDistance, new Vector3(0.125f, 0.1f, 0.125f) * 2);
+            Gizmos.DrawWireCube(transform.position - (transform.up * boxCastMaxDistance) + new Vector3(0, 1.1f, 0), new Vector3(0.125f, 0.1f, 0.125f) * 2);
+
         }
 
     }
@@ -501,6 +492,7 @@ public class playerController1 : MonoBehaviour
         if(knockBackNoMovementTimer >= 0)
             knockBackNoMovementTimer -= Time.deltaTime;
     }
+
     /// <summary>
     /// player has run out of health and has died
     /// should play death animation ect.
@@ -512,6 +504,7 @@ public class playerController1 : MonoBehaviour
         deathScreen.enabled = true;
         addFriction();
     }
+
     /// <summary>
     /// checks the player speed and limits it if it exceeds the movement
     /// </summary>
@@ -534,6 +527,7 @@ public class playerController1 : MonoBehaviour
         float speedInput = currentSpeed / playerMaxMovementSpeed;
         ani.SetFloat("speed", speedInput);
     }
+
     /// <summary>
     /// increased friction to the highest possible value
     /// </summary>

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.UIElements;
 
 public class grapplingHook : MonoBehaviour
@@ -9,8 +10,18 @@ public class grapplingHook : MonoBehaviour
     [Header("GRAPPLE STATS")]
     [Tooltip("how far the grapple can move")]
     public float maxLength;
+    [Tooltip("shortest possible grappling Hook")]
+    [Min(0.1f)]
+    public float minLength;
+    [Tooltip("how fast the grapple can grow")]
+    [Min(0.1f)]
+    public float lengthenReelSpeed;
+    [Tooltip("how fast the grapple can shrink")]
+    [Min(0.1f)]
+    public float shortenReelSpeed;
     //how fast it extends
     [Tooltip("how fast the grapple moves")]
+    [Min(0.1f)]
     public float extendRate;
     //is the hook extended
 
@@ -57,9 +68,20 @@ public class grapplingHook : MonoBehaviour
     private Vector3 grappleStartingPos;
     private float lerpPercent = 0;
     private Vector3 maxExtendedPoint;
-
+    [Header("SPRING")]
+    public float startingDamper;
+    public float startingSpring;
+    public float startingMassScale;
     private bool retracting;
     private List<MeshRenderer> rends;
+
+    private float grappleGrace;
+    public float maxGrappleGrace;
+
+    private SpringJoint spring;
+    private Vector3 grapplePoint;
+
+    public Text deleteThisLater;
     // Start is called before the first frame update
     void Start()
     {
@@ -88,22 +110,28 @@ public class grapplingHook : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         grappleStartingPos = new Vector3(player.transform.position.x, player.transform.position.y + baseHeightIncrease, player.transform.position.z) + (playerCamera.transform.forward * grappleDistFromPlayer);
 
         //moves grapple to player position
         parent.transform.position = grappleStartingPos;
 
-        //sets the line renderer to draw between the hook and parent
-        lRend.SetPosition(0, grappleStartingPos);
-        lRend.SetPosition(1, transform.position);
+        if (Input.GetMouseButtonDown(1))
+        {
+            grappleGrace = maxGrappleGrace;
+        }
+        else
+        {
+            grappleGrace -= Time.deltaTime;
+        }
 
         if (!active)
         {
             //gets a new spot to shoot a grapple towards
-            if (Input.GetMouseButtonDown(1))
+            if (grappleGrace >= 0)
             {
                 RaycastHit hit;
-
+                grappleGrace = -1;
 
                 if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100))
                 {
@@ -112,11 +140,87 @@ public class grapplingHook : MonoBehaviour
                     parent.gameObject.transform.LookAt(new Vector3(destination.x, destination.y, transform.position.z));
                     collide.enabled = true;
                     active = true; // grapple exists
-                    extending = true; // grapple is extending
                     StartCoroutine(extend());
                 }
             }
         }
+        if(wallGrabbed)
+        {
+            transform.position = grapplePoint;
+            if (Input.GetKey(KeyCode.W))
+            {
+                shortenGrapplingHook();
+            }
+            else if (Input.GetKey(KeyCode.S))
+            {
+                lengthenGrapplingHook();
+            }
+        }
+        if (Input.GetMouseButtonUp(1))
+        {
+            extending = false;
+            StopCoroutine(extend());
+            StartCoroutine(retract());         //start retracting when extending has been completed
+            if (spring)
+                stopGrapple();
+        }
+    }
+    private void LateUpdate()
+    {
+        drawRope();
+    }
+    void drawRope()
+    {
+
+        lRend.SetPosition(0, transform.position);
+        lRend.SetPosition(1, parent.transform.position);
+    }
+
+    private void startGrapple()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100.0f))
+        {
+            spring = player.gameObject.AddComponent<SpringJoint>();
+            spring.autoConfigureConnectedAnchor = false;
+            spring.connectedAnchor = grapplePoint;
+
+            float distanceFromPoint = Vector3.Distance(parent.transform.position, grapplePoint);
+
+            //distance grapple will try to stay at
+            spring.maxDistance = distanceFromPoint * 0.8f;
+            spring.minDistance = minLength;
+            //change these at will:
+            spring.damper = startingDamper;
+            spring.spring = startingSpring;
+            spring.massScale = startingMassScale;
+
+            lRend.positionCount = 2;
+        }
+    }
+
+    private void shortenGrapplingHook()
+    {
+        if (spring.maxDistance > minLength)
+        {
+            spring.maxDistance -= shortenReelSpeed * Time.deltaTime;
+        }
+        else
+            spring.maxDistance = minLength;
+    }
+
+    private void lengthenGrapplingHook()
+    {
+        if (spring.maxDistance < maxLength)
+        {
+            spring.maxDistance += lengthenReelSpeed * Time.deltaTime;
+        }
+        else
+            spring.maxDistance = maxLength;
+    }
+    private void stopGrapple()
+    {
+        Destroy(spring);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -132,19 +236,22 @@ public class grapplingHook : MonoBehaviour
         }
         else if (collision.gameObject.tag == "grappleTarget" && !wallGrabbed && !isEnemyGrabbed && extending)
         {
-            //grapple the wall
-            playerRB.velocity = Vector3.zero;
             wallGrabbed = true;
             extending = false;
-            forceDirection = (new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, player.gameObject.transform.position.z) - player.gameObject.transform.position);
-            distanceToWall = forceDirection.magnitude;//length
-            forceDirection.Normalize();
-            playerPullToWall();
+            ContactPoint contact = collision.contacts[0];
+            grapplePoint = contact.point;
+            startGrapple();
+            //forceDirection = (new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, player.gameObject.transform.position.z) - player.gameObject.transform.position);
+            //distanceToWall = forceDirection.magnitude;//length
+            //forceDirection.Normalize();
+            //playerPullToWall();
         }
         else
         {
             //hits anything else
             extending = false;
+            StopCoroutine(extend());
+            StartCoroutine(retract());
         }
     }
 
@@ -178,8 +285,9 @@ public class grapplingHook : MonoBehaviour
     {
         reappear();
         StopCoroutine(retract());
+        extending = true;
         rb.isKinematic = false;
-        Vector3 startPos = parent.transform.position;
+        bool maxReached = false;
         maxExtendedPoint = parent.transform.position + (gameObject.transform.right * maxLength);
         while (extending)
         {
@@ -187,21 +295,24 @@ public class grapplingHook : MonoBehaviour
             //transform.position = Vector3.Lerp(startPos, maxExtendedPoint, lerpPercent);
             lerpPercent += extendRate * Time.deltaTime;
 
-            if (lerpPercent > maxLength)
+            if (lerpPercent >= maxLength)
             {
                 extending = false;
+                maxReached = true;
+                Debug.Log("retract");
+                
             }
             yield return null;
         }
         lerpPercent = 0;                                //resest the lerp timer
-        extending = false;                              //will now start to retract
-        yield return StartCoroutine(retract());         //start retracting when extending has been completed
-        
+        if(maxReached)
+           yield return StartCoroutine(retract());         //start retracting when extending has been completed
     }
 
     IEnumerator retract()
     {
         StopCoroutine(extend());
+        wallGrabbed = false;
         retracting = true;
         collide.enabled = false;        //collider turned off
         rb.isKinematic = true;          //kinematic to stop physics
@@ -217,12 +328,12 @@ public class grapplingHook : MonoBehaviour
             if (lerpPercent > maxLength)
             {
                 retracting = false;
-                active = false;
             }
             yield return null;
         }
         lerpPercent = 0;                //reset the lerp value
-         disappear();
+        active = false;
+        disappear();
     }
 
     private void disappear()

@@ -12,7 +12,7 @@ public class Sound
     [Range(0.1f,3)]
     [Tooltip("base pitch for the sound")]
     public float pitch;
-    [Tooltip("small value either added or subtracted from the pitch so it is different each time")]
+    [Tooltip("a value that is added and subtracted to get a range of pitch that is randomly selected each time it is played")]
     public float pitchRandomizer;
     [Range(0.1f,1)]
     [Tooltip("how loud the sound will be")]
