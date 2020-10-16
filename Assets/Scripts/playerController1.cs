@@ -122,13 +122,15 @@ public class playerController1 : MonoBehaviour
     //temp player speed text
     [Tooltip("Text used for debugging")]
     public Text deleteThisLater;
-
+    [HideInInspector]
+    public bool isGrappled;
 
     //animations
     private Animator ani;
     //private SoundManager soundManager;
     private void Awake()
     {
+        isGrappled = false;
         //health bar values
         healthbarImage = healthBar.transform.GetChild(1).gameObject.GetComponent<Image>();
         if(playerStats.health <= 0 && !dead)
@@ -195,7 +197,7 @@ public class playerController1 : MonoBehaviour
                 else // slower acceleration while in the air
                     rb.AddForce(transform.forward * speed * Time.deltaTime * airMovementMultiplier, ForceMode.VelocityChange);
             }
-            if (jumpHoldTime >= 0 && jumpBuffer >= 0)
+            if (jumpHoldTime >= 0 && jumpBuffer >= 0 && !isGrappled)
             {
                 //removes current vertical velocity
                 ani.SetTrigger("jumped"); // jump animation
@@ -209,7 +211,7 @@ public class playerController1 : MonoBehaviour
                 jumpHoldTime = -1;  // -> not grounded
                 jumpBuffer = -1;   // -> hasn't pressed the key
             }
-            else if (jumpBuffer >= 0 && doubleJump)
+            else if (jumpBuffer >= 0 && doubleJump && !isGrappled)
             {
                 Vector3 velocityKill = rb.velocity;
                 velocityKill.y = 0;
@@ -375,7 +377,15 @@ public class playerController1 : MonoBehaviour
         }
         //debug ray to check if a ramp is infront of the player
         Debug.DrawRay(transform.position + new Vector3(0, -0.45f, 0), transform.forward * 0.25f, Color.green);
-        deleteThisLater.text = attackNumber.ToString();
+        if (jumpHoldTime >= 0 && !isGrappled)
+            deleteThisLater.text = "can jump";
+        else
+        {
+
+            deleteThisLater.text = "grounded forever";
+        }
+
+
         if (jumping)
             deleteThisLater.color = Color.yellow;
         else if (antiBumpForceTimer > 0 && !jumping)
