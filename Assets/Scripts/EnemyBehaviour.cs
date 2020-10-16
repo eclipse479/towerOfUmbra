@@ -118,6 +118,7 @@ public class EnemyBehaviour : MonoBehaviour
 
     // Death trigger
     bool is_dead = false;
+    Collider collider;
 
     // Navigation rays
     struct PathRays
@@ -142,7 +143,7 @@ public class EnemyBehaviour : MonoBehaviour
     private void Awake()
     {
         animator = GetComponent<Animator>();
-
+        collider = GetComponent<Collider>();
 
         // From the forward ray all the way around
         //                6
@@ -264,13 +265,6 @@ public class EnemyBehaviour : MonoBehaviour
         {
             nav_rays[i].ray.origin = ray_centre.position;
             Debug.DrawRay(nav_rays[i].ray.origin, nav_rays[i].ray.direction, Color.yellow);
-        }
-
-        // If it has no health points
-        if (health <= 0.0f && !is_dead)
-        {
-            is_dead = true;
-            animator.SetTrigger("Death");
         }
         
         if (!is_dead)
@@ -578,16 +572,29 @@ public class EnemyBehaviour : MonoBehaviour
     // Damage function with knockback.
     public void enemyHealthDown(int damage)
     {
-        is_stunned = true;
-
-        // Reset Enemy velocity
-        rb.velocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
-
-        rb.AddForce((transform.up * knockback_vertical) + (-transform.forward * knockback_horizontal), ForceMode.VelocityChange);
-
         health -= damage;
         healthSlider.value = health;
+
+        if (health > 0)
+        { 
+            is_stunned = true;
+
+            // Reset Enemy velocity
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+
+            rb.AddForce((transform.up * knockback_vertical) + (-transform.forward * knockback_horizontal), ForceMode.VelocityChange);
+        }
+
+
+        // If it has no health points
+        if (health <= 0.0f && !is_dead)
+        {
+            is_dead = true;
+            animator.SetBool("Walk", false);
+            animator.ResetTrigger("Knockback");
+            animator.SetTrigger("Death");
+        }
     }
 
     public bool IsDead
