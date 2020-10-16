@@ -168,16 +168,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5d0d442361f5d4428ccd3bf7655ab2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxLength: 9
-  extendRate: 28
+  maxLength: 12.07
+  minLength: 6
+  lengthenReelSpeed: 37.73
+  shortenReelSpeed: 61.9
+  extendRate: 30
   player: {fileID: 0}
   playerCamera: {fileID: 0}
   grappleDistFromPlayer: 0.74
-  baseHeightIncrease: 0.76
+  baseHeightIncrease: 1.03
   grabbedEnemy: {fileID: 0}
-  forceDirection: {x: -0.36970007, y: 0.9291512, z: 0}
-  grapplePullToWallForce: 1
+  forceDirection: {x: -0.17858976, y: 0.9839236, z: 0}
+  grapplePullToWallForce: 23.48
   grapplePullEnemyForce: 5
+  startingDamper: 241.5
+  startingSpring: 265.9
+  startingMassScale: 278.1
+  maxGrappleGrace: 238
+  deleteThisLater: {fileID: 0}
 --- !u!1001 &1744011396147886142
 PrefabInstance:
   m_ObjectHideFlags: 0
