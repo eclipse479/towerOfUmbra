@@ -146,7 +146,6 @@ public class grapplingHook : MonoBehaviour
         }
         if(wallGrabbed)
         {
-            transform.position = grapplePoint;
             if (Input.GetKey(KeyCode.W))
             {
                 shortenGrapplingHook();
@@ -156,11 +155,25 @@ public class grapplingHook : MonoBehaviour
                 lengthenGrapplingHook();
             }
         }
+
+
+        if(spring)
+        {
+            transform.position = grapplePoint;
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                playerPullToWall();
+            }
+
+        }
+
+
+
         if (Input.GetMouseButtonUp(1))
         {
             extending = false;
             StopCoroutine(extend());
-            StartCoroutine(retract());         //start retracting when extending has been completed
+            StartCoroutine(retract());         //start retracting when mouse button is let go
             if (spring)
                 stopGrapple();
         }
@@ -197,6 +210,7 @@ public class grapplingHook : MonoBehaviour
 
             lRend.positionCount = 2;
         }
+        player.GetComponent<playerController1>().isGrappled = true;
     }
 
     private void shortenGrapplingHook()
@@ -221,6 +235,7 @@ public class grapplingHook : MonoBehaviour
     private void stopGrapple()
     {
         Destroy(spring);
+        player.GetComponent<playerController1>().isGrappled = false;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -241,10 +256,6 @@ public class grapplingHook : MonoBehaviour
             ContactPoint contact = collision.contacts[0];
             grapplePoint = contact.point;
             startGrapple();
-            //forceDirection = (new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, player.gameObject.transform.position.z) - player.gameObject.transform.position);
-            //distanceToWall = forceDirection.magnitude;//length
-            //forceDirection.Normalize();
-            //playerPullToWall();
         }
         else
         {
@@ -269,6 +280,10 @@ public class grapplingHook : MonoBehaviour
     }
     public void playerPullToWall()
     {
+        forceDirection = (new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, player.gameObject.transform.position.z) - player.gameObject.transform.position);
+        distanceToWall = forceDirection.magnitude;//length
+        forceDirection.Normalize();
+
         collide.enabled = false;
         wallGrabbed = false;
         playerRB.AddForce(forceDirection * CalculateJumpForce(distanceToWall, 9.8f) * grapplePullToWallForce, ForceMode.VelocityChange);
@@ -319,10 +334,8 @@ public class grapplingHook : MonoBehaviour
         maxExtendedPoint = transform.position;
         while (retracting)
         {
-            //retract the grappling hook
-            //parent.transform.LookAt(gameObject.transform.position); // makes the hook face away from the player when retracting
             Vector3 endPos = parent.transform.position;
-            //transform.position = Vector3.Lerp(maxExtendedPoint, endPos, lerpPercent);
+
             transform.position = Vector3.MoveTowards(transform.position, endPos, extendRate * Time.deltaTime);
             lerpPercent += extendRate * Time.deltaTime;
             if (lerpPercent > maxLength)
