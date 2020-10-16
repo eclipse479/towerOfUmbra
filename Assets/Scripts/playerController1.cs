@@ -292,7 +292,7 @@ public class playerController1 : MonoBehaviour
                 }
 
                 //controlled jumping -> allows short hops when button is tapped and large jumps when held
-                if(Input.GetKeyUp(KeyCode.Space) && rb.velocity.y > 0)
+                if(Input.GetKeyUp(KeyCode.Space) && rb.velocity.y > 0 && !isGrappled)
                 {
                     rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y * 0.5f, rb.velocity.z);
                 }
