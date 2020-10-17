@@ -285,7 +285,6 @@ public class grapplingHook : MonoBehaviour
         forceDirection.Normalize();
 
         collide.enabled = false;
-        wallGrabbed = false;
         playerRB.AddForce(forceDirection * CalculateJumpForce(distanceToWall, 9.8f) * grapplePullToWallForce, ForceMode.VelocityChange);
     }
 
@@ -334,6 +333,10 @@ public class grapplingHook : MonoBehaviour
         maxExtendedPoint = transform.position;
         while (retracting)
         {
+            if(spring)
+            {
+                stopGrapple();
+            }
             Vector3 endPos = parent.transform.position;
 
             transform.position = Vector3.MoveTowards(transform.position, endPos, extendRate * Time.deltaTime);
