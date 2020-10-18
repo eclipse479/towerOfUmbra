@@ -21,7 +21,7 @@ public class PrototypeGML21 : MonoBehaviour
     {
         if (Input.GetKeyDown(restartKey))
         {
-            SceneManager.LoadScene(2);
+            SceneManager.LoadScene(1);
         }
 
         if (Input.GetKeyDown(QuitKey))

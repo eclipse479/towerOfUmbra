@@ -5,29 +5,10 @@ using UnityEngine.SceneManagement;
 
 
 public class PrototypeGMTut : MonoBehaviour
+
 {
-    public KeyCode restartKey = KeyCode.R;
-
-
-    public KeyCode QuitKey = KeyCode.Q;
-    // Start is called before the first frame update
-    void Start()
+    public void RestartL0()
     {
-
-    }
-
-
-    void Update()
-    {
-        if (Input.GetKeyDown(restartKey))
-        {
-            SceneManager.LoadScene(0);
-        }
-
-        if (Input.GetKeyDown(QuitKey))
-        {
-            Application.Quit();
-            Debug.Log("Bye");
-        }
+        SceneManager.LoadScene(0);
     }
 }
