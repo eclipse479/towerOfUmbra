@@ -113,6 +113,10 @@ public class EnemyBehaviour : MonoBehaviour
     [Header("Stun settings")]
     [Tooltip("How long the enemy is stunned")] public float stun_duration = 2.0f;
     [Tooltip("Rate of stun recovery")] public float stun_recovery = 2.0f;
+    [Tooltip("How long enemy stays dizzy")] public float dizzy_duration;
+    bool is_dizzy = false;
+    float dizzy_time;
+
     bool is_stunned;
     float stun_time;
 
@@ -137,6 +141,8 @@ public class EnemyBehaviour : MonoBehaviour
     public float ground_check_offset = 2.0f;
     public float ground_check_radius = 1.0f;
     bool is_grounded;
+
+    
 
 
     // Things that need to be loaded before first frame
@@ -168,6 +174,9 @@ public class EnemyBehaviour : MonoBehaviour
             }
             nav_rays[i].path_open = false; // By default
         }
+
+        // Dizzy
+        dizzy_time = dizzy_duration;
 
         // Cooldown timer for Path navigation
         nav_cooldown = path_choice_cooldown;
@@ -270,7 +279,7 @@ public class EnemyBehaviour : MonoBehaviour
         if (!is_dead)
         {
             // As long as the enemy isn't stunned, do it's thing.
-            if (!is_stunned)
+            if (!is_stunned && !is_dizzy)
             {
                   // Has detected player but is not within attack range
                   if (detectionZone())
@@ -341,9 +350,28 @@ public class EnemyBehaviour : MonoBehaviour
                       }
                   }
             }
+            else if (is_dizzy)
+            {
+                hookStun();
+            }
         }
     }
 
+
+
+    /// <summary>
+    /// Used with the animator. Play's grappling hook stun
+    /// </summary>
+    void hookStun()
+    {
+        dizzy_time -= 1 * Time.deltaTime;
+            
+        if (dizzy_time <= 0)
+        {
+            is_dizzy = false;
+            dizzy_time = dizzy_duration;
+        }
+    }
 
 
     /// <summary>
@@ -387,7 +415,7 @@ public class EnemyBehaviour : MonoBehaviour
                 Rigidbody player_rb = player.GetComponent<Rigidbody>();
 
                 player_rb.AddForce(transform.forward * knockback_to_player_horizontal + player.transform.up * knockback_to_player_vertical, ForceMode.VelocityChange);
-                player.GetComponent<playerController1>().currentHealth -= damage_to_player;
+                playerStats.health -= damage_to_player;
             }
             setAttack();
         }
@@ -541,6 +569,8 @@ public class EnemyBehaviour : MonoBehaviour
     void die()
     {
         textCounter.subtract();
+        gameObject.layer = 0;
+        healthBar.gameObject.SetActive(false);
         this.enabled = false;
         // Destroy(gameObject);
     }
@@ -562,10 +592,18 @@ public class EnemyBehaviour : MonoBehaviour
     {
         if (other.gameObject.layer == 10)
         {
-            is_stunned = true;
+            is_dizzy = true;
             // Reset Enemy velocity
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.layer == 10)
+        {
+            is_dizzy = true;
         }
     }
 
@@ -592,6 +630,8 @@ public class EnemyBehaviour : MonoBehaviour
         {
             is_dead = true;
             animator.SetBool("Walk", false);
+            animator.ResetTrigger("Attack");
+            animator.ResetTrigger("Shoot");
             animator.ResetTrigger("Knockback");
             animator.SetTrigger("Death");
         }
@@ -616,6 +656,16 @@ public class EnemyBehaviour : MonoBehaviour
     public STATE State
     {
         get { return behaviour; }
+    }
+
+    public bool IsDizzy
+    {
+        get { return is_dizzy; }
+    }
+
+    public float StunTime
+    {
+        get { return dizzy_time; }
     }
 
     // Return the shoot available
