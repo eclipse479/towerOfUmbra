@@ -22,7 +22,7 @@ public class attack2 : StateMachineBehaviour
     {
         if (control.attackNumber >= 3)
         {
-            control.attackNumber = 3; // keeps it at 3
+            //control.attackNumber = 3; // keeps it at 3
             animator.SetBool("thirdAttack", true);
         }
     }
