@@ -10,9 +10,9 @@ public class attack1 : StateMachineBehaviour
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         animator.SetBool("firstAttack", false);
-        if(control.attackNumber > 2)
+        if(control.attackNumber > 3)
         {
-            control.attackNumber = 2; // sets up the 2nd attack
+            control.attackNumber = 3; // sets up the 2nd attack
         }
     }
 
@@ -20,7 +20,7 @@ public class attack1 : StateMachineBehaviour
     {
        if(control.attackNumber >= 2)
        {
-            control.attackNumber = 2; //  keeps it at 2
+            //control.attackNumber = 2; //  keeps it at 2
             animator.SetBool("secondAttack", true);
        }
     }
