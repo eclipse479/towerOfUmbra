@@ -16,7 +16,8 @@ public class playerController1 : MonoBehaviour
     //player health bar
     [Tooltip("The health bar game object")]
     public GameObject healthBar;
-    private Image healthbarImage;
+    [HideInInspector]
+    public Image healthbarImage;
 
 
 
@@ -345,7 +346,7 @@ public class playerController1 : MonoBehaviour
                 ///---------------------------------------------------------------------------------------------------------------------------
 
                 //swing sword
-                if (Input.GetMouseButtonDown(0))
+                if (Input.GetMouseButtonDown(0) && grounded)
                 {
                     if(attackNumber < 3)
                     {
@@ -368,7 +369,7 @@ public class playerController1 : MonoBehaviour
                     if(attackNumber == 1 || attackNumber == 2)
                     attackNumber = 0;//reset attack when no more frames
                 }
-                //deleteThisLater.text = attackNumber.ToString();
+                deleteThisLater.text = attackNumber.ToString();
             }
         }
         else if (dead)
@@ -377,24 +378,22 @@ public class playerController1 : MonoBehaviour
         }
         //debug ray to check if a ramp is infront of the player
         Debug.DrawRay(transform.position + new Vector3(0, -0.45f, 0), transform.forward * 0.25f, Color.green);
-        if (jumpHoldTime >= 0 && !isGrappled)
-            deleteThisLater.text = "can jump";
+
+       // if (jumping)
+       //     deleteThisLater.color = Color.yellow;
+       // else if (antiBumpForceTimer > 0 && !jumping)
+       // {
+       //     deleteThisLater.color = Color.red;
+       // }
+       // else
+       // {
+       //     deleteThisLater.color = Color.blue;
+       // }
+        if (currentComboDelay > 0)
+            deleteThisLater.color = Color.blue;
         else
-        {
-
-            deleteThisLater.text = "grounded forever";
-        }
-
-
-        if (jumping)
-            deleteThisLater.color = Color.yellow;
-        else if (antiBumpForceTimer > 0 && !jumping)
         {
             deleteThisLater.color = Color.red;
-        }
-        else
-        {
-            deleteThisLater.color = Color.cyan;
         }
     }
     
@@ -417,6 +416,7 @@ public class playerController1 : MonoBehaviour
             Debug.Log(collision.gameObject.name);
             //reduce health
             playerStats.health--;
+                
             healthText.text = "Health: " + playerStats.health;
             knockBack(collision.gameObject);
             //move health bar health
