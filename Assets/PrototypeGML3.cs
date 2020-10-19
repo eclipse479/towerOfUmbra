@@ -5,29 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class PrototypeGML3 : MonoBehaviour
 {
-    
-    public KeyCode restartKey = KeyCode.R;
-
-
-    public KeyCode QuitKey = KeyCode.Q;
-    // Start is called before the first frame update
-    void Start()
+    public void RestartL3()
     {
-
-    }
-
-
-    void Update()
-    {
-        if (Input.GetKeyDown(restartKey))
-        {
-            SceneManager.LoadScene(3);
-        }
-
-        if (Input.GetKeyDown(QuitKey))
-        {
-            Application.Quit();
-            Debug.Log("Bye");
-        }
+        SceneManager.LoadScene(3);
     }
 }

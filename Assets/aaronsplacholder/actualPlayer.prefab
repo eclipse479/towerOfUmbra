@@ -67,20 +67,21 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   healthText: {fileID: 0}
-  maxHealth: 40
+  maxHealth: 100
   currentHealth: 20
   healthBar: {fileID: 0}
   verticalKnockBackAmount: 5
-  horizontalKnockBackAmount: 50
+  horizontalKnockBackAmount: 35
   maxKnockBackNoMovementTimer: 0.6
   numOfFlashes: 3
   flashLength: 0.4
   maxComboDelay: 0.2
+  attackNumber: 0
   swordSpeed: 780
   pauseScreen: {fileID: 0}
   gameplayMenu: {fileID: 0}
   deathScreen: {fileID: 0}
-  speed: 28.61
+  speed: 42.8
   playerMaxMovementSpeed: 9.5
   airMovementMultiplier: 0.75
   antiSlopeBumpForce: 2.5
@@ -91,6 +92,7 @@ MonoBehaviour:
   gravityIncrease: 1.45
   boxCastMaxDistance: 1.33
   deleteThisLater: {fileID: 0}
+  isGrappled: 0
 --- !u!54 &868598636
 Rigidbody:
   m_ObjectHideFlags: 0
