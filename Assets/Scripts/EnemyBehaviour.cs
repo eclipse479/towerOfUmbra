@@ -416,6 +416,8 @@ public class EnemyBehaviour : MonoBehaviour
 
                 player_rb.AddForce(transform.forward * knockback_to_player_horizontal + player.transform.up * knockback_to_player_vertical, ForceMode.VelocityChange);
                 playerStats.health -= damage_to_player;
+                player.GetComponent<playerController1>().healthText.text = "Health: " + playerStats.health; 
+                player.GetComponent<playerController1>().healthbarImage.fillAmount = playerStats.health / player.GetComponent<playerController1>().maxHealth;
             }
             setAttack();
         }
