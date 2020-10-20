@@ -571,8 +571,11 @@ public class EnemyBehaviour : MonoBehaviour
     void die()
     {
         textCounter.subtract();
-        gameObject.layer = 0;
+        gameObject.tag = "Untagged";
+        gameObject.layer = 4;
         healthBar.gameObject.SetActive(false);
+        rb.useGravity = false;
+        collider.enabled = false;
         this.enabled = false;
         // Destroy(gameObject);
     }
