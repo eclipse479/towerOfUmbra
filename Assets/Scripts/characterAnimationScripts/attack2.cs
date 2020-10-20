@@ -3,7 +3,6 @@
 public class attack2 : StateMachineBehaviour
 {
     static playerController1 control;
-    private bool attackAgain = false;
 
     private void Awake()
     {

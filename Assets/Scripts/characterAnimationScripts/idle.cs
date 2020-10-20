@@ -9,11 +9,12 @@ public class idle : StateMachineBehaviour
     }
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        control.currentComboDelay = -1;
         control.attackNumber = 0;
+        animator.SetBool("attacking", false);
     }
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-
     }
 }
