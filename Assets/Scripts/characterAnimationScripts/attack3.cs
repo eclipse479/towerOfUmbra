@@ -10,6 +10,7 @@ public class attack3 : StateMachineBehaviour
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         animator.SetBool("thirdAttack", false);
+        
         control.attackNumber = 0; // reset attack combo
     }
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

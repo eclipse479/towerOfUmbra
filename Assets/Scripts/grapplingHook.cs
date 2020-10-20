@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class grapplingHook : MonoBehaviour
 {
@@ -104,7 +103,7 @@ public class grapplingHook : MonoBehaviour
         isEnemyGrabbed = false;
         extending = false;
         active = false;
-        parent.transform.position = player.transform.position;
+        grappleGrace = -1;
     }
 
     // Update is called once per frame
@@ -120,7 +119,8 @@ public class grapplingHook : MonoBehaviour
         {
             grappleGrace = maxGrappleGrace;
         }
-        else
+
+        if(grappleGrace > 0)
         {
             grappleGrace -= Time.deltaTime;
         }
@@ -191,25 +191,21 @@ public class grapplingHook : MonoBehaviour
 
     private void startGrapple()
     {
-        RaycastHit hit;
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100.0f))
-        {
-            spring = player.gameObject.AddComponent<SpringJoint>();
-            spring.autoConfigureConnectedAnchor = false;
-            spring.connectedAnchor = grapplePoint;
+        spring = player.gameObject.AddComponent<SpringJoint>();
+        spring.autoConfigureConnectedAnchor = false;
+        spring.connectedAnchor = grapplePoint;
 
-            float distanceFromPoint = Vector3.Distance(parent.transform.position, grapplePoint);
+        float distanceFromPoint = Vector3.Distance(parent.transform.position, grapplePoint);
 
-            //distance grapple will try to stay at
-            spring.maxDistance = distanceFromPoint * 0.8f;
-            spring.minDistance = minLength;
-            //change these at will:
-            spring.damper = startingDamper;
-            spring.spring = startingSpring;
-            spring.massScale = startingMassScale;
+        //distance grapple will try to stay at
+        spring.maxDistance = distanceFromPoint * 0.8f;
+        spring.minDistance = minLength;
+        //change these at will:
+        spring.damper = startingDamper;
+        spring.spring = startingSpring;
+        spring.massScale = startingMassScale;
 
-            lRend.positionCount = 2;
-        }
+        lRend.positionCount = 2;
         player.GetComponent<playerController1>().isGrappled = true;
     }
 
