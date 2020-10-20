@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackPoint: {fileID: 0}
-  attackRange: 1
+  attackRange: 1.1
   enemyLayers:
     serializedVersion: 2
     m_Bits: 2048
@@ -70,12 +70,13 @@ MonoBehaviour:
   maxHealth: 100
   currentHealth: 20
   healthBar: {fileID: 0}
+  healthbarImage: {fileID: 0}
   verticalKnockBackAmount: 5
-  horizontalKnockBackAmount: 35
+  horizontalKnockBackAmount: 30
   maxKnockBackNoMovementTimer: 0.6
-  numOfFlashes: 3
-  flashLength: 0.4
-  maxComboDelay: 0.2
+  numOfFlashes: 5
+  flashLength: 0.1
+  maxComboDelay: 0.3
   attackNumber: 0
   swordSpeed: 780
   pauseScreen: {fileID: 0}

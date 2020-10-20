@@ -29,7 +29,7 @@ public class AnimationSwitch : MonoBehaviour
         // Check to see which actions are being performed
         if (!state.IsDead)
         {
-             if (!state.isStunned)
+             if (!state.isStunned && !state.IsDizzy)
              {
                  switch (state.State)
                  {
@@ -62,10 +62,14 @@ public class AnimationSwitch : MonoBehaviour
                          break;
                  }
              }
-             else
+             else if (state.isStunned)
              {
                  animation.SetTrigger("Knockback");
              }
+            else
+            {
+                animation.SetFloat("Stun Time", state.StunTime);
+            }
         }
 
     }
