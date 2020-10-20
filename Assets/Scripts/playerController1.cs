@@ -44,7 +44,8 @@ public class playerController1 : MonoBehaviour
     [Header("ATTACK SETTINGS")]
     [Tooltip("the maximum amount of time between attack clicks to do the next attack")]
     public float maxComboDelay;
-    private float currentComboDelay;
+    [HideInInspector]
+    public float currentComboDelay;
 
     [HideInInspector]
     public int attackNumber;
@@ -105,8 +106,6 @@ public class playerController1 : MonoBehaviour
     //collider that the physics material is on so friction can be changed
     private Collider collide;
 
-
-
     //timer for how long the force is applied
     private float maxAntiBumpForceTimer = 0.3f;
     private float antiBumpForceTimer;
@@ -123,11 +122,16 @@ public class playerController1 : MonoBehaviour
     //temp player speed text
     [Tooltip("Text used for debugging")]
     public Text deleteThisLater;
-    [HideInInspector]
-    public bool isGrappled;
 
     //animations
     private Animator ani;
+
+    [HideInInspector]
+    public bool isGrappled;
+
+    private float attack1Time;
+    private float attack2Time;
+    private float attack3Time;
     //private SoundManager soundManager;
     private void Awake()
     {
@@ -171,7 +175,6 @@ public class playerController1 : MonoBehaviour
         //is grounded
         grounded = true;
         //sword is not swinging
-
 
         ani = GetComponentInChildren<Animator>();
     }
@@ -348,17 +351,17 @@ public class playerController1 : MonoBehaviour
                 //swing sword
                 if (Input.GetMouseButtonDown(0) && grounded)
                 {
-                    if(attackNumber < 3)
+                    if (attackNumber < 3)
                     {
                         currentComboDelay = maxComboDelay; // check if animation is playing
                     }
                     attackNumber++;
-                    if(attackNumber == 1) //starts the first attack the rest should occur automatically if clicked again
-                    {
-                        swingSword("firstAttack");
-                        Debug.Log("start");
-                    }
+                }    
+                if(attackNumber == 1) //starts the first attack the rest should occur automatically if clicked again
+                {
+                    swingSword("firstAttack");
                 }
+                
                 if(currentComboDelay >= 0)
                 {
                     currentComboDelay -= Time.deltaTime; //count frames
@@ -366,8 +369,15 @@ public class playerController1 : MonoBehaviour
                 else if(currentComboDelay < 0)
                 {
                     ani.SetBool("attacking", false);
-                    if(attackNumber == 1 || attackNumber == 2)
-                    attackNumber = 0;//reset attack when no more frames
+                    if(attackNumber > 0)
+                    {
+                        attackNumber = 0;
+                        Debug.Log("WTF");
+                    }
+                    //resets the attacks
+                    ani.SetBool("firstAttack", false);
+                    ani.SetBool("secondAttack", false);
+                    ani.SetBool("thirdAttack", false);
                 }
                 deleteThisLater.text = attackNumber.ToString();
             }
@@ -653,5 +663,25 @@ public class playerController1 : MonoBehaviour
             yield return new WaitForSeconds(flashLength);
         }
         gameObject.layer = 8;
+    }
+
+    public void UpdateAnimClipTimes()
+    {
+        AnimationClip[] clips = ani.runtimeAnimatorController.animationClips;
+        foreach (AnimationClip clip in clips)
+        {
+            switch (clip.name)
+            {
+                case "Swing1":
+                    Debug.Log("attack 1: " + clip.length);
+                    break;
+                case "Swing2":
+                    Debug.Log("attack 2: " + clip.length);
+                    break;
+                case "Swing3":
+                    Debug.Log("attack 3: " + clip.length);
+                    break;
+            }
+        }
     }
 }
