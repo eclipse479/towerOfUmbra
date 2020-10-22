@@ -538,7 +538,8 @@ public class EnemyBehaviour : MonoBehaviour
         move_velocity = new Vector3(move_velocity.x, 0.0f, 0.0f);
 
         // Wherever  the player is, move towards them on the x-axis
-        rb.AddForce(move_velocity * speed * Time.deltaTime, ForceMode.VelocityChange);
+        if (rb.velocity.magnitude < max_speed)
+            rb.AddForce(move_velocity * speed * Time.deltaTime, ForceMode.VelocityChange);
     }
 
     /// <summary>
@@ -556,7 +557,9 @@ public class EnemyBehaviour : MonoBehaviour
          {
              transform.forward *= -1;
          }
-         rb.AddForce(transform.forward * speed * Time.deltaTime, ForceMode.VelocityChange);
+
+         if (rb.velocity.magnitude < max_speed)
+            rb.AddForce(transform.forward * speed * Time.deltaTime, ForceMode.VelocityChange);
     }
 
     /// <summary>
@@ -635,6 +638,7 @@ public class EnemyBehaviour : MonoBehaviour
         {
             is_dead = true;
             animator.SetBool("Walk", false);
+            animator.SetFloat("Stun Time", 0);
             animator.ResetTrigger("Attack");
             animator.ResetTrigger("Shoot");
             animator.ResetTrigger("Knockback");
