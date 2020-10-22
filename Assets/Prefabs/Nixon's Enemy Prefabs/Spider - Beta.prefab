@@ -2045,9 +2045,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   knockback_horizontal: 20
   knockback_vertical: 2
-  knockback_to_player_horizontal: 20
-  knockback_to_player_vertical: 10
-  health: 2
+  knockback_to_player_horizontal: 8
+  knockback_to_player_vertical: 2
+  health: 3
   hit_box: {fileID: 9196819207215386850}
   hit_range: 1
   damage_to_player: 1
@@ -2056,20 +2056,22 @@ MonoBehaviour:
     m_Bits: 256
   detection_range: 5
   max_ray_dist: 10
-  speed: 200
+  speed: 100
+  max_speed: 10
   target: {fileID: 0}
   ray_centre: {fileID: 9196819207910964180}
   detect_distance: 5
-  ray_offset: 3
+  ray_offset: 2.01
   drop_cast_dist: 1.5
-  min_dist: 1
-  attack_cooldown: 2
+  min_dist: 1.48
+  attack_cooldown: 3
   attack_range: 0.8
-  bullet: {fileID: 7091955269792678419, guid: 39fbe86a4b47bfe468477d03ddfb5373, type: 3}
+  bullet: {fileID: 7091955269792678419, guid: 9146f5fb4b4e77d40b1eba7152976f13, type: 3}
   shoot_cooldown: 2
   enemiesLeftText: {fileID: 0}
   stun_duration: 2
   stun_recovery: 2
+  dizzy_duration: 0
   path_choice_cooldown: 3
   jump_force: 5
   ground_check_offset: 0.49
@@ -2084,7 +2086,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.8590212
+  m_Radius: 0.65
   m_Height: 2.79
   m_Direction: 0
   m_Center: {x: 0, y: 0.6744833, z: 0.08636224}
