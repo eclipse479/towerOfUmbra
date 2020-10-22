@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 897083975296178064}
   - component: {fileID: 4798702060352638729}
   - component: {fileID: 9083255443284850997}
-  - component: {fileID: 6082420442976648681}
+  - component: {fileID: 5520537442164027600}
   m_Layer: 0
   m_Name: PREFAB_Blockout_CaveWall_1
   m_TagString: grappleTarget
@@ -303,8 +303,8 @@ MonoBehaviour:
   - a: 19
     b: 18
   m_SelectedVertices: 10000000110000001200000013000000
---- !u!64 &6082420442976648681
-MeshCollider:
+--- !u!65 &5520537442164027600
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -313,7 +313,6 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 0}
+  serializedVersion: 2
+  m_Size: {x: 4, y: 58, z: 1}
+  m_Center: {x: 2, y: 29, z: -0.5}

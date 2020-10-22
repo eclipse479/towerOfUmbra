@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5831865625112323489}
   - component: {fileID: 3993417753181088085}
   - component: {fileID: 8536950176326388299}
-  - component: {fileID: 170618354095081566}
+  - component: {fileID: 1661051548713784546}
   m_Layer: 9
   m_Name: PREFAB_20x2x2_Cave_Platform
   m_TagString: grappleTarget
@@ -303,8 +303,8 @@ MonoBehaviour:
   - a: 7
     b: 6
   m_SelectedVertices: 04000000050000000600000007000000
---- !u!64 &170618354095081566
-MeshCollider:
+--- !u!65 &1661051548713784546
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -313,7 +313,6 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 1
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 0}
+  serializedVersion: 2
+  m_Size: {x: 20, y: 2.0000637, z: 2}
+  m_Center: {x: 10, y: 1.0000318, z: -1}
