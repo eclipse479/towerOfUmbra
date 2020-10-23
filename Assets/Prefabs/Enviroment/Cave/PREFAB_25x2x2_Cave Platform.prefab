@@ -1,5 +1,18 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!65 &5299852119716788002
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2076773561748333343}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 25, y: 2.000063, z: 2}
+  m_Center: {x: 12.5, y: 1.0000315, z: -1}
 --- !u!1 &9066477424803497798
 GameObject:
   m_ObjectHideFlags: 0
@@ -42,6 +55,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Mesh
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1661051548713784546, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 1661051548713784546, guid: 7b0d36f12e4fa1d448acb46435954788,
+        type: 3}
+      propertyPath: m_Center.x
+      value: 12.5
       objectReference: {fileID: 0}
     - target: {fileID: 2505575618823426229, guid: 7b0d36f12e4fa1d448acb46435954788,
         type: 3}
@@ -358,8 +381,15 @@ PrefabInstance:
       propertyPath: m_Tangents.Array.data[23].y
       value: -0.0000024414062
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1661051548713784546, guid: 7b0d36f12e4fa1d448acb46435954788, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 7b0d36f12e4fa1d448acb46435954788, type: 3}
+--- !u!1 &2076773561748333343 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2670188232278295026, guid: 7b0d36f12e4fa1d448acb46435954788,
+    type: 3}
+  m_PrefabInstance: {fileID: 4169282679479395053}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1952824193248096856 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2505575618823426229, guid: 7b0d36f12e4fa1d448acb46435954788,
