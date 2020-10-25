@@ -77,7 +77,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9616f5cf573c74c459237aba916fc845, type: 2}
+  - {fileID: 2100000, guid: 38419af60808a96468a9e79d9d632bce, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -103,7 +103,7 @@ LineRenderer:
   - {x: 0, y: 0, z: 1}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.02
+    widthMultiplier: 0.05
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -168,21 +168,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5d0d442361f5d4428ccd3bf7655ab2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxLength: 12.07
+  maxLength: 15
   minLength: 0.5
-  lengthenReelSpeed: 40
-  shortenReelSpeed: 41
-  extendRate: 30
+  lengthenReelSpeed: 10
+  shortenReelSpeed: 10
+  extendRate: 35
   player: {fileID: 0}
   playerCamera: {fileID: 0}
   grappleDistFromPlayer: 0.74
   baseHeightIncrease: 1.03
   grabbedEnemy: {fileID: 0}
-  forceDirection: {x: -0.1889924, y: 0.9819786, z: 0}
-  grapplePullToWallForce: 1.5
-  grapplePullEnemyForce: 5
-  startingDamper: 241.5
-  startingSpring: 265.9
+  forceDirection: {x: 0.2372894, y: 0.971439, z: 0}
+  grapplePullToWallForce: 0.9
+  grapplePullEnemyForce: 1
+  startingDamper: 439.7
+  startingSpring: 638.7
   startingMassScale: 278.1
   maxGrappleGrace: 238
   deleteThisLater: {fileID: 0}
@@ -226,7 +226,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 27b764a7956bc2f47957f01c7bf699f5,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.03
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 27b764a7956bc2f47957f01c7bf699f5,
         type: 3}
