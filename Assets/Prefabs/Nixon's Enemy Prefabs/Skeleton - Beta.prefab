@@ -128,7 +128,7 @@ GameObject:
   - component: {fileID: 2312264040055887054}
   m_Layer: 11
   m_Name: Skeleton - Beta
-  m_TagString: enemy
+  m_TagString: skeleton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -174,18 +174,17 @@ MonoBehaviour:
   attack_layer:
     serializedVersion: 2
     m_Bits: 256
-  detection_range: 1.3
+  detection_range: 8
   max_ray_dist: 2.84
   speed: 100
   max_speed: 10
   target: {fileID: 0}
   ray_centre: {fileID: 2312264040567953524}
-  detect_distance: 8.82
   ray_offset: 5.52
   drop_cast_dist: 1.5
-  min_dist: 4.23
+  min_dist: 5
   attack_cooldown: 0.1
-  attack_range: 2.47
+  attack_range: 3
   bullet: {fileID: 7091955269792678419, guid: bb59f89fb9312114ca0153b3160eeca7, type: 3}
   shoot_cooldown: 5
   enemiesLeftText: {fileID: 0}
@@ -195,7 +194,7 @@ MonoBehaviour:
   path_choice_cooldown: 3
   jump_force: 10
   ground_check_offset: 0.64
-  ground_check_radius: 0.5
+  ground_check_radius: 2.5
 --- !u!54 &2312264039623448738
 Rigidbody:
   m_ObjectHideFlags: 0

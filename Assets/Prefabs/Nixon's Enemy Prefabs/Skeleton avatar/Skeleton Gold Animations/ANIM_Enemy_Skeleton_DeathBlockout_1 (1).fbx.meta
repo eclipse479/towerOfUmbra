@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: 06957d94fb8cb76449891027e2ef5ea4
+guid: 67c62ae89bb05ba4abee5769073d8c9b
 ModelImporter:
   serializedVersion: 26
   internalIDToNameTable:
   - first:
-      74: 5028496548861586052
-    second: ANIM_Enemy_Skeleton_StunnedBlockout_1
+      74: -6101170147210069286
+    second: ANIM_Enemy_Skeleton_DeathBlockout_1
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -35,18 +35,18 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: ANIM_Enemy_Skeleton_StunnedBlockout_1
-      takeName: ANIM_Enemy_Skeleton_StunnedBlockout_1
+      name: ANIM_Enemy_Skeleton_DeathBlockout_1
+      takeName: ANIM_Enemy_Skeleton_DeathBlockout_1
       internalID: 0
       firstFrame: 0
-      lastFrame: 30
+      lastFrame: 16
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -58,7 +58,14 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0
+        functionName: die
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -81,8 +88,8 @@ ModelImporter:
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
-    skinWeightsMode: 1
-    maxBonesPerVertex: 32
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
     minBoneWeight: 0.001
     meshOptimizationFlags: -1
     indexFormat: 0
