@@ -67,7 +67,6 @@ public class EnemyBehaviour : MonoBehaviour
     [Tooltip("Either the root node or whatever object is called the ray centre")] public Transform ray_centre;
 
     // Keep track of the player
-    [Tooltip("How far the enemy can see the player")] public float detect_distance = 5.0f;
     float distance_to_player;
 
     // Rays to check on each side
@@ -289,7 +288,14 @@ public class EnemyBehaviour : MonoBehaviour
                           // Is the player isn't in melee range
                           if (!attackRange())
                           {
-                              behaviour = STATE.SHOOT;
+                              if (can_shoot)
+                              { 
+                                  behaviour = STATE.SHOOT;
+                              }
+                              else
+                              {
+                                  behaviour = STATE.CHASING;
+                              }
                           }
                           else
                           {
@@ -329,8 +335,6 @@ public class EnemyBehaviour : MonoBehaviour
                   {
                       case (STATE)2: // Attack
                         attack();
-                          break;
-                      case (STATE)3: // Shoot
                           break;
                     default:
                         break;
@@ -382,7 +386,9 @@ public class EnemyBehaviour : MonoBehaviour
         if (ray_centre != null)
             Instantiate(bullet, ray_centre.position + transform.forward, transform.rotation);
         else
-            Instantiate(bullet, transform.position + transform.forward, transform.rotation);   
+            Instantiate(bullet, transform.position + transform.forward, transform.rotation);
+
+        can_shoot = false;
     }
 
     // For the animator events to reset shooting timer
@@ -477,7 +483,7 @@ public class EnemyBehaviour : MonoBehaviour
         // Check where the player is
         distance_to_player = (target.position - transform.position).magnitude;
 
-        if (distance_to_player < detect_distance)
+        if (distance_to_player < detection_range)
         {
             transform.forward = new Vector3((target.position - transform.position).x, 0, 0).normalized;
             behaviour = STATE.CHASING;
@@ -574,6 +580,7 @@ public class EnemyBehaviour : MonoBehaviour
     void die()
     {
         textCounter.subtract();
+        FindObjectOfType<SoundManager>().playSound("skeletonDies");
         gameObject.tag = "Untagged";
         gameObject.layer = 4;
         healthBar.gameObject.SetActive(false);
@@ -625,6 +632,8 @@ public class EnemyBehaviour : MonoBehaviour
         { 
             is_stunned = true;
 
+            FindObjectOfType<SoundManager>().playSound("skeletonHit");
+
             // Reset Enemy velocity
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
@@ -645,6 +654,8 @@ public class EnemyBehaviour : MonoBehaviour
             animator.SetTrigger("Death");
         }
     }
+
+ 
 
     public bool IsDead
     {

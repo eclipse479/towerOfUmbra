@@ -38,12 +38,8 @@ public class AnimationSwitch : MonoBehaviour
                          if (state.canShoot)
                          {
                              state.canShoot = false;
-                             if (!state.IsShooting)
-                             {
-                                 state.isAttacking = false;
-                                 state.IsShooting = true;
-                                 animation.SetTrigger("Shoot");
-                             }
+                             state.isAttacking = false;
+                             animation.SetTrigger("Shoot");
                          }
                          break;
                      case EnemyBehaviour.STATE.ATTACK:

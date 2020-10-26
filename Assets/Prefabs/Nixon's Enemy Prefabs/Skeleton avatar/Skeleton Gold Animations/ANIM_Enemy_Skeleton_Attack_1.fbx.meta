@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: 6b85f03d48665d44b970a19e9c700922
+guid: 43bc9d2bf9a0d664d878f7c0c5170227
 ModelImporter:
   serializedVersion: 26
   internalIDToNameTable:
   - first:
-      74: -1406763753947749747
-    second: ANIM_Enemy_Skeleton_RangedBlockout_1
+      74: 7577759056254908277
+    second: ANIM_Enemy_Skeleton_AttackBlockout_1
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -35,11 +35,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: ANIM_Enemy_Skeleton_RangedBlockout_1
-      takeName: ANIM_Enemy_Skeleton_RangedBlockout_1
+      name: ANIM_Enemy_Skeleton_AttackBlockout_1
+      takeName: ANIM_Enemy_Skeleton_AttackBlockout_1
       internalID: 0
       firstFrame: 0
-      lastFrame: 45
+      lastFrame: 40
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -59,8 +59,15 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.7013953
-        functionName: shoot
+      - time: 0.326284
+        functionName: activateAttack
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.38549188
+        functionName: setAttack
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
@@ -88,8 +95,8 @@ ModelImporter:
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
-    skinWeightsMode: 1
-    maxBonesPerVertex: 32
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
     minBoneWeight: 0.001
     meshOptimizationFlags: -1
     indexFormat: 0
