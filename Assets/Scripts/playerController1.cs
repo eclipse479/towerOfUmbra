@@ -6,6 +6,7 @@ public class playerController1 : MonoBehaviour
 {
     [SerializeField] public LayerMask platformLayerMask;
     //health variables
+    #region helath settings
     [Header("HEATH SETTINGS")]
     [Tooltip("Text that displays health left")]
     public Text healthText;
@@ -18,12 +19,9 @@ public class playerController1 : MonoBehaviour
     public GameObject healthBar;
     [HideInInspector]
     public Image healthbarImage;
-
-
-
-    //rigidbody
-    private Rigidbody rb;
+    #endregion
     //enemy collision knockback
+    #region knockback
     [Header("KNOCKBACK")]
     [Tooltip("How high the player is knocked when hit")]
     public float verticalKnockBackAmount;
@@ -32,7 +30,8 @@ public class playerController1 : MonoBehaviour
     [Tooltip("how long after getting hit can the player not move")]
     public float maxKnockBackNoMovementTimer;
     private float knockBackNoMovementTimer;
-
+    #endregion
+    #region Invincibility frames
     [Header("INVINCIBILITY FRAMES")]
     [Tooltip("How many times the player will flash")]
     [Min(0)]
@@ -40,7 +39,8 @@ public class playerController1 : MonoBehaviour
     [Tooltip("How long each flash is")]
     public float flashLength;
     private GameObject playerRend;
-
+    #endregion
+    #region attack settings
     [Header("ATTACK SETTINGS")]
     [Tooltip("the maximum amount of time between attack clicks to do the next attack")]
     public float maxComboDelay;
@@ -49,13 +49,10 @@ public class playerController1 : MonoBehaviour
 
     [HideInInspector]
     public int attackNumber;
-
-    [Tooltip("how fast the sword swings")]
-    public float swordSpeed;    // how fast the sword moves
+    #endregion
 
 
-    //pausing
-    private bool paused;
+    #region UIs
     [Header("UIS")]
     [Tooltip("the pause UI")]
     public Canvas pauseScreen;
@@ -64,13 +61,13 @@ public class playerController1 : MonoBehaviour
     //player has no health
     [Tooltip("the game over screen")]
     public Canvas deathScreen;
-    private bool dead;
+    #endregion
 
-
+    #region player movement
     [Header("PLAYER MOVEMENT")]
     //player movement
     [Tooltip("the players acceleration")]
-    public float speed;
+    public float acceleration;
     [Tooltip("the players max horizontal movement speed")]
     public float playerMaxMovementSpeed;
     //how much force a jump has
@@ -79,37 +76,35 @@ public class playerController1 : MonoBehaviour
     public float airMovementMultiplier = 0.75f;
     [Tooltip("force applied to keep the player on the ground at slopes")]
     public float antiSlopeBumpForce = 0.75f;
+    #endregion
+    //timer for how long the force is applied
+    private float maxAntiBumpForceTimer = 0.3f;
+    private float antiBumpForceTimer;
 
+    #region jumping
     [Header("JUMPING")]
     [Tooltip("How strong the player jumping is")]
     public float jumpForce;
     [Tooltip("Force multiplier for the double jump, min - 0")]
     [Min(0)]
     public float doubleJumpForce;
-    [Tooltip("Time when the player can jump after falling off a platform withour using double jump")]
+    [Tooltip("Time when the player can jump after falling off a platform without using double jump")]
     [Min(0.1f)]
-    public float maxJumpHoldTime;
-    private float jumpHoldTime = -1;
+    public float maxCoyoteTime;
+    private float coyoteTime = -1;
     [Tooltip("Time when the player can press the jump button while in the air and then jump when landed")]
     [Min(0.1f)]
     public float maxJumpBuffer;
     private float jumpBuffer = -1;
-    private float groundedDelay;
-    //is the player on the ground
-    private bool grounded;
     //can player double jump
     private bool doubleJump;
     //is player jumping
     private bool jumping;
+    #endregion
 
 
-    //collider that the physics material is on so friction can be changed
-    private Collider collide;
 
-    //timer for how long the force is applied
-    private float maxAntiBumpForceTimer = 0.3f;
-    private float antiBumpForceTimer;
-
+    #region misc
     [Header("OTHER")]
     [Tooltip("increase in gravity 0 -> normal 1 -> double")]
     public float gravityIncrease = 0;
@@ -119,19 +114,31 @@ public class playerController1 : MonoBehaviour
     private RaycastHit boxHit;
     private RaycastHit floorCheckRay;
     RaycastHit inFrontOfPlayer;
-    //temp player speed text
-    [Tooltip("Text used for debugging")]
-    public Text deleteThisLater;
+    #endregion
 
-    //animations
+    #region private objects
+    //collider that the physics material is on so friction can be changed
+    private Collider collide;
+    //rigidbody
+    private Rigidbody rb;
+    //animator
     private Animator ani;
+    #endregion
+
+    //pausing
+    private bool paused;
+    private bool dead;
+    private float groundedDelay;
+
+    //is the player on the ground
+    private bool grounded;
 
     [HideInInspector]
     public bool isGrappled;
 
-    private float attack1Time;
-    private float attack2Time;
-    private float attack3Time;
+    //temp player speed text
+    [Tooltip("Text used for debugging")]
+    public Text deleteThisLater;
     //private SoundManager soundManager;
     private void Awake()
     {
@@ -161,10 +168,6 @@ public class playerController1 : MonoBehaviour
         jumping = false;
         pauseScreen.enabled = false;
         deathScreen.enabled = false;
-        if (swordSpeed <= 0)
-        {
-            swordSpeed = 1;
-        }
         attackNumber = 0;
         //the rigidbody
         rb = GetComponent<Rigidbody>();
@@ -189,19 +192,19 @@ public class playerController1 : MonoBehaviour
             {
                 //move player
                 if (grounded)
-                    rb.AddForce(transform.forward * speed * Time.deltaTime, ForceMode.VelocityChange);
+                    rb.AddForce(transform.forward * acceleration * Time.deltaTime, ForceMode.VelocityChange);
                 else
-                    rb.AddForce(transform.forward * speed * Time.deltaTime * airMovementMultiplier, ForceMode.VelocityChange);
+                    rb.AddForce(transform.forward * acceleration * Time.deltaTime * airMovementMultiplier, ForceMode.VelocityChange);
             }
             if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
             {
                 //move player
                 if (grounded)//player movement on the ground
-                    rb.AddForce(transform.forward * speed * Time.deltaTime, ForceMode.VelocityChange);
+                    rb.AddForce(transform.forward * acceleration * Time.deltaTime, ForceMode.VelocityChange);
                 else // slower acceleration while in the air
-                    rb.AddForce(transform.forward * speed * Time.deltaTime * airMovementMultiplier, ForceMode.VelocityChange);
+                    rb.AddForce(transform.forward * acceleration * Time.deltaTime * airMovementMultiplier, ForceMode.VelocityChange);
             }
-            if (jumpHoldTime >= 0 && jumpBuffer >= 0 && !isGrappled)
+            if (coyoteTime >= 0 && jumpBuffer >= 0 && !isGrappled)
             {
                 //removes current vertical velocity
                 ani.SetTrigger("jumped"); // jump animation
@@ -212,7 +215,7 @@ public class playerController1 : MonoBehaviour
                 rb.AddForce(transform.up * jumpForce, ForceMode.VelocityChange);
                 jumping = true;
                 antiBumpForceTimer = -1;
-                jumpHoldTime = -1;  // -> not grounded
+                coyoteTime = -1;  // -> not grounded
                 jumpBuffer = -1;   // -> hasn't pressed the key
             }
             else if (jumpBuffer >= 0 && doubleJump && !isGrappled)
@@ -324,7 +327,7 @@ public class playerController1 : MonoBehaviour
                     doubleJump = true;
                     ani.SetBool("grounded", true);
                     ani.SetBool("falling", false);
-                    jumpHoldTime = maxJumpHoldTime;
+                    coyoteTime = maxCoyoteTime;
                     if (groundedDelay < 0)
                     {
                         jumping = false;
@@ -349,13 +352,14 @@ public class playerController1 : MonoBehaviour
                 ///---------------------------------------------------------------------------------------------------------------------------
 
                 //swing sword
-                if (Input.GetMouseButtonDown(0) && grounded)
+                if (Input.GetMouseButtonDown(0) /*&& grounded*/)
                 {
-                    if (attackNumber < 3)
-                    {
-                        currentComboDelay = maxComboDelay; // check if animation is playing
-                    }
+                    //if (attackNumber < 3)
+                    //{
+                    //}
+                        resetComboCooldown();
                     attackNumber++;
+                    attackNumber = Mathf.Clamp(attackNumber, 0, 3);
                 }    
                 if(attackNumber == 1) //starts the first attack the rest should occur automatically if clicked again
                 {
@@ -368,13 +372,12 @@ public class playerController1 : MonoBehaviour
                 }
                 else if(currentComboDelay < 0)
                 {
-                    ani.SetBool("attacking", false);
                     if(attackNumber > 0)
                     {
                         attackNumber = 0;
-                        Debug.Log("WTF");
                     }
                     //resets the attacks
+                    ani.SetBool("attacking", false);
                     ani.SetBool("firstAttack", false);
                     ani.SetBool("secondAttack", false);
                     ani.SetBool("thirdAttack", false);
@@ -505,8 +508,8 @@ public class playerController1 : MonoBehaviour
 
     private void timersUpdate()
     {
-        if(jumpHoldTime >= 0)
-            jumpHoldTime -= Time.deltaTime;
+        if(coyoteTime >= 0)
+            coyoteTime -= Time.deltaTime;
         if(jumpBuffer >= 0)
             jumpBuffer -= Time.deltaTime;
         if(knockBackNoMovementTimer >= 0)
@@ -684,4 +687,10 @@ public class playerController1 : MonoBehaviour
             }
         }
     }
+
+    public void resetComboCooldown()
+    {
+        currentComboDelay = maxComboDelay;
+    }
+
 }

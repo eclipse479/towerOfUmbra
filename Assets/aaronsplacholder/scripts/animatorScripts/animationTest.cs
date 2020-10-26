@@ -6,7 +6,6 @@ public class animationTest : MonoBehaviour
     public float attackRange;
     public LayerMask enemyLayers;
 
-
     public void swordOn()
     {     
 
@@ -15,6 +14,7 @@ public class animationTest : MonoBehaviour
     public void swordOff()
     {
     }
+
     public void playSwordSwingSound()
     {
         FindObjectOfType<SoundManager>().playSound("swordSwing");
@@ -26,7 +26,6 @@ public class animationTest : MonoBehaviour
         
         foreach(Collider enemy in enemiesHit)
         {
-            Debug.Log("Hit: " + enemy.transform.name);
             EnemyBehaviour behaviour = enemy.GetComponent<EnemyBehaviour>();
             behaviour.enemyHealthDown(1);
         }
