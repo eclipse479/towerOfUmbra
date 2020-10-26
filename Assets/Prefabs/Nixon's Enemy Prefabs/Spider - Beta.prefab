@@ -2023,8 +2023,8 @@ Animator:
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 4d291e5ae9232a44bbbe6c137b1b62e1, type: 3}
   m_Controller: {fileID: 9100000, guid: af62ea715984adf40be357bdc5a45f55, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
+  m_CullingMode: 1
+  m_UpdateMode: 1
   m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
@@ -2057,6 +2057,7 @@ MonoBehaviour:
   detection_range: 5
   max_ray_dist: 10
   speed: 200
+  max_speed: 10
   target: {fileID: 0}
   ray_centre: {fileID: 9196819207910964180}
   detect_distance: 5
@@ -2066,10 +2067,11 @@ MonoBehaviour:
   attack_cooldown: 2
   attack_range: 0.8
   bullet: {fileID: 7091955269792678419, guid: 39fbe86a4b47bfe468477d03ddfb5373, type: 3}
-  shoot_cooldown: 2
+  shoot_cooldown: 6
   enemiesLeftText: {fileID: 0}
   stun_duration: 2
   stun_recovery: 2
+  dizzy_duration: 0
   path_choice_cooldown: 3
   jump_force: 5
   ground_check_offset: 0.49

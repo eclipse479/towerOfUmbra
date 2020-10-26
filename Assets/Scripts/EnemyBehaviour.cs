@@ -289,7 +289,14 @@ public class EnemyBehaviour : MonoBehaviour
                           // Is the player isn't in melee range
                           if (!attackRange())
                           {
-                              behaviour = STATE.SHOOT;
+                              if (can_shoot)
+                              { 
+                                  behaviour = STATE.SHOOT;
+                              }
+                              else
+                              {
+                                  behaviour = STATE.CHASING;
+                              }
                           }
                           else
                           {
@@ -329,8 +336,6 @@ public class EnemyBehaviour : MonoBehaviour
                   {
                       case (STATE)2: // Attack
                         attack();
-                          break;
-                      case (STATE)3: // Shoot
                           break;
                     default:
                         break;
@@ -382,7 +387,9 @@ public class EnemyBehaviour : MonoBehaviour
         if (ray_centre != null)
             Instantiate(bullet, ray_centre.position + transform.forward, transform.rotation);
         else
-            Instantiate(bullet, transform.position + transform.forward, transform.rotation);   
+            Instantiate(bullet, transform.position + transform.forward, transform.rotation);
+
+        can_shoot = false;
     }
 
     // For the animator events to reset shooting timer
