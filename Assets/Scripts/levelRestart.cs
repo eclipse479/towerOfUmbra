@@ -20,7 +20,7 @@ public class levelRestart : MonoBehaviour
         {
             currentRestartTimer -= Time.deltaTime; 
             string timeLeft = currentRestartTimer.ToString("F2");
-            restartTimerText.text = "Level restarting in: " + timeLeft;
+            restartTimerText.text = "Respawning in: " + timeLeft;
         }
      
         if (currentRestartTimer < 0)//reloads current scene

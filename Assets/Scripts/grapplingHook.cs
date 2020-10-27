@@ -44,7 +44,6 @@ public class grapplingHook : MonoBehaviour
     private Rigidbody playerRB;
     private Rigidbody rb;
     private bool extending;
-    private bool isEnemyGrabbed;
     private bool wallGrabbed;
     //enemy hit by grappling hook
     [HideInInspector]
@@ -93,17 +92,16 @@ public class grapplingHook : MonoBehaviour
         {
             rends.Add(gameObject.transform.GetChild(0).gameObject.transform.GetChild(i).GetComponent<MeshRenderer>());
         }
-        disappear();
         parent = gameObject.transform.parent.gameObject;
         lRend = transform.GetComponent<LineRenderer>();
         collide = gameObject.GetComponent<Collider>();
         rb = transform.GetComponent<Rigidbody>();
         playerRB = player.GetComponent<Rigidbody>();
         collide.enabled = false;
-        isEnemyGrabbed = false;
         extending = false;
         active = false;
         grappleGrace = -1;
+        disappear();
     }
 
     // Update is called once per frame
@@ -137,7 +135,7 @@ public class grapplingHook : MonoBehaviour
                 {
                     Vector3 destination = hit.point; // position clicked
                     //make grapple face position clicked to it can extend properly
-                    parent.gameObject.transform.LookAt(new Vector3(destination.x, destination.y, transform.position.z));
+                    parent.transform.LookAt(new Vector3(destination.x, destination.y, transform.position.z));
                     collide.enabled = true;
                     active = true; // grapple exists
                     StartCoroutine(extend());
@@ -164,29 +162,37 @@ public class grapplingHook : MonoBehaviour
             {
                 playerPullToWall();
             }
-
+            if (!Input.GetMouseButton(1))//if the mouse button isn't being held then remove the spring from the grapple/turn swing off
+            {
+                stopGrapple();
+            }
         }
 
-
-
-        if (Input.GetMouseButtonUp(1))
+        if(Input.GetMouseButtonUp(1))
         {
-            extending = false;
-            StopCoroutine(extend());
-            StartCoroutine(retract());         //start retracting when mouse button is let go
-            if (spring)
-                stopGrapple();
+                extending = false;
+                StopCoroutine(extend());
+            if(!retracting)
+                StartCoroutine(retract());         //start retracting when mouse button is let go
         }
     }
     private void LateUpdate()
     {
+        
         drawRope();
     }
     void drawRope()
     {
-
-        lRend.SetPosition(0, transform.position);
-        lRend.SetPosition(1, parent.transform.position);
+        if (extending || wallGrabbed || retracting)
+        {
+            lRend.SetPosition(0, transform.position);
+            lRend.SetPosition(1, parent.transform.position);
+        }
+        else
+        {
+            lRend.SetPosition(0, transform.position);
+            lRend.SetPosition(1, transform.position);
+        }
     }
 
     private void startGrapple()
@@ -230,42 +236,49 @@ public class grapplingHook : MonoBehaviour
     }
     private void stopGrapple()
     {
-        Destroy(spring);
         player.GetComponent<playerController1>().isGrappled = false;
+        Destroy(spring);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
+        //Debug.Log(collision.gameObject.name);
         //collisions with various objects with tags
-        if (collision.gameObject.tag == "enemy" && !isEnemyGrabbed && !wallGrabbed && extending)
+        if (collision.gameObject.tag == "enemy" && extending)
         {
+            extending = false;
+            StopCoroutine(extend());
+            if (!retracting)
+                StartCoroutine(retract());
             //grapple the enemy
             grabbedEnemy = collision.gameObject;
-            extending = false;
-            isEnemyGrabbed = true;
             pullEnemy(grabbedEnemy);
         }
-        else if (collision.gameObject.tag == "grappleTarget" && !wallGrabbed && !isEnemyGrabbed && extending)
+        else if (collision.gameObject.tag == "grappleTarget" )
         {
-            wallGrabbed = true;
-            extending = false;
-            ContactPoint contact = collision.contacts[0];
-            grapplePoint = contact.point;
-            startGrapple();
+            if (extending)
+            {
+                extending = false;
+                wallGrabbed = true;
+                ContactPoint contact = collision.contacts[0];
+                grapplePoint = contact.point;
+                Debug.Log(grapplePoint);
+                startGrapple();
+            }
         }
         else
         {
             //hits anything else
             extending = false;
             StopCoroutine(extend());
-            StartCoroutine(retract());
+            if (!retracting)
+                StartCoroutine(retract());
         }
     }
 
     public void pullEnemy(GameObject thingToPull)
     {
         collide.enabled = false;
-        isEnemyGrabbed = false;
         Rigidbody enemyBody;
         enemyBody = thingToPull.GetComponent<Rigidbody>();
         Vector3 enemyDirection = (player.transform.position - thingToPull.transform.position);
@@ -308,9 +321,7 @@ public class grapplingHook : MonoBehaviour
             if (lerpPercent >= maxLength)
             {
                 extending = false;
-                maxReached = true;
-                Debug.Log("retract");
-                
+                maxReached = true;                
             }
             yield return null;
         }
@@ -350,6 +361,7 @@ public class grapplingHook : MonoBehaviour
 
     private void disappear()
     {
+        transform.position = parent.transform.position;
         foreach(MeshRenderer rend in rends)
         {
             rend.enabled = false;

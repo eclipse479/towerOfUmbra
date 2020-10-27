@@ -17,5 +17,7 @@ public class attack3 : StateMachineBehaviour
     {
         animator.SetBool("attacking", false);
         Debug.Log("stop attacking");
-    }
+        control.resetComboCooldown();
+    } 
+
 }
