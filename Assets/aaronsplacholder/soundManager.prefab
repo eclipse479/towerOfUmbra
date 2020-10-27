@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 6913591392865385094}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.04433, y: 0.04433, z: 0.04433}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -53,6 +53,146 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: swordSwing
     clip: {fileID: 8300000, guid: ff952905304ec574c8c38cbe3a77c434, type: 3}
+    pitch: 1
+    pitchRandomizer: 0.2
+    volume: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: playerDamaged_1
+    clip: {fileID: 8300000, guid: 0da76dd5ede639c4ab6c446112c120b2, type: 3}
+    pitch: 1
+    pitchRandomizer: 0.2
+    volume: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: playerDeath
+    clip: {fileID: 8300000, guid: 7e5c2a4eab084ca49a08783a98f8bf02, type: 3}
+    pitch: 1
+    pitchRandomizer: 0.2
+    volume: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: playerLand
+    clip: {fileID: 8300000, guid: 6beb341c01d918e42ba694476f0131d3, type: 3}
+    pitch: 1
+    pitchRandomizer: 0.2
+    volume: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: spiderDeath
+    clip: {fileID: 8300000, guid: 10aa573cf0d721c44af43962db013edc, type: 3}
+    pitch: 1
+    pitchRandomizer: 0.2
+    volume: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: fireballThrow
+    clip: {fileID: 8300000, guid: 0a7e19e4cd30ceb41bbfe7aeb119c6ab, type: 3}
+    pitch: 1
+    pitchRandomizer: 0.2
+    volume: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: fireballImpact
+    clip: {fileID: 8300000, guid: f60738bcd10cad543a7df9f6b1d7d5cc, type: 3}
+    pitch: 1
+    pitchRandomizer: 0.2
+    volume: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: skeletonDamaged_1
+    clip: {fileID: 8300000, guid: fcd7a29afe732964c8134be702a2335c, type: 3}
+    pitch: 1
+    pitchRandomizer: 0.2
+    volume: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: skeletonDeath
+    clip: {fileID: 8300000, guid: 5c5c35b219dde4c408e4752d1c177223, type: 3}
+    pitch: 1
+    pitchRandomizer: 0.2
+    volume: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: caveAmbience
+    clip: {fileID: 8300000, guid: 015c4e4b8a23c964592857f67987ce60, type: 3}
+    pitch: 1
+    pitchRandomizer: 0.2
+    volume: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: caveMusic
+    clip: {fileID: 8300000, guid: 32086ec30771b5c4f9b2ad8f603d6eb2, type: 3}
+    pitch: 1
+    pitchRandomizer: 0.2
+    volume: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: tutorialAmbience
+    clip: {fileID: 8300000, guid: a4768b4e5fb26dc458f3006077e061ac, type: 3}
+    pitch: 1
+    pitchRandomizer: 0.2
+    volume: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: tutorialMusic
+    clip: {fileID: 8300000, guid: 55d37e990c5030b49922109296cd7192, type: 3}
+    pitch: 1
+    pitchRandomizer: 0.2
+    volume: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: footstep_1
+    clip: {fileID: 8300000, guid: cfd6e67df9155de4cba8d5ae70db6f88, type: 3}
+    pitch: 1
+    pitchRandomizer: 0.2
+    volume: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: jumping
+    clip: {fileID: 8300000, guid: 128c90cd043c4fc4387d7c6f83a3bdb0, type: 3}
+    pitch: 1
+    pitchRandomizer: 0.2
+    volume: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: jumpLanding
+    clip: {fileID: 8300000, guid: 0a054651d588b354abfe38d627e75a86, type: 3}
+    pitch: 1
+    pitchRandomizer: 0.2
+    volume: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: grappleHookThrow
+    clip: {fileID: 8300000, guid: baae4ba8be3652248870a2f7738c90ee, type: 3}
+    pitch: 1
+    pitchRandomizer: 0.2
+    volume: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: grappleHookImpact
+    clip: {fileID: 8300000, guid: 1edfa224d84e37c4683363af3d234926, type: 3}
+    pitch: 1
+    pitchRandomizer: 0.2
+    volume: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: grappleHookReel
+    clip: {fileID: 8300000, guid: 9f3e64160a70718488c7922dc9b46b24, type: 3}
+    pitch: 1
+    pitchRandomizer: 0.2
+    volume: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: spiderDamaged_1
+    clip: {fileID: 8300000, guid: bc7d637669db2a048bb9388111d91548, type: 3}
+    pitch: 1
+    pitchRandomizer: 0.2
+    volume: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: spiderwebThrow
+    clip: {fileID: 8300000, guid: 6522bab7cc6decb4183e65d56b318661, type: 3}
     pitch: 1
     pitchRandomizer: 0.2
     volume: 1

@@ -9396,6 +9396,26 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 553859852}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &634139295 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1872795440, guid: dacd56c157fc3e94d86f8adefe93cb8f,
+    type: 3}
+  m_PrefabInstance: {fileID: 1209347283}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &634139297
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 634139295}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 1
+  m_CookingOptions: 14
+  m_Mesh: {fileID: 7123538664403962175, guid: 801acf93992a6cc41b2143f107b45f1c, type: 3}
 --- !u!4 &636327429 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3138377527947640601, guid: bfa0db1885705584694cc4b9c2aafa66,
@@ -10575,6 +10595,26 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1956288735}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &752431953 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 513979625, guid: dacd56c157fc3e94d86f8adefe93cb8f,
+    type: 3}
+  m_PrefabInstance: {fileID: 1209347283}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &752431955
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 752431953}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 1
+  m_CookingOptions: 14
+  m_Mesh: {fileID: 7123538664403962175, guid: 801acf93992a6cc41b2143f107b45f1c, type: 3}
 --- !u!43 &762493315
 Mesh:
   m_ObjectHideFlags: 0
@@ -17804,7 +17844,9 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 513979629, guid: dacd56c157fc3e94d86f8adefe93cb8f, type: 3}
+    - {fileID: 1872795444, guid: dacd56c157fc3e94d86f8adefe93cb8f, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: dacd56c157fc3e94d86f8adefe93cb8f, type: 3}
 --- !u!1 &1210953657
 GameObject:
@@ -17944,7 +17986,37 @@ PrefabInstance:
     - target: {fileID: 2312264039623448739, guid: e7946915413248e48b07bbad1ce50f4d,
         type: 3}
       propertyPath: attack_range
-      value: 3.75
+      value: 12.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2312264039623448739, guid: e7946915413248e48b07bbad1ce50f4d,
+        type: 3}
+      propertyPath: knockback_to_player_horizontal
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2312264039623448739, guid: e7946915413248e48b07bbad1ce50f4d,
+        type: 3}
+      propertyPath: knockback_to_player_vertical
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2312264039623448739, guid: e7946915413248e48b07bbad1ce50f4d,
+        type: 3}
+      propertyPath: health
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2312264039623448739, guid: e7946915413248e48b07bbad1ce50f4d,
+        type: 3}
+      propertyPath: hit_range
+      value: 1.53
+      objectReference: {fileID: 0}
+    - target: {fileID: 2312264039623448739, guid: e7946915413248e48b07bbad1ce50f4d,
+        type: 3}
+      propertyPath: detection_range
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2312264039623448739, guid: e7946915413248e48b07bbad1ce50f4d,
+        type: 3}
+      propertyPath: max_ray_dist
+      value: 30.5
       objectReference: {fileID: 0}
     - target: {fileID: 2312264039623448741, guid: e7946915413248e48b07bbad1ce50f4d,
         type: 3}
@@ -24080,6 +24152,11 @@ PrefabInstance:
       propertyPath: deleteThisLater
       value: 
       objectReference: {fileID: 1469589158}
+    - target: {fileID: 5600749127471954166, guid: ac79447f2fc28674781f800ceba169e7,
+        type: 3}
+      propertyPath: maxHealth
+      value: 30000
+      objectReference: {fileID: 0}
     - target: {fileID: 6730093160646667984, guid: ac79447f2fc28674781f800ceba169e7,
         type: 3}
       propertyPath: m_LocalPosition.x
