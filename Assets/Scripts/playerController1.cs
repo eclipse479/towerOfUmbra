@@ -424,7 +424,7 @@ public class playerController1 : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "enemy" || collision.gameObject.tag == "bullet")
+        if (collision.gameObject.tag == "bullet")
         {
             Debug.Log(collision.gameObject.name);
             //reduce health
