@@ -141,14 +141,18 @@ public class EnemyBehaviour : MonoBehaviour
     public float ground_check_radius = 1.0f;
     bool is_grounded;
 
-    
 
+    SoundManager sound;
 
     // Things that need to be loaded before first frame
     private void Awake()
     {
         animator = GetComponent<Animator>();
         collider = GetComponent<Collider>();
+
+        // Search for sound
+        sound = FindObjectOfType<SoundManager>();
+
 
         // From the forward ray all the way around
         //                6
@@ -422,7 +426,8 @@ public class EnemyBehaviour : MonoBehaviour
 
                 player_rb.AddForce(transform.forward * knockback_to_player_horizontal + player.transform.up * knockback_to_player_vertical, ForceMode.VelocityChange);
                 playerStats.health -= damage_to_player;
-                player.GetComponent<playerController1>().healthText.text = "Health: " + playerStats.health; 
+                player.GetComponent<playerController1>().healthText.text = "Health: " + playerStats.health;
+                player.GetComponent<playerController1>().flashStart();
                 player.GetComponent<playerController1>().healthbarImage.fillAmount = playerStats.health / player.GetComponent<playerController1>().maxHealth;
             }
             setAttack();
@@ -580,13 +585,13 @@ public class EnemyBehaviour : MonoBehaviour
     void die()
     {
         textCounter.subtract();
-        FindObjectOfType<SoundManager>().playSound("skeletonDies");
         gameObject.tag = "Untagged";
         gameObject.layer = 4;
         healthBar.gameObject.SetActive(false);
         rb.useGravity = false;
         collider.enabled = false;
         this.enabled = false;
+        FindObjectOfType<SoundManager>().playSound("skeletonDies");
         // Destroy(gameObject);
     }
 
@@ -632,7 +637,19 @@ public class EnemyBehaviour : MonoBehaviour
         { 
             is_stunned = true;
 
-            FindObjectOfType<SoundManager>().playSound("skeletonHit");
+            if (sound != null)
+            {
+                switch (gameObject.tag)
+                {
+                    case "skeleton":
+                        sound.playSound("skeletonHit");
+                        break;
+                    case "spider":
+                        sound.playSound("spiderHit");
+                        break;
+                }
+            }
+      
 
             // Reset Enemy velocity
             rb.velocity = Vector3.zero;
