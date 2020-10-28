@@ -724,18 +724,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 91412042349265563}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &142990041 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5600749127471954166, guid: ac79447f2fc28674781f800ceba169e7,
-    type: 3}
-  m_PrefabInstance: {fileID: 91412042349265563}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 142990039}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c3982bf304b5284e8252f0df5895664, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!54 &142990042
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7698,7 +7686,6 @@ MonoBehaviour:
   enemyLayers:
     serializedVersion: 2
     m_Bits: 2048
-  playercontrol: {fileID: 142990041}
 --- !u!114 &1536892447 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1417503691, guid: 0af5cc857729e6949b1ca1ee29617012,
@@ -11218,6 +11205,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8494249305705404969, guid: ac79447f2fc28674781f800ceba169e7,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 1f59f333c37269843ad866e728273b44, type: 2}
     - target: {fileID: 8624833879953289982, guid: ac79447f2fc28674781f800ceba169e7,
         type: 3}
       propertyPath: m_Layer
@@ -11281,7 +11273,12 @@ PrefabInstance:
     - target: {fileID: 1650586839854135738, guid: d8ad71e5e536b464ba14165a7b24a283,
         type: 3}
       propertyPath: distanceFromPlayer
-      value: 8.87
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1650586839854135738, guid: d8ad71e5e536b464ba14165a7b24a283,
+        type: 3}
+      propertyPath: upDown
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 1650586839854135739, guid: d8ad71e5e536b464ba14165a7b24a283,
         type: 3}
@@ -11814,10 +11811,15 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4991258980371478669, guid: 0af5cc857729e6949b1ca1ee29617012,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -559
+      objectReference: {fileID: 0}
     - target: {fileID: 5677281272060389232, guid: 0af5cc857729e6949b1ca1ee29617012,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5677281272060389233, guid: 0af5cc857729e6949b1ca1ee29617012,
         type: 3}

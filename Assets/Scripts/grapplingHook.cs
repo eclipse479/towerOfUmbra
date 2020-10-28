@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class grapplingHook : MonoBehaviour
 {
+    #region grappleStats
     //total length of the hook
     [Header("GRAPPLE STATS")]
     [Tooltip("how far the grapple can move")]
@@ -23,34 +24,32 @@ public class grapplingHook : MonoBehaviour
     [Min(0.1f)]
     public float extendRate;
     //is the hook extended
-
     private bool active;
+    [Tooltip("aditional height the grapple starts at")]
+    public float baseHeightIncrease;
+
+    #endregion
     //has the hook hit an enemy
     //the player
+    #region player stats
     [Header("PLAYER STATS")]
     [Tooltip("the player")]
     public GameObject player;
-    //rotation point
-    //camera stats
+    private playerController1 control;
     [Tooltip("the camera that follows the player")]
     public Camera playerCamera;
     [Tooltip("how far the grapple is from the player")]
     public float grappleDistFromPlayer;
-
+    #endregion
     private GameObject parent;
 
-    public float baseHeightIncrease;
 
     private Rigidbody playerRB;
     private Rigidbody rb;
     private bool extending;
     private bool wallGrabbed;
     //enemy hit by grappling hook
-    [HideInInspector]
-    public GameObject grabbedEnemy;
-    //vector for pulling direction player -> wall
-    [HideInInspector]
-    public Vector3 forceDirection;
+    
     private float distanceToWall;
 
     private Collider collide;
@@ -66,23 +65,31 @@ public class grapplingHook : MonoBehaviour
     private Vector3 grappleStartingPos;
     private float lerpPercent = 0;
     private Vector3 maxExtendedPoint;
+    #region spring stats
     [Header("SPRING")]
     public float startingDamper;
     public float startingSpring;
     public float startingMassScale;
+    private SpringJoint spring;
+    #endregion
     private bool retracting;
     private List<MeshRenderer> rends;
 
     private float grappleGrace;
     public float maxGrappleGrace;
 
-    private SpringJoint spring;
     private Vector3 grapplePoint;
 
+    [HideInInspector]
+    public GameObject grabbedEnemy;
+    //vector for pulling direction player -> wall
+    [HideInInspector]
+    public Vector3 forceDirection;
     public Text deleteThisLater;
     // Start is called before the first frame update
     void Start()
     {
+        control = player.GetComponent<playerController1>();
         rends = new List<MeshRenderer>();
         for (int i = 1; i <= 3; i++)
         {
@@ -212,7 +219,7 @@ public class grapplingHook : MonoBehaviour
         spring.massScale = startingMassScale;
 
         lRend.positionCount = 2;
-        player.GetComponent<playerController1>().isGrappled = true;
+        control.setGrappled(true);
     }
 
     private void shortenGrapplingHook()
@@ -236,7 +243,7 @@ public class grapplingHook : MonoBehaviour
     }
     private void stopGrapple()
     {
-        player.GetComponent<playerController1>().isGrappled = false;
+        control.setGrappled(false);
         Destroy(spring);
     }
 
@@ -299,7 +306,7 @@ public class grapplingHook : MonoBehaviour
 
     private float CalculateJumpForce(float jumpHeight, float gravity)
     {
-        float playerGravity = gravity + (gravity * player.GetComponent<playerController1>().gravityIncrease);
+        float playerGravity = gravity + (gravity * control.gravityIncrease);
         //jumpheight -> distance to target to jump to
         return Mathf.Sqrt(2 * jumpHeight * playerGravity);
     }
