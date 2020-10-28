@@ -684,6 +684,11 @@ public class playerController1 : MonoBehaviour
         gameObject.layer = 8;
     }
 
+    public void flashStart()
+    {
+        StartCoroutine(Flasher());
+    }
+
     public void UpdateAnimClipTimes()
     {
         AnimationClip[] clips = ani.runtimeAnimatorController.animationClips;
