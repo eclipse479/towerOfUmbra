@@ -74,6 +74,9 @@ public class playerController1 : MonoBehaviour
     [Tooltip("movement force multiplier when the player is not grounded")]
     [Range(0,1)]
     public float airMovementMultiplier = 0.75f;
+    [Tooltip("movement force multiplier when the player is grappled to a target")]
+    [Range(0, 1)]
+    public float grappledMovementMultiplier = 0.75f;
     [Tooltip("force applied to keep the player on the ground at slopes")]
     public float antiSlopeBumpForce = 0.75f;
     #endregion
@@ -114,6 +117,8 @@ public class playerController1 : MonoBehaviour
     private RaycastHit boxHit;
     private RaycastHit floorCheckRay;
     RaycastHit inFrontOfPlayer;
+    [HideInInspector]
+    public bool mainMenu;
     #endregion
 
     #region private objects
@@ -164,7 +169,6 @@ public class playerController1 : MonoBehaviour
     void Start()
     {
         dead = false;
-        paused = false;
         jumping = false;
         pauseScreen.enabled = false;
         deathScreen.enabled = false;
@@ -183,51 +187,59 @@ public class playerController1 : MonoBehaviour
     }
     void FixedUpdate()
     {
-        //increase in gravity for th eplayer
-        rb.AddForce(Physics.gravity * rb.mass * gravityIncrease, ForceMode.Force);
-        if (!dead && knockBackNoMovementTimer <= 0)
+        if(!paused)
         {
-            //movement
-            if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+            //increase in gravity for th eplayer
+            rb.AddForce(Physics.gravity * rb.mass * gravityIncrease, ForceMode.Force);
+            if (!dead && knockBackNoMovementTimer <= 0)
             {
-                //move player
-                if (grounded)
-                    rb.AddForce(transform.forward * acceleration * Time.deltaTime, ForceMode.VelocityChange);
-                else
-                    rb.AddForce(transform.forward * acceleration * Time.deltaTime * airMovementMultiplier, ForceMode.VelocityChange);
-            }
-            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
-            {
-                //move player
-                if (grounded)//player movement on the ground
-                    rb.AddForce(transform.forward * acceleration * Time.deltaTime, ForceMode.VelocityChange);
-                else // slower acceleration while in the air
-                    rb.AddForce(transform.forward * acceleration * Time.deltaTime * airMovementMultiplier, ForceMode.VelocityChange);
-            }
-            if (coyoteTime >= 0 && jumpBuffer >= 0 && !isGrappled)
-            {
-                //removes current vertical velocity
-                ani.SetTrigger("jumped"); // jump animation
-                Vector3 velocityKill = rb.velocity;
-                velocityKill.y = 0;
-                rb.velocity = velocityKill;
-                //jumps
-                rb.AddForce(transform.up * jumpForce, ForceMode.VelocityChange);
-                jumping = true;
-                antiBumpForceTimer = -1;
-                coyoteTime = -1;  // -> not grounded
-                jumpBuffer = -1;   // -> hasn't pressed the key
-            }
-            else if (jumpBuffer >= 0 && doubleJump && !isGrappled)
-            {
-                Vector3 velocityKill = rb.velocity;
-                velocityKill.y = 0;
-                rb.velocity = velocityKill;
-                rb.AddForce(transform.up * jumpForce * doubleJumpForce, ForceMode.VelocityChange);//jump half as high
-                doubleJump = false;
-                jumping = true;
-                antiBumpForceTimer = -1;
-                jumpBuffer = -1;
+
+                //movement
+                if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+                {
+                    //move player
+                    if (grounded)//if on the ground
+                        rb.AddForce(transform.forward * acceleration * Time.deltaTime, ForceMode.VelocityChange);
+                    else if(isGrappled)// if in the air and grappled
+                        rb.AddForce(transform.forward * acceleration * Time.deltaTime * grappledMovementMultiplier, ForceMode.VelocityChange);
+                    else //if just in the air
+                        rb.AddForce(transform.forward * acceleration * Time.deltaTime * airMovementMultiplier, ForceMode.VelocityChange);
+                }
+                if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+                {
+                    //move player
+                    if (grounded)//player movement on the ground
+                        rb.AddForce(transform.forward * acceleration * Time.deltaTime, ForceMode.VelocityChange);
+                    else if (isGrappled)
+                        rb.AddForce(transform.forward * acceleration * Time.deltaTime * grappledMovementMultiplier, ForceMode.VelocityChange);
+                    else // slower acceleration while in the air
+                        rb.AddForce(transform.forward * acceleration * Time.deltaTime * airMovementMultiplier, ForceMode.VelocityChange);
+                }
+                if (coyoteTime >= 0 && jumpBuffer >= 0 && !isGrappled)
+                {
+                    //removes current vertical velocity
+                    ani.SetTrigger("jumped"); // jump animation
+                    Vector3 velocityKill = rb.velocity;
+                    velocityKill.y = 0;
+                    rb.velocity = velocityKill;
+                    //jumps
+                    rb.AddForce(transform.up * jumpForce, ForceMode.VelocityChange);
+                    jumping = true;
+                    antiBumpForceTimer = -1;
+                    coyoteTime = -1;  // -> not grounded
+                    jumpBuffer = -1;   // -> hasn't pressed the key
+                }
+                else if (jumpBuffer >= 0 && doubleJump && !isGrappled)
+                {
+                    Vector3 velocityKill = rb.velocity;
+                    velocityKill.y = 0;
+                    rb.velocity = velocityKill;
+                    rb.AddForce(transform.up * jumpForce * doubleJumpForce, ForceMode.VelocityChange);//jump half as high
+                    doubleJump = false;
+                    jumping = true;
+                    antiBumpForceTimer = -1;
+                    jumpBuffer = -1;
+                }
             }
         }
     }
@@ -243,7 +255,7 @@ public class playerController1 : MonoBehaviour
                 if (!paused)
                 {
                     paused = true;
-                    Time.timeScale = 0.0f;
+                    //Time.timeScale = 0.0f;
                     pauseScreen.enabled = true;
                     gameplayMenu.enabled = false;
                 }
@@ -320,6 +332,7 @@ public class playerController1 : MonoBehaviour
                 }
                 ///box cast to check if the player is grounded
                 //box cast for if player is grounded and can jump
+                if(groundedDelay > 0)
                 groundedDelay -= Time.deltaTime;
                 if (Physics.BoxCast(transform.position + new Vector3(0, 1.1f, 0), new Vector3(0.125f, 0.1f, 0.125f), -transform.up, out boxHit, Quaternion.identity, boxCastMaxDistance, platformLayerMask))
                 {
@@ -328,7 +341,7 @@ public class playerController1 : MonoBehaviour
                     ani.SetBool("grounded", true);
                     ani.SetBool("falling", false);
                     coyoteTime = maxCoyoteTime;
-                    if (groundedDelay < 0)
+                    if (groundedDelay <= 0)
                     {
                         jumping = false;
                     }
@@ -352,14 +365,17 @@ public class playerController1 : MonoBehaviour
                 ///---------------------------------------------------------------------------------------------------------------------------
 
                 //swing sword
-                if (Input.GetMouseButtonDown(0) /*&& grounded*/)
+                if (Input.GetMouseButtonDown(0) && !isGrappled)
                 {
+                    if(grounded || rb.velocity.y < 0)
+                    {
+                        resetComboCooldown();
+                        attackNumber++;
+                        attackNumber = Mathf.Clamp(attackNumber, 0, 3);
+                    }
                     //if (attackNumber < 3)
                     //{
                     //}
-                        resetComboCooldown();
-                    attackNumber++;
-                    attackNumber = Mathf.Clamp(attackNumber, 0, 3);
                 }    
                 if(attackNumber == 1) //starts the first attack the rest should occur automatically if clicked again
                 {
@@ -698,4 +714,16 @@ public class playerController1 : MonoBehaviour
         currentComboDelay = maxComboDelay;
     }
 
+    public void setGrappled(bool grappled)
+    {
+        isGrappled = grappled;
+        ani.SetBool("grappled", grappled);
+    }
+
+    public void setMainmenu(bool newBool)
+    {
+        paused = newBool;
+        mainMenu = newBool;
+        Debug.Log(paused + " " + mainMenu);
+    }
 }
