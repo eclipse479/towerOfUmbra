@@ -392,6 +392,19 @@ public class EnemyBehaviour : MonoBehaviour
         else
             Instantiate(bullet, transform.position + transform.forward, transform.rotation);
 
+        // Check type of enemy for the sound to play
+        switch (gameObject.tag)
+        {
+            case "skeleton":
+                sound.playSound("fireballThrow");
+                break;
+            case "spider":
+                sound.playSound("spiderwebThrow");
+                break;
+            default:
+                break;
+        }
+
         can_shoot = false;
     }
 
@@ -424,15 +437,13 @@ public class EnemyBehaviour : MonoBehaviour
                 GameObject player = hit.gameObject;
                 Rigidbody player_rb = player.GetComponent<Rigidbody>();
 
-                sound.playSound("playerIsHit");
+                sound.playSound("playerDamaged_1");
 
                 player_rb.AddForce(transform.forward * knockback_to_player_horizontal + player.transform.up * knockback_to_player_vertical, ForceMode.VelocityChange);
                 playerStats.health -= damage_to_player;
                 player.GetComponent<playerController1>().healthText.text = "Health: " + playerStats.health;
                 player.GetComponent<playerController1>().flashStart();
                 player.GetComponent<playerController1>().healthbarImage.fillAmount = playerStats.health / player.GetComponent<playerController1>().maxHealth;
-
-
             }
             setAttack();
         }
@@ -595,10 +606,10 @@ public class EnemyBehaviour : MonoBehaviour
         switch (gameObject.tag)
         {
             case "skeleton":
-                sound.playSound("skeletonDies");
+                sound.playSound("skeletonDeath");
                 break;
             case "spider":
-                sound.playSound("spiderDies");
+                sound.playSound("spiderDeath");
                 break;
             default:
                 break;
@@ -641,10 +652,10 @@ public class EnemyBehaviour : MonoBehaviour
         switch (gameObject.tag)
         {
             case "skeleton":
-                sound.playSound("skeletonHit");
+                sound.playSound("skeletonDamaged_1");
                 break;
             case "spider":
-                sound.playSound("spiderHit");
+                sound.playSound("spiderDamaged_1");
                 break;
         }
 
@@ -669,10 +680,10 @@ public class EnemyBehaviour : MonoBehaviour
             switch (gameObject.tag)
             {
                 case "skeleton":
-                    sound.playSound("skeletonHit");
+                    sound.playSound("skeletonDamaged_1");
                     break;
                 case "spider":
-                    sound.playSound("spiderHit");
+                    sound.playSound("spiderDamaged_1");
                     break;
                 default:
                     break;
@@ -696,10 +707,10 @@ public class EnemyBehaviour : MonoBehaviour
                 switch (gameObject.tag)
                 {
                     case "skeleton":
-                        sound.playSound("skeletonHit");
+                        sound.playSound("skeletonDamaged_1");
                         break;
                     case "spider":
-                        sound.playSound("spiderHit");
+                        sound.playSound("spiderDamaged_1");
                         break;
                 }
             }
