@@ -44,10 +44,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   particles:
-  - particle: {fileID: 2420752581275456772, guid: 64334afeb21ce384cb6ac862f725dd06,
+  - name: grappleHit
+    particle: {fileID: 2420752581275456772, guid: 64334afeb21ce384cb6ac862f725dd06,
       type: 3}
-    name: grappleHit
+    emission_rate: 2.29
+    emission_size: 1
+    duration: 7.13
+    loop: 0
+    particle_end: 0
+  - name: bloodSplatter
+    particle: {fileID: 1377668730850991747, guid: 4096fd3f3c31f534a89cb2f3c0927836,
+      type: 3}
     emission_rate: 1
     emission_size: 1
     duration: 2
     loop: 0
+    particle_end: 0
+  - name: Footsteps impact
+    particle: {fileID: 4321783673745990904, guid: 3cf5cb164816541469e89036c880d2fa,
+      type: 3}
+    emission_rate: 1
+    emission_size: 1
+    duration: 2
+    loop: 0
+    particle_end: 0
+  - name: Stun effect
+    particle: {fileID: 0}
+    emission_rate: 1
+    emission_size: 1
+    duration: 2
+    loop: 0
+    particle_end: 0
