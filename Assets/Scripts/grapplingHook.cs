@@ -249,7 +249,6 @@ public class grapplingHook : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        //Debug.Log(collision.gameObject.name);
         //collisions with various objects with tags
         if (collision.gameObject.tag == "enemy" && extending)
         {
@@ -269,7 +268,6 @@ public class grapplingHook : MonoBehaviour
                 wallGrabbed = true;
                 ContactPoint contact = collision.contacts[0];
                 grapplePoint = contact.point;
-                Debug.Log(grapplePoint);
                 startGrapple();
             }
         }

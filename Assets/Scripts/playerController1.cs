@@ -255,7 +255,7 @@ public class playerController1 : MonoBehaviour
                 if (!paused)
                 {
                     paused = true;
-                    //Time.timeScale = 0.0f;
+                    Time.timeScale = 0.0f;
                     pauseScreen.enabled = true;
                     gameplayMenu.enabled = false;
                 }
@@ -442,7 +442,6 @@ public class playerController1 : MonoBehaviour
     {
         if (collision.gameObject.tag == "bullet")
         {
-            Debug.Log(collision.gameObject.name);
             //reduce health
             playerStats.health--;
                 
@@ -465,6 +464,15 @@ public class playerController1 : MonoBehaviour
             {
                 StartCoroutine(Flasher());
             }
+        }
+        if (playerStats.health <= 0)
+        {
+            if (!dead)
+            {
+                ani.SetTrigger("dead");
+                dead = true;
+            }
+            gameObject.layer = 19;
         }
     }
 
@@ -688,27 +696,6 @@ public class playerController1 : MonoBehaviour
     {
         StartCoroutine(Flasher());
     }
-
-    public void UpdateAnimClipTimes()
-    {
-        AnimationClip[] clips = ani.runtimeAnimatorController.animationClips;
-        foreach (AnimationClip clip in clips)
-        {
-            switch (clip.name)
-            {
-                case "Swing1":
-                    Debug.Log("attack 1: " + clip.length);
-                    break;
-                case "Swing2":
-                    Debug.Log("attack 2: " + clip.length);
-                    break;
-                case "Swing3":
-                    Debug.Log("attack 3: " + clip.length);
-                    break;
-            }
-        }
-    }
-
     public void resetComboCooldown()
     {
         currentComboDelay = maxComboDelay;
@@ -724,6 +711,13 @@ public class playerController1 : MonoBehaviour
     {
         paused = newBool;
         mainMenu = newBool;
-        Debug.Log(paused + " " + mainMenu);
+        if(newBool)
+        {
+            Time.timeScale = 0.0f;
+        }
+        else
+        {
+            Time.timeScale = 1.0f;
+        }
     }
 }
