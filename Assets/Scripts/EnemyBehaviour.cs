@@ -141,14 +141,19 @@ public class EnemyBehaviour : MonoBehaviour
     public float ground_check_radius = 1.0f;
     bool is_grounded;
 
-    
 
+    SoundManager sound;
+    ParticleManager particles;
 
     // Things that need to be loaded before first frame
     private void Awake()
     {
         animator = GetComponent<Animator>();
         collider = GetComponent<Collider>();
+
+        // Search for sound
+        sound = FindObjectOfType<SoundManager>();
+        particles = FindObjectOfType<ParticleManager>();
 
         // From the forward ray all the way around
         //                6
@@ -388,6 +393,19 @@ public class EnemyBehaviour : MonoBehaviour
         else
             Instantiate(bullet, transform.position + transform.forward, transform.rotation);
 
+        // Check type of enemy for the sound to play
+        switch (gameObject.tag)
+        {
+            case "skeleton":
+                sound.playSound("fireballThrow");
+                break;
+            case "spider":
+                sound.playSound("spiderwebThrow");
+                break;
+            default:
+                break;
+        }
+
         can_shoot = false;
     }
 
@@ -420,9 +438,12 @@ public class EnemyBehaviour : MonoBehaviour
                 GameObject player = hit.gameObject;
                 Rigidbody player_rb = player.GetComponent<Rigidbody>();
 
+                sound.playSound("playerDamaged_1");
+
                 player_rb.AddForce(transform.forward * knockback_to_player_horizontal + player.transform.up * knockback_to_player_vertical, ForceMode.VelocityChange);
                 playerStats.health -= damage_to_player;
-                player.GetComponent<playerController1>().healthText.text = "Health: " + playerStats.health; 
+                player.GetComponent<playerController1>().healthText.text = "Health: " + playerStats.health;
+                player.GetComponent<playerController1>().flashStart();
                 player.GetComponent<playerController1>().healthbarImage.fillAmount = playerStats.health / player.GetComponent<playerController1>().maxHealth;
             }
             setAttack();
@@ -577,16 +598,36 @@ public class EnemyBehaviour : MonoBehaviour
         return (transform.position - target.position).magnitude < attack_range;
     }
 
+    /// <summary>
+    /// Disables this script, collider and plays death sound on death.
+    /// </summary>
     void die()
     {
+        // Check type of enemy for the sound to play
+        switch (gameObject.tag)
+        {
+            case "skeleton":
+                sound.playSound("skeletonDeath");
+                break;
+            case "spider":
+                sound.playSound("spiderDeath");
+                break;
+            default:
+                break;
+        }
+
+        // Reset Enemy velocity
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
         textCounter.subtract();
-        FindObjectOfType<SoundManager>().playSound("skeletonDies");
         gameObject.tag = "Untagged";
         gameObject.layer = 4;
         healthBar.gameObject.SetActive(false);
         rb.useGravity = false;
         collider.enabled = false;
         this.enabled = false;
+        
         // Destroy(gameObject);
     }
 
@@ -603,10 +644,24 @@ public class EnemyBehaviour : MonoBehaviour
         Gizmos.DrawWireSphere(hit_box.transform.position, hit_range);
     }
 
+    /// <summary>
+    /// The dizzy bool trigger when using a trigger
+    /// </summary>
+    /// <param name="other"></param>
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == 10)
+        switch (gameObject.tag)
         {
+            case "skeleton":
+                sound.playSound("skeletonDamaged_1");
+                break;
+            case "spider":
+                sound.playSound("spiderDamaged_1");
+                break;
+        }
+
+        if (other.gameObject.layer == 10)
+        {        
             is_dizzy = true;
             // Reset Enemy velocity
             rb.velocity = Vector3.zero;
@@ -614,10 +669,26 @@ public class EnemyBehaviour : MonoBehaviour
         }
     }
 
+
+    /// <summary>
+    /// The dizzy trigger using the collider
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.layer == 10)
         {
+            switch (gameObject.tag)
+            {
+                case "skeleton":
+                    sound.playSound("skeletonDamaged_1");
+                    break;
+                case "spider":
+                    sound.playSound("spiderDamaged_1");
+                    break;
+                default:
+                    break;
+            }
             is_dizzy = true;
         }
     }
@@ -628,11 +699,32 @@ public class EnemyBehaviour : MonoBehaviour
         health -= damage;
         healthSlider.value = health;
 
+        // While still alive
         if (health > 0)
         { 
             is_stunned = true;
 
-            FindObjectOfType<SoundManager>().playSound("skeletonHit");
+            // Check for sounds
+            if (sound != null)
+            {
+                switch (gameObject.tag)
+                {
+                    case "skeleton":
+                        sound.playSound("skeletonDamaged_1");
+                        break;
+                    case "spider":
+                        sound.playSound("spiderDamaged_1");
+                        break;
+                }
+            }
+
+            // Check for particles
+            if (particles != null)
+            {
+                particles.playParticle("bloodSplatter", transform.position, transform.rotation);
+            }
+
+            
 
             // Reset Enemy velocity
             rb.velocity = Vector3.zero;
@@ -640,6 +732,8 @@ public class EnemyBehaviour : MonoBehaviour
 
             rb.AddForce((transform.up * knockback_vertical) + (-transform.forward * knockback_horizontal), ForceMode.VelocityChange);
         }
+
+
 
 
         // If it has no health points
