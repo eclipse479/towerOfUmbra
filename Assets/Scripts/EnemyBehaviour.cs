@@ -143,6 +143,7 @@ public class EnemyBehaviour : MonoBehaviour
 
 
     SoundManager sound;
+    ParticleManager particles;
 
     // Things that need to be loaded before first frame
     private void Awake()
@@ -152,7 +153,7 @@ public class EnemyBehaviour : MonoBehaviour
 
         // Search for sound
         sound = FindObjectOfType<SoundManager>();
-
+        particles = FindObjectOfType<ParticleManager>();
 
         // From the forward ray all the way around
         //                6
@@ -698,10 +699,12 @@ public class EnemyBehaviour : MonoBehaviour
         health -= damage;
         healthSlider.value = health;
 
+        // While still alive
         if (health > 0)
         { 
             is_stunned = true;
 
+            // Check for sounds
             if (sound != null)
             {
                 switch (gameObject.tag)
@@ -714,7 +717,14 @@ public class EnemyBehaviour : MonoBehaviour
                         break;
                 }
             }
-      
+
+            // Check for particles
+            if (particles != null)
+            {
+                particles.playParticle("bloodSplatter", transform.position, transform.rotation);
+            }
+
+            
 
             // Reset Enemy velocity
             rb.velocity = Vector3.zero;
@@ -722,6 +732,8 @@ public class EnemyBehaviour : MonoBehaviour
 
             rb.AddForce((transform.up * knockback_vertical) + (-transform.forward * knockback_horizontal), ForceMode.VelocityChange);
         }
+
+
 
 
         // If it has no health points
