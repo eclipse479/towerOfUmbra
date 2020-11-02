@@ -31,7 +31,8 @@ public class AnimationSwitch : MonoBehaviour
         {
              if (!state.isStunned && !state.IsDizzy)
              {
-                 switch (state.State)
+                animation.SetFloat("Stun Time", 0.0f);
+                switch (state.State)
                  {
                      case EnemyBehaviour.STATE.SHOOT:
                          // Check the shooting trigger
@@ -62,10 +63,10 @@ public class AnimationSwitch : MonoBehaviour
              {
                  animation.SetTrigger("Knockback");
              }
-            else
-            {
+             else
+             {
                 animation.SetFloat("Stun Time", state.StunTime);
-            }
+             }
         }
 
     }

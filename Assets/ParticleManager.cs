@@ -18,7 +18,6 @@ public class ParticleManager : MonoBehaviour
 
     List<ParticleSystem> particle_effect;
  
-    // public ParticleSystem[] particles;
     public static ParticleManager instance;
 
     private void Awake()
@@ -39,8 +38,6 @@ public class ParticleManager : MonoBehaviour
             emission.duration = p.duration; // How long it plays
             emission.stopAction = p.particle_end;
         }
-
-  
     }
 
     public void playParticle(string particle_name)

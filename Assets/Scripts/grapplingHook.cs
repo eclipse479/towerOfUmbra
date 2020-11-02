@@ -35,6 +35,10 @@ public class grapplingHook : MonoBehaviour
     [Header("PLAYER STATS")]
     [Tooltip("the player")]
     public GameObject player;
+    [Tooltip("the player left hand object")]
+    public Transform JNT_Hand_L; 
+    [Tooltip("the player left shoulder object")]
+    public Transform JNT_UpperArm_L;
     private playerController1 control;
     [Tooltip("the camera that follows the player")]
     public Camera playerCamera;
@@ -130,6 +134,29 @@ public class grapplingHook : MonoBehaviour
             grappleGrace -= Time.deltaTime;
         }
 
+
+        if (spring)
+        {
+            transform.position = grapplePoint;
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                playerPullToWall();
+            }
+            if (!Input.GetMouseButton(1))//if the mouse button isn't being held then remove the spring from the grapple/turn swing off
+            {
+                stopGrapple();
+            }
+        }
+
+        if (Input.GetMouseButtonUp(1))
+        {
+            extending = false;
+            StopCoroutine(extend());
+            if (!retracting)
+                StartCoroutine(retract());         //start retracting when mouse button is let go
+        }
+
+
         if (!active)
         {
             //gets a new spot to shoot a grapple towards
@@ -149,6 +176,21 @@ public class grapplingHook : MonoBehaviour
                 }
             }
         }
+        else
+        {
+            Vector3 input = transform.position - JNT_UpperArm_L.position;
+            input.Normalize();
+            if(player.transform.rotation.y < 0)
+            {
+                input.x *= -1;
+            }
+            control.animator().SetFloat("xAngle", input.x);
+            control.animator().SetFloat("yAngle", input.y);
+            string y = input.y.ToString("F2");
+            string x = input.x.ToString("F2");
+            deleteThisLater.text = "X: " + x + " Y: " + y;
+        }
+        
         if(wallGrabbed)
         {
             if (Input.GetKey(KeyCode.W))
@@ -162,26 +204,9 @@ public class grapplingHook : MonoBehaviour
         }
 
 
-        if(spring)
-        {
-            transform.position = grapplePoint;
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                playerPullToWall();
-            }
-            if (!Input.GetMouseButton(1))//if the mouse button isn't being held then remove the spring from the grapple/turn swing off
-            {
-                stopGrapple();
-            }
-        }
+        
 
-        if(Input.GetMouseButtonUp(1))
-        {
-                extending = false;
-                StopCoroutine(extend());
-            if(!retracting)
-                StartCoroutine(retract());         //start retracting when mouse button is let go
-        }
+       
     }
     private void LateUpdate()
     {
@@ -193,7 +218,8 @@ public class grapplingHook : MonoBehaviour
         if (extending || wallGrabbed || retracting)
         {
             lRend.SetPosition(0, transform.position);
-            lRend.SetPosition(1, parent.transform.position);
+            //lRend.SetPosition(1, parent.transform.position);
+            lRend.SetPosition(1, JNT_Hand_L.position);
         }
         else
         {
@@ -312,6 +338,7 @@ public class grapplingHook : MonoBehaviour
     IEnumerator extend()
     {
         reappear();
+        control.animator().SetBool("grappleThrow", true);
         StopCoroutine(retract());
         extending = true;
         rb.isKinematic = false;
@@ -338,6 +365,7 @@ public class grapplingHook : MonoBehaviour
     IEnumerator retract()
     {
         StopCoroutine(extend());
+        control.animator().SetBool("grappleThrow", false);
         wallGrabbed = false;
         retracting = true;
         collide.enabled = false;        //collider turned off
