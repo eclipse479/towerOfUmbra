@@ -52,7 +52,7 @@ MonoBehaviour:
     duration: 7.13
     loop: 0
     particle_end: 0
-  - name: bloodSplatter
+  - name: PlayerBloodSplatter
     particle: {fileID: 1377668730850991747, guid: 4096fd3f3c31f534a89cb2f3c0927836,
       type: 3}
     emission_rate: 1
@@ -69,7 +69,24 @@ MonoBehaviour:
     loop: 0
     particle_end: 0
   - name: Stun effect
-    particle: {fileID: 0}
+    particle: {fileID: 3155787203630147748, guid: 747a0e4c472787b4688f1d8bf5a99908,
+      type: 3}
+    emission_rate: 1
+    emission_size: 1
+    duration: 2
+    loop: 0
+    particle_end: 0
+  - name: SkeletonHitEffect
+    particle: {fileID: 2420752581275456772, guid: 64334afeb21ce384cb6ac862f725dd06,
+      type: 3}
+    emission_rate: 1
+    emission_size: 1
+    duration: 2
+    loop: 0
+    particle_end: 0
+  - name: SpiderBloodEffect
+    particle: {fileID: 1377668730850991747, guid: 4096fd3f3c31f534a89cb2f3c0927836,
+      type: 3}
     emission_rate: 1
     emission_size: 1
     duration: 2
