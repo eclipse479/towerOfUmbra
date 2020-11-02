@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -188,7 +189,6 @@ public class grapplingHook : MonoBehaviour
             control.animator().SetFloat("yAngle", input.y);
             string y = input.y.ToString("F2");
             string x = input.x.ToString("F2");
-            deleteThisLater.text = "X: " + x + " Y: " + y;
         }
         
         if(wallGrabbed)
@@ -204,7 +204,8 @@ public class grapplingHook : MonoBehaviour
         }
 
 
-        
+        if(grapplePoint != null)
+            deleteThisLater.text = "angle: " + (Mathf.Atan2(grapplePoint.y - player.transform.position.y, grapplePoint.x - player.transform.position.x) * Mathf.Rad2Deg - 90);
 
        
     }
