@@ -8,8 +8,6 @@ public class playerController1 : MonoBehaviour
     //health variables
     #region helath settings
     [Header("HEATH SETTINGS")]
-    [Tooltip("Text that displays health left")]
-    public Text healthText;
     [Tooltip("Player max health")]
     public float maxHealth;
     [HideInInspector]
@@ -177,8 +175,6 @@ public class playerController1 : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         //the collider
         collide = GetComponent<Collider>();
-        //remaining health
-        healthText.text = "Health: " + playerStats.health;
         //is grounded
         grounded = true;
         //sword is not swinging
@@ -398,7 +394,7 @@ public class playerController1 : MonoBehaviour
                     ani.SetBool("secondAttack", false);
                     ani.SetBool("thirdAttack", false);
                 }
-                deleteThisLater.text = attackNumber.ToString();
+                //deleteThisLater.text = attackNumber.ToString();
             }
         }
         else if (dead)
@@ -444,8 +440,6 @@ public class playerController1 : MonoBehaviour
         {
             //reduce health
             playerStats.health--;
-                
-            healthText.text = "Health: " + playerStats.health;
             knockBack(collision.gameObject);
             //move health bar health
             healthbarImage.fillAmount = playerStats.health / maxHealth;
@@ -719,5 +713,10 @@ public class playerController1 : MonoBehaviour
         {
             Time.timeScale = 1.0f;
         }
+    }
+
+    public Animator animator()
+    {
+        return ani;
     }
 }
