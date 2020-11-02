@@ -72,11 +72,13 @@ public class playerController1 : MonoBehaviour
     [Tooltip("movement force multiplier when the player is not grounded")]
     [Range(0,1)]
     public float airMovementMultiplier = 0.75f;
+    [Tooltip("force applied to keep the player on the ground at slopes")]
+    public float antiSlopeBumpForce = 0.75f;
     [Tooltip("movement force multiplier when the player is grappled to a target")]
     [Range(0, 1)]
     public float grappledMovementMultiplier = 0.75f;
-    [Tooltip("force applied to keep the player on the ground at slopes")]
-    public float antiSlopeBumpForce = 0.75f;
+
+
     #endregion
     //timer for how long the force is applied
     private float maxAntiBumpForceTimer = 0.3f;
@@ -189,35 +191,60 @@ public class playerController1 : MonoBehaviour
             rb.AddForce(Physics.gravity * rb.mass * gravityIncrease, ForceMode.Force);
             if (!dead && knockBackNoMovementTimer <= 0)
             {
-
+                ///testing --------------------------------------------------------------------------
+                if (grounded)
+                {
+                    if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+                    {
+                        rb.AddForce(transform.forward * acceleration * Time.deltaTime, ForceMode.VelocityChange);
+                    }
+                }
+                else if(isGrappled)
+                {
+                    if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+                    {
+                        rb.AddForce(transform.forward * acceleration * Time.deltaTime * grappledMovementMultiplier, ForceMode.VelocityChange);
+                    }
+                }
+                else
+                {
+                    if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+                    {
+                        rb.AddForce(transform.forward * acceleration * Time.deltaTime * airMovementMultiplier, ForceMode.VelocityChange);
+                    }
+                }
+                ///testing --------------------------------------------------------------------------
                 //movement
-                if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
-                {
-                    //move player
-                    if (grounded)//if on the ground
-                        rb.AddForce(transform.forward * acceleration * Time.deltaTime, ForceMode.VelocityChange);
-                    else if(isGrappled)// if in the air and grappled
-                        rb.AddForce(transform.forward * acceleration * Time.deltaTime * grappledMovementMultiplier, ForceMode.VelocityChange);
-                    else //if just in the air
-                        rb.AddForce(transform.forward * acceleration * Time.deltaTime * airMovementMultiplier, ForceMode.VelocityChange);
-                }
-                if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
-                {
-                    //move player
-                    if (grounded)//player movement on the ground
-                        rb.AddForce(transform.forward * acceleration * Time.deltaTime, ForceMode.VelocityChange);
-                    else if (isGrappled)
-                        rb.AddForce(transform.forward * acceleration * Time.deltaTime * grappledMovementMultiplier, ForceMode.VelocityChange);
-                    else // slower acceleration while in the air
-                        rb.AddForce(transform.forward * acceleration * Time.deltaTime * airMovementMultiplier, ForceMode.VelocityChange);
-                }
+                //if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+                //{
+                //    //move player
+                //    if (grounded)//if on the ground
+                //        rb.AddForce(transform.forward * acceleration * Time.deltaTime, ForceMode.VelocityChange);
+                //    else if(isGrappled)// if in the air and grappled
+                //        rb.AddForce(transform.forward * acceleration * Time.deltaTime * maxGrappledMovementMultiplier, ForceMode.VelocityChange);
+                //    else //if just in the air
+                //        rb.AddForce(transform.forward * acceleration * Time.deltaTime * airMovementMultiplier, ForceMode.VelocityChange);
+                //}
+                //if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+                //{
+                //    //move player
+                //    if (grounded)//player movement on the ground
+                //        rb.AddForce(transform.forward * acceleration * Time.deltaTime, ForceMode.VelocityChange);
+                //    else if (isGrappled)
+                //        rb.AddForce(transform.forward * acceleration * Time.deltaTime * maxGrappledMovementMultiplier, ForceMode.VelocityChange);
+                //    else // slower acceleration while in the air
+                        
+                //}
                 if (coyoteTime >= 0 && jumpBuffer >= 0 && !isGrappled)
                 {
                     //removes current vertical velocity
                     ani.SetTrigger("jumped"); // jump animation
-                    Vector3 velocityKill = rb.velocity;
-                    velocityKill.y = 0;
-                    rb.velocity = velocityKill;
+                    if (rb.velocity.y < 0)
+                    {
+                        Vector3 velocityKill = rb.velocity;
+                        velocityKill.y = 0;
+                        rb.velocity = velocityKill;
+                    }
                     //jumps
                     rb.AddForce(transform.up * jumpForce, ForceMode.VelocityChange);
                     jumping = true;
@@ -227,9 +254,13 @@ public class playerController1 : MonoBehaviour
                 }
                 else if (jumpBuffer >= 0 && doubleJump && !isGrappled)
                 {
-                    Vector3 velocityKill = rb.velocity;
-                    velocityKill.y = 0;
-                    rb.velocity = velocityKill;
+                    ani.SetTrigger("jumped"); // jump animation
+                    if (rb.velocity.y < 0)
+                    {
+                        Vector3 velocityKill = rb.velocity;
+                        velocityKill.y = 0;
+                        rb.velocity = velocityKill;
+                    }
                     rb.AddForce(transform.up * jumpForce * doubleJumpForce, ForceMode.VelocityChange);//jump half as high
                     doubleJump = false;
                     jumping = true;
