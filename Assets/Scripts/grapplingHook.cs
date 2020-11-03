@@ -92,6 +92,8 @@ public class grapplingHook : MonoBehaviour
     public Vector3 forceDirection;
     public Text deleteThisLater;
     // Start is called before the first frame update
+
+    private float angle;
     void Start()
     {
         control = player.GetComponent<playerController1>();
@@ -201,13 +203,10 @@ public class grapplingHook : MonoBehaviour
             {
                 lengthenGrapplingHook();
             }
+            angle = (Mathf.Atan2(grapplePoint.y - player.transform.position.y, grapplePoint.x - player.transform.position.x) * Mathf.Rad2Deg);
         }
 
 
-        if(grapplePoint != null)
-            deleteThisLater.text = "angle: " + (Mathf.Atan2(grapplePoint.y - player.transform.position.y, grapplePoint.x - player.transform.position.x) * Mathf.Rad2Deg - 90);
-
-       
     }
     private void LateUpdate()
     {
@@ -408,5 +407,10 @@ public class grapplingHook : MonoBehaviour
         {
             rend.enabled = true;
         }
+    }
+
+    public float theAngle()
+    {
+        return angle;
     }
 }
