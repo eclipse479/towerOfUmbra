@@ -37,6 +37,9 @@ public class playerController1 : MonoBehaviour
     [Tooltip("How long each flash is")]
     public float flashLength;
     private GameObject playerRend;
+    private GameObject playerSecondRend;
+    
+    
     #endregion
     #region attack settings
     [Header("ATTACK SETTINGS")]
@@ -76,9 +79,10 @@ public class playerController1 : MonoBehaviour
     public float antiSlopeBumpForce = 0.75f;
     [Tooltip("movement force multiplier when the player is grappled to a target")]
     [Range(0, 1)]
-    public float grappledMovementMultiplier = 0.75f;
-
-
+    public float maxGrappledMovementMultiplier = 0.75f;
+    [Tooltip("rate at whcih the grappled timer is reduced")]
+    public float grappleMovementTimerReductionSpeed;
+    private float currentGrappleMovement;
     #endregion
     //timer for how long the force is applied
     private float maxAntiBumpForceTimer = 0.3f;
@@ -119,6 +123,8 @@ public class playerController1 : MonoBehaviour
     RaycastHit inFrontOfPlayer;
     [HideInInspector]
     public bool mainMenu;
+
+    public grapplingHook hook;
     #endregion
 
     #region private objects
@@ -134,6 +140,8 @@ public class playerController1 : MonoBehaviour
     private bool paused;
     private bool dead;
     private float groundedDelay;
+    /// testing
+    private float angle;
 
     //is the player on the ground
     private bool grounded;
@@ -147,6 +155,7 @@ public class playerController1 : MonoBehaviour
     //private SoundManager soundManager;
     private void Awake()
     {
+        currentGrappleMovement = maxGrappledMovementMultiplier;
         isGrappled = false;
         //health bar values
         healthbarImage = healthBar.transform.GetChild(1).gameObject.GetComponent<Image>();
@@ -161,6 +170,7 @@ public class playerController1 : MonoBehaviour
         }
 
         playerRend = gameObject.transform.GetChild(0).transform.GetChild(0).gameObject;
+        playerSecondRend = gameObject.transform.GetChild(0).transform.GetChild(2).gameObject;
         //soundManager = FindObjectOfType<SoundManager>();
         
         //line to play a sound from anywhere
@@ -169,7 +179,6 @@ public class playerController1 : MonoBehaviour
     void Start()
     {
         dead = false;
-        jumping = false;
         pauseScreen.enabled = false;
         deathScreen.enabled = false;
         attackNumber = 0;
@@ -177,10 +186,7 @@ public class playerController1 : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         //the collider
         collide = GetComponent<Collider>();
-        //is grounded
-        grounded = true;
-        //sword is not swinging
-
+        //animator
         ani = GetComponentInChildren<Animator>();
     }
     void FixedUpdate()
@@ -191,7 +197,8 @@ public class playerController1 : MonoBehaviour
             rb.AddForce(Physics.gravity * rb.mass * gravityIncrease, ForceMode.Force);
             if (!dead && knockBackNoMovementTimer <= 0)
             {
-                ///testing --------------------------------------------------------------------------
+                grappleTimerSet();
+                
                 if (grounded)
                 {
                     if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
@@ -201,9 +208,39 @@ public class playerController1 : MonoBehaviour
                 }
                 else if(isGrappled)
                 {
-                    if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+                    if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
                     {
-                        rb.AddForce(transform.forward * acceleration * Time.deltaTime * grappledMovementMultiplier, ForceMode.VelocityChange);
+                        if (hook.theAngle() >= 0 && hook.theAngle() < 100)//left of grapple point
+                        {
+                            //if moving left and on the right of the grapple point
+                            currentGrappleMovement = maxGrappledMovementMultiplier;
+                            rb.AddForce(transform.forward * acceleration * Time.deltaTime * currentGrappleMovement, ForceMode.VelocityChange);
+                        }
+                        else if (hook.theAngle() >= 90 && hook.theAngle() < 180)//right of grapple point
+                        {
+                            rb.AddForce(transform.forward * acceleration * Time.deltaTime * currentGrappleMovement, ForceMode.VelocityChange);
+                        }
+                        else // if above the grapple point
+                        {
+                            rb.AddForce(transform.forward * acceleration * Time.deltaTime * maxGrappledMovementMultiplier, ForceMode.VelocityChange);
+                        }
+                    }
+                    else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+                    {
+                        if (hook.theAngle() >= 0 && hook.theAngle() < 90)//left of grapple point
+                        {
+                            rb.AddForce(transform.forward * acceleration * Time.deltaTime * currentGrappleMovement, ForceMode.VelocityChange);
+                        }
+                        else if (hook.theAngle() >= 80 && hook.theAngle() < 180)//right of grapple point
+                        {
+                            //if moveing right and on the left of the grapple point
+                            currentGrappleMovement = maxGrappledMovementMultiplier;
+                            rb.AddForce(transform.forward * acceleration * Time.deltaTime * currentGrappleMovement, ForceMode.VelocityChange);
+                        }
+                        else // if above the grapple point
+                        {
+                            rb.AddForce(transform.forward * acceleration * Time.deltaTime * maxGrappledMovementMultiplier, ForceMode.VelocityChange);
+                        }
                     }
                 }
                 else
@@ -213,28 +250,7 @@ public class playerController1 : MonoBehaviour
                         rb.AddForce(transform.forward * acceleration * Time.deltaTime * airMovementMultiplier, ForceMode.VelocityChange);
                     }
                 }
-                ///testing --------------------------------------------------------------------------
-                //movement
-                //if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
-                //{
-                //    //move player
-                //    if (grounded)//if on the ground
-                //        rb.AddForce(transform.forward * acceleration * Time.deltaTime, ForceMode.VelocityChange);
-                //    else if(isGrappled)// if in the air and grappled
-                //        rb.AddForce(transform.forward * acceleration * Time.deltaTime * maxGrappledMovementMultiplier, ForceMode.VelocityChange);
-                //    else //if just in the air
-                //        rb.AddForce(transform.forward * acceleration * Time.deltaTime * airMovementMultiplier, ForceMode.VelocityChange);
-                //}
-                //if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
-                //{
-                //    //move player
-                //    if (grounded)//player movement on the ground
-                //        rb.AddForce(transform.forward * acceleration * Time.deltaTime, ForceMode.VelocityChange);
-                //    else if (isGrappled)
-                //        rb.AddForce(transform.forward * acceleration * Time.deltaTime * maxGrappledMovementMultiplier, ForceMode.VelocityChange);
-                //    else // slower acceleration while in the air
-                        
-                //}
+               
                 if (coyoteTime >= 0 && jumpBuffer >= 0 && !isGrappled)
                 {
                     //removes current vertical velocity
@@ -307,8 +323,7 @@ public class playerController1 : MonoBehaviour
                     {
                         if (Input.GetKeyDown(KeyCode.D) && rb.velocity.x > 0)
                         {
-                            //insert turn around animation call
-                            rb.velocity = new Vector3(rb.velocity.x * 0.3f, rb.velocity.y, rb.velocity.z);
+                                rb.velocity = new Vector3(rb.velocity.x * 0.3f, rb.velocity.y, rb.velocity.z);
                         }
                         //remove friction when running
                         removeFriction();
@@ -319,14 +334,14 @@ public class playerController1 : MonoBehaviour
                     {
                         if (Input.GetKeyDown(KeyCode.A) && rb.velocity.x < 0)
                         {
-                            //insert turn around animation call
-                            rb.velocity = new Vector3(rb.velocity.x * 0.3f, rb.velocity.y, rb.velocity.z);
+                                rb.velocity = new Vector3(rb.velocity.x * 0.3f, rb.velocity.y, rb.velocity.z);                         
                         }
                         //remove friction when running
                         removeFriction();
                         //change player facing direction
                         transform.eulerAngles = new Vector3(0, 90, 0);
                     }
+                
                     if (Input.GetKeyDown(KeyCode.Space)) //jumps
                     {
                         jumpBuffer = maxJumpBuffer;
@@ -336,7 +351,6 @@ public class playerController1 : MonoBehaviour
                 {
                     ani.SetBool("falling", true);
                 }
-
                 //controlled jumping -> allows short hops when button is tapped and large jumps when held
                 if(Input.GetKeyUp(KeyCode.Space) && rb.velocity.y > 0 && !isGrappled)
                 {
@@ -359,7 +373,7 @@ public class playerController1 : MonoBehaviour
                 }
                 ///box cast to check if the player is grounded
                 //box cast for if player is grounded and can jump
-                if(groundedDelay > 0)
+                if (groundedDelay > 0)
                 groundedDelay -= Time.deltaTime;
                 if (Physics.BoxCast(transform.position + new Vector3(0, 1.1f, 0), new Vector3(0.125f, 0.1f, 0.125f), -transform.up, out boxHit, Quaternion.identity, boxCastMaxDistance, platformLayerMask))
                 {
@@ -385,7 +399,6 @@ public class playerController1 : MonoBehaviour
                     grounded = false;
                     ani.SetBool("grounded", false);
                 }
-
                 ///---------------------------------------------------------------------------------------------------------------------------
                 //checks ground directally beneth and in front of the player
                 groundCheck();
@@ -425,7 +438,7 @@ public class playerController1 : MonoBehaviour
                     ani.SetBool("secondAttack", false);
                     ani.SetBool("thirdAttack", false);
                 }
-                //deleteThisLater.text = attackNumber.ToString();
+                
             }
         }
         else if (dead)
@@ -434,23 +447,6 @@ public class playerController1 : MonoBehaviour
         }
         //debug ray to check if a ramp is infront of the player
         Debug.DrawRay(transform.position + new Vector3(0, -0.45f, 0), transform.forward * 0.25f, Color.green);
-
-       // if (jumping)
-       //     deleteThisLater.color = Color.yellow;
-       // else if (antiBumpForceTimer > 0 && !jumping)
-       // {
-       //     deleteThisLater.color = Color.red;
-       // }
-       // else
-       // {
-       //     deleteThisLater.color = Color.blue;
-       // }
-        if (currentComboDelay > 0)
-            deleteThisLater.color = Color.blue;
-        else
-        {
-            deleteThisLater.color = Color.red;
-        }
     }
     
 
@@ -563,6 +559,14 @@ public class playerController1 : MonoBehaviour
             jumpBuffer -= Time.deltaTime;
         if(knockBackNoMovementTimer >= 0)
             knockBackNoMovementTimer -= Time.deltaTime;
+        if (currentGrappleMovement > 0)
+        {
+            currentGrappleMovement -= Time.deltaTime * grappleMovementTimerReductionSpeed;
+            if (currentGrappleMovement < 0)
+                currentGrappleMovement = 0;
+        }
+        
+        
     }
 
     /// <summary>
@@ -642,7 +646,6 @@ public class playerController1 : MonoBehaviour
             if (!Physics.Raycast(transform.position + new Vector3(0, -0.45f, 0), transform.forward, out forwardRay, 1.0f, platformLayerMask))
             {
                 Debug.DrawRay(transform.position + new Vector3(0, -0.45f, 0), transform.forward, Color.black);
-                //deleteThisLater.text = "APPLY THE FORCE!!! time left: " + antiBumpForceTimer;
                 rb.AddForce(-Vector3.up * antiSlopeBumpForce, ForceMode.VelocityChange);
             }
             else
@@ -663,9 +666,6 @@ public class playerController1 : MonoBehaviour
         {
             Debug.DrawRay(transform.position + new Vector3(0, -0.4f, 0), -transform.up * 0.2f, Color.blue);
         }
-        ///---------------------------------------------------------------------------------------------------------
-        //deleteThisLater.text = "Normal X: " + slopeCheckRay.normal.x + " Normal Y: " + slopeCheckRay.normal.y + " Normal Z: " + slopeCheckRay.normal.z;
-        ///---------------------------------------------------------------------------------------------------------
     }
 
     /// <summary>
@@ -700,6 +700,10 @@ public class playerController1 : MonoBehaviour
             Debug.DrawRay(rayCastPos, -transform.up * length, Color.gray);
         }
     }
+    public void flashStart()
+    {
+        StartCoroutine(Flasher());
+    }
 
     /// <summary>
     /// player flash to signify Iframes
@@ -710,17 +714,15 @@ public class playerController1 : MonoBehaviour
         for (int i = 0; i < numOfFlashes; i++)
         {
             playerRend.SetActive(false);
+            playerSecondRend.SetActive(false);
             yield return new WaitForSeconds(flashLength);
             playerRend.SetActive(true);
+            playerSecondRend.SetActive(true);
             yield return new WaitForSeconds(flashLength);
         }
         gameObject.layer = 8;
     }
 
-    public void flashStart()
-    {
-        StartCoroutine(Flasher());
-    }
     public void resetComboCooldown()
     {
         currentComboDelay = maxComboDelay;
@@ -744,6 +746,22 @@ public class playerController1 : MonoBehaviour
         {
             Time.timeScale = 1.0f;
         }
+    }
+
+    private void grappleTimerSet()
+    {
+        angle = hook.theAngle();
+        
+        if (angle > 90)
+            angle = 180 - angle;
+
+        angle -= 90;
+        angle *= -1;
+        //if(angle < 90)
+        //currentGrappleMovement = maxGrappledMovementMultiplier * (angle /90);
+        //else
+        //currentGrappleMovement = maxGrappledMovementMultiplier;
+        //deleteThisLater.text = angle.ToString();
     }
 
     public Animator animator()
