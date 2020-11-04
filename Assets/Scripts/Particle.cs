@@ -10,6 +10,8 @@ public class Particle
 
     [Tooltip("Actual Particle")] public ParticleSystem particle;
 
+    [Tooltip("Play when spawned in")] public bool play_on_awake = false;
+
     [Tooltip("How quickly the particles emit")] public float emission_rate = 1.0f;
 
     [Tooltip("Size of the particle emissions")] public float emission_size = 1.0f;
