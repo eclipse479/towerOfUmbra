@@ -356,7 +356,7 @@ public class EnemyBehaviour : MonoBehaviour
                       case (STATE)2: // Attack
                         attack();
                           break;
-                    case (STATE)3:
+                    case (STATE)3: // Shoot
                         shooting_direction = (target.position - shooting_hand.position).normalized; // Get the direction
 
                         if (transform.rotation.y > 0)

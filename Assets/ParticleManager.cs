@@ -46,12 +46,13 @@ public class ParticleManager : MonoBehaviour
     public ParticleSystem addParticle(string particle_name, Vector3 position, Quaternion rotation)
     {
         Particle p = Array.Find(particles, particle => particle.name == particle_name);
-        p.particle.transform.position = position;
 
         if (p == null)
         {
             Debug.Log("Warning: Particle" + particle_name + " not found!");
         }
+
+        p.particle.transform.position = position;
 
         return Instantiate(p.particle, position, rotation);
     }
