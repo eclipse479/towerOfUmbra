@@ -212,8 +212,19 @@ public class EnemyBehaviour : MonoBehaviour
         // Check for particles
         if (particles != null)
         {
-            particle_effect = particles.addParticle("bloodSplatter", ray.origin, transform.rotation);
-            particle_transform = particle_effect.gameObject.transform;
+            switch (gameObject.tag)
+            {
+                case "skeleton":
+                    particle_effect = particles.addParticle("SkeletonHitEffect", ray.origin, transform.rotation);
+                    particle_transform = particle_effect.gameObject.transform;
+                    break;
+                case "spider":
+                    particle_effect = particles.addParticle("SpiderBloodEffect", ray.origin, transform.rotation);
+                    particle_transform = particle_effect.gameObject.transform;
+                    break;
+                default:
+                    break;
+            }
         }
 
        
@@ -356,7 +367,7 @@ public class EnemyBehaviour : MonoBehaviour
                       case (STATE)2: // Attack
                         attack();
                           break;
-                    case (STATE)3:
+                    case (STATE)3: // Shoot
                         shooting_direction = (target.position - shooting_hand.position).normalized; // Get the direction
 
                         if (transform.rotation.y > 0)
