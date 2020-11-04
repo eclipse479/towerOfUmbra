@@ -212,8 +212,19 @@ public class EnemyBehaviour : MonoBehaviour
         // Check for particles
         if (particles != null)
         {
-            particle_effect = particles.addParticle("bloodSplatter", ray.origin, transform.rotation);
-            particle_transform = particle_effect.gameObject.transform;
+            switch (gameObject.tag)
+            {
+                case "skeleton":
+                    particle_effect = particles.addParticle("SkeletonHitEffect", ray.origin, transform.rotation);
+                    particle_transform = particle_effect.gameObject.transform;
+                    break;
+                case "spider":
+                    particle_effect = particles.addParticle("SpiderBloodEffect", ray.origin, transform.rotation);
+                    particle_transform = particle_effect.gameObject.transform;
+                    break;
+                default:
+                    break;
+            }
         }
 
        
@@ -356,16 +367,19 @@ public class EnemyBehaviour : MonoBehaviour
                       case (STATE)2: // Attack
                         attack();
                           break;
-                    case (STATE)3:
-                        shooting_direction = (target.position - shooting_hand.position).normalized; // Get the direction
-
-                        if (transform.rotation.y > 0)
+                    case (STATE)3: // Shoot
+                        if (shooting_hand != null)
                         {
-                            shooting_direction.z *= -1;
-                        }
+                            shooting_direction = (target.position - shooting_hand.position).normalized; // Get the direction
 
-                        animator.SetFloat("x", shooting_direction.z);
-                        animator.SetFloat("y", shooting_direction.y);
+                            if (transform.rotation.y > 0)
+                            {
+                                shooting_direction.z *= -1;
+                            }
+
+                            animator.SetFloat("x", shooting_direction.z);
+                            animator.SetFloat("y", shooting_direction.y);
+                        }
                         break;
                     default:
                         break;
@@ -419,9 +433,6 @@ public class EnemyBehaviour : MonoBehaviour
     void shoot()
     {
         shooting_angle.SetFromToRotation(transform.forward, shooting_direction);
-
-        //animator.SetFloat("x", shooting_direction.z);
-        //animator.SetFloat("y", shooting_direction.y);
 
         if (shooting_hand != null)
             Instantiate(bullet, shooting_hand.position, shooting_angle);
