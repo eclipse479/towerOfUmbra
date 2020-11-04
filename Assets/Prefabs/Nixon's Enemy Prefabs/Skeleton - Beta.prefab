@@ -180,13 +180,14 @@ MonoBehaviour:
   max_speed: 10
   target: {fileID: 0}
   ray_centre: {fileID: 2312264040567953524}
-  ray_offset: 5.52
+  ray_offset: 3
   drop_cast_dist: 1.5
   min_dist: 5
   attack_cooldown: 0.3
   attack_range: 2.43
   bullet: {fileID: 7091955269792678419, guid: bb59f89fb9312114ca0153b3160eeca7, type: 3}
   shoot_cooldown: 0.5
+  shooting_hand: {fileID: 7165838025093101201}
   enemiesLeftText: {fileID: 0}
   stun_duration: 2
   stun_recovery: 2
@@ -629,6 +630,12 @@ PrefabInstance:
 --- !u!4 &3047811049443125800 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 9db2e404b5a7a4f4c96ce730f65e4514,
+    type: 3}
+  m_PrefabInstance: {fileID: 8013791387584086322}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &7165838025093101201 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8339365266557110365, guid: 9db2e404b5a7a4f4c96ce730f65e4514,
     type: 3}
   m_PrefabInstance: {fileID: 8013791387584086322}
   m_PrefabAsset: {fileID: 0}
