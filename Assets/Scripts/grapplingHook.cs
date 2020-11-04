@@ -88,6 +88,7 @@ public class grapplingHook : MonoBehaviour
 
     public float maxGrappleGrace;
     private float grappleGrace;
+    private float pullTimer;
     #endregion
 
 
@@ -121,6 +122,7 @@ public class grapplingHook : MonoBehaviour
         extending = false;
         active = false;
         grappleGrace = -1;
+        pullTimer = 0.3f;
         disappear();
     }
 
@@ -146,8 +148,9 @@ public class grapplingHook : MonoBehaviour
         if (spring)
         {
             transform.position = grapplePoint;
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) && pullTimer < 0)
             {
+                pullTimer = 0.4f;
                 playerPullToWall();
             }
             if (!Input.GetMouseButton(1))//if the mouse button isn't being held then remove the spring from the grapple/turn swing off
@@ -210,8 +213,8 @@ public class grapplingHook : MonoBehaviour
             }
             angle = (Mathf.Atan2(grapplePoint.y - player.transform.position.y, grapplePoint.x - player.transform.position.x) * Mathf.Rad2Deg);
         }
-
-
+        if(pullTimer > 0)
+        pullTimer -= Time.deltaTime;
     }
     private void LateUpdate()
     {
@@ -299,11 +302,11 @@ public class grapplingHook : MonoBehaviour
                 wallGrabbed = true;
                 ContactPoint contact = collision.contacts[0];
                 grapplePoint = contact.point;
-                //control.resetDoubleJump();
+                control.resetDoubleJump();
                 startGrapple();
             }
         }
-        else
+        else if(!wallGrabbed)
         {
             //hits anything else
             extending = false;
