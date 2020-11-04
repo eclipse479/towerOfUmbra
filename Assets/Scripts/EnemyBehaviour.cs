@@ -368,15 +368,18 @@ public class EnemyBehaviour : MonoBehaviour
                         attack();
                           break;
                     case (STATE)3: // Shoot
-                        shooting_direction = (target.position - shooting_hand.position).normalized; // Get the direction
-
-                        if (transform.rotation.y > 0)
+                        if (shooting_hand != null)
                         {
-                            shooting_direction.z *= -1;
-                        }
+                            shooting_direction = (target.position - shooting_hand.position).normalized; // Get the direction
 
-                        animator.SetFloat("x", shooting_direction.z);
-                        animator.SetFloat("y", shooting_direction.y);
+                            if (transform.rotation.y > 0)
+                            {
+                                shooting_direction.z *= -1;
+                            }
+
+                            animator.SetFloat("x", shooting_direction.z);
+                            animator.SetFloat("y", shooting_direction.y);
+                        }
                         break;
                     default:
                         break;
@@ -430,9 +433,6 @@ public class EnemyBehaviour : MonoBehaviour
     void shoot()
     {
         shooting_angle.SetFromToRotation(transform.forward, shooting_direction);
-
-        //animator.SetFloat("x", shooting_direction.z);
-        //animator.SetFloat("y", shooting_direction.y);
 
         if (shooting_hand != null)
             Instantiate(bullet, shooting_hand.position, shooting_angle);
