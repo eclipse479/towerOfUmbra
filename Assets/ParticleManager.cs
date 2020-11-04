@@ -50,6 +50,7 @@ public class ParticleManager : MonoBehaviour
         if (p == null)
         {
             Debug.Log("Warning: Particle" + particle_name + " not found!");
+            return null;
         }
 
         p.particle.transform.position = position;
