@@ -212,8 +212,19 @@ public class EnemyBehaviour : MonoBehaviour
         // Check for particles
         if (particles != null)
         {
-            particle_effect = particles.addParticle("bloodSplatter", ray.origin, transform.rotation);
-            particle_transform = particle_effect.gameObject.transform;
+            switch (gameObject.tag)
+            {
+                case "skeleton":
+                    particle_effect = particles.addParticle("SkeletonHitEffect", ray.origin, transform.rotation);
+                    particle_transform = particle_effect.gameObject.transform;
+                    break;
+                case "spider":
+                    particle_effect = particles.addParticle("SpiderBloodEffect", ray.origin, transform.rotation);
+                    particle_transform = particle_effect.gameObject.transform;
+                    break;
+                default:
+                    break;
+            }
         }
 
        
