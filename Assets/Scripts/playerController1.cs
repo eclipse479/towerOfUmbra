@@ -174,7 +174,7 @@ public class playerController1 : MonoBehaviour
         //soundManager = FindObjectOfType<SoundManager>();
         
         //line to play a sound from anywhere
-        //FindObjectOfType<SoundManager>().playSound("soundName");
+        //SoundManager.instance.playSound("soundName");
     }
     void Start()
     {
@@ -193,11 +193,10 @@ public class playerController1 : MonoBehaviour
     {
         if(!paused)
         {
-            //increase in gravity for th eplayer
+            //increase in gravity for the player
             rb.AddForce(Physics.gravity * rb.mass * gravityIncrease, ForceMode.Force);
             if (!dead && knockBackNoMovementTimer <= 0)
             {
-                grappleTimerSet();
                 
                 if (grounded)
                 {
@@ -216,7 +215,7 @@ public class playerController1 : MonoBehaviour
                             currentGrappleMovement = maxGrappledMovementMultiplier;
                             rb.AddForce(transform.forward * acceleration * Time.deltaTime * currentGrappleMovement, ForceMode.VelocityChange);
                         }
-                        else if (hook.theAngle() >= 90 && hook.theAngle() < 180)//right of grapple point
+                        else if (hook.theAngle() >= 80 && hook.theAngle() < 180)//right of grapple point
                         {
                             rb.AddForce(transform.forward * acceleration * Time.deltaTime * currentGrappleMovement, ForceMode.VelocityChange);
                         }
@@ -227,14 +226,14 @@ public class playerController1 : MonoBehaviour
                     }
                     else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
                     {
-                        if (hook.theAngle() >= 0 && hook.theAngle() < 90)//left of grapple point
-                        {
-                            rb.AddForce(transform.forward * acceleration * Time.deltaTime * currentGrappleMovement, ForceMode.VelocityChange);
-                        }
-                        else if (hook.theAngle() >= 80 && hook.theAngle() < 180)//right of grapple point
+                        if (hook.theAngle() >= 80 && hook.theAngle() < 180)//right of grapple point
                         {
                             //if moveing right and on the left of the grapple point
                             currentGrappleMovement = maxGrappledMovementMultiplier;
+                            rb.AddForce(transform.forward * acceleration * Time.deltaTime * currentGrappleMovement, ForceMode.VelocityChange);
+                        }
+                        else if (hook.theAngle() >= 0 && hook.theAngle() < 100)//left of grapple point
+                        {
                             rb.AddForce(transform.forward * acceleration * Time.deltaTime * currentGrappleMovement, ForceMode.VelocityChange);
                         }
                         else // if above the grapple point
@@ -292,6 +291,7 @@ public class playerController1 : MonoBehaviour
         //pausing
         if (!dead)
         {
+            deleteThisLater.text = hook.theAngle().ToString();
             //pausing
             if (Input.GetKeyDown(KeyCode.Escape))
             {
@@ -403,7 +403,7 @@ public class playerController1 : MonoBehaviour
                 //checks ground directally beneth and in front of the player
                 groundCheck();
                 ///---------------------------------------------------------------------------------------------------------------------------
-
+                //deleteThisLater.text = currentComboDelay.ToString();
                 //swing sword
                 if (Input.GetMouseButtonDown(0) && !isGrappled)
                 {
@@ -413,9 +413,6 @@ public class playerController1 : MonoBehaviour
                         attackNumber++;
                         attackNumber = Mathf.Clamp(attackNumber, 0, 3);
                     }
-                    //if (attackNumber < 3)
-                    //{
-                    //}
                 }    
                 if(attackNumber == 1) //starts the first attack the rest should occur automatically if clicked again
                 {
@@ -424,7 +421,7 @@ public class playerController1 : MonoBehaviour
                 
                 if(currentComboDelay >= 0)
                 {
-                    currentComboDelay -= Time.deltaTime; //count frames
+                    currentComboDelay -= Time.deltaTime;
                 }
                 else if(currentComboDelay < 0)
                 {
@@ -473,16 +470,17 @@ public class playerController1 : MonoBehaviour
             
             if (playerStats.health <= 0)
             {
-                //*insert death animation*
                 if(!dead)
                 {
                     ani.SetTrigger("dead");
+                    SoundManager.instance.playSound("playerDeath");
                     dead = true;
                 }
                 gameObject.layer = 19;
             }
             else
             {
+                SoundManager.instance.playSound("playerDamaged_1");
                 StartCoroutine(Flasher());
             }
         }
@@ -757,15 +755,14 @@ public class playerController1 : MonoBehaviour
 
         angle -= 90;
         angle *= -1;
-        //if(angle < 90)
-        //currentGrappleMovement = maxGrappledMovementMultiplier * (angle /90);
-        //else
-        //currentGrappleMovement = maxGrappledMovementMultiplier;
-        //deleteThisLater.text = angle.ToString();
     }
 
     public Animator animator()
     {
         return ani;
+    }
+    public void resetDoubleJump()
+    {
+        doubleJump = true;
     }
 }

@@ -7,6 +7,11 @@ public class attack1 : StateMachineBehaviour
     {
         control = GameObject.FindGameObjectWithTag("player").gameObject.GetComponent<playerController1>();
     }
+
+    public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        control.resetComboCooldown();
+    }
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         animator.SetBool("firstAttack", false);

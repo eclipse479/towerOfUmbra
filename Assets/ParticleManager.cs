@@ -30,8 +30,11 @@ public class ParticleManager : MonoBehaviour
         // Add the particle systems to the list
         foreach (Particle p in particles)
         {
+            /* Local copies of the particle systems */
             var emission = p.particle.main; // Create a local cache for each particle
             var emission_rate = p.particle.emission; // Create a local emission_rate cache to edit particles
+
+            emission.playOnAwake = p.play_on_awake; // If it plays on awake.
             emission_rate.rateOverTime = p.emission_rate; // Particles emitted per second
             emission.startSize = p.emission_size;
             emission.loop = p.loop; // Replay?
@@ -40,28 +43,18 @@ public class ParticleManager : MonoBehaviour
         }
     }
 
-    public void playParticle(string particle_name)
+    public ParticleSystem addParticle(string particle_name, Vector3 position, Quaternion rotation)
     {
         Particle p = Array.Find(particles, particle => particle.name == particle_name);
 
         if (p == null)
         {
             Debug.Log("Warning: Particle" + particle_name + " not found!");
+            return null;
         }
-        p.particle.Play();
-    }
 
-    public void playParticle(string particle_name, Vector3 position, Quaternion rotation)
-    {
-        Particle p = Array.Find(particles, particle => particle.name == particle_name);
         p.particle.transform.position = position;
 
-        
-        if (p == null)
-        {
-            Debug.Log("Warning: Particle" + particle_name + " not found!");
-        }
-
-        Instantiate(p.particle, position, rotation);
+        return Instantiate(p.particle, position, rotation);
     }
 }
