@@ -174,7 +174,7 @@ public class playerController1 : MonoBehaviour
         //soundManager = FindObjectOfType<SoundManager>();
         
         //line to play a sound from anywhere
-        //FindObjectOfType<SoundManager>().playSound("soundName");
+        //SoundManager.instance.playSound("soundName");
     }
     void Start()
     {
@@ -403,7 +403,7 @@ public class playerController1 : MonoBehaviour
                 //checks ground directally beneth and in front of the player
                 groundCheck();
                 ///---------------------------------------------------------------------------------------------------------------------------
-
+                deleteThisLater.text = currentComboDelay.ToString();
                 //swing sword
                 if (Input.GetMouseButtonDown(0) && !isGrappled)
                 {
@@ -413,9 +413,6 @@ public class playerController1 : MonoBehaviour
                         attackNumber++;
                         attackNumber = Mathf.Clamp(attackNumber, 0, 3);
                     }
-                    //if (attackNumber < 3)
-                    //{
-                    //}
                 }    
                 if(attackNumber == 1) //starts the first attack the rest should occur automatically if clicked again
                 {
@@ -424,7 +421,7 @@ public class playerController1 : MonoBehaviour
                 
                 if(currentComboDelay >= 0)
                 {
-                    currentComboDelay -= Time.deltaTime; //count frames
+                    currentComboDelay -= Time.deltaTime;
                 }
                 else if(currentComboDelay < 0)
                 {
@@ -473,16 +470,17 @@ public class playerController1 : MonoBehaviour
             
             if (playerStats.health <= 0)
             {
-                //*insert death animation*
                 if(!dead)
                 {
                     ani.SetTrigger("dead");
+                    SoundManager.instance.playSound("playerDeath");
                     dead = true;
                 }
                 gameObject.layer = 19;
             }
             else
             {
+                SoundManager.instance.playSound("playerDamaged_1");
                 StartCoroutine(Flasher());
             }
         }
@@ -767,5 +765,9 @@ public class playerController1 : MonoBehaviour
     public Animator animator()
     {
         return ani;
+    }
+    public void resetDoubleJump()
+    {
+        doubleJump = true;
     }
 }

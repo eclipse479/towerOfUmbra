@@ -29,9 +29,10 @@ public class grapplingHook : MonoBehaviour
     [Tooltip("aditional height the grapple starts at")]
     public float baseHeightIncrease;
 
+    private GameObject parent;
+    private Rigidbody rb;
     #endregion
-    //has the hook hit an enemy
-    //the player
+
     #region player stats
     [Header("PLAYER STATS")]
     [Tooltip("the player")]
@@ -45,31 +46,20 @@ public class grapplingHook : MonoBehaviour
     public Camera playerCamera;
     [Tooltip("how far the grapple is from the player")]
     public float grappleDistFromPlayer;
-    #endregion
-    private GameObject parent;
-
-
     private Rigidbody playerRB;
-    private Rigidbody rb;
-    private bool extending;
-    private bool wallGrabbed;
-    //enemy hit by grappling hook
-    
-    private float distanceToWall;
+    #endregion
 
+
+    
+    #region forces
     private Collider collide;
     [Header("FORCE MULTIPLIERS")]
     [Tooltip("force multiplier when a wall is hit with the grapple")]
     public float grapplePullToWallForce;
     [Tooltip("force multiplier when an enemy is hit by the grapple")]
     public float grapplePullEnemyForce;
+    #endregion
 
-    private LineRenderer lRend;
-
-    //improved extending and retracting
-    private Vector3 grappleStartingPos;
-    private float lerpPercent = 0;
-    private Vector3 maxExtendedPoint;
     #region spring stats
     [Header("SPRING")]
     public float startingDamper;
@@ -77,23 +67,39 @@ public class grapplingHook : MonoBehaviour
     public float startingMassScale;
     private SpringJoint spring;
     #endregion
-    private bool retracting;
+
+
+    #region misc
+    private LineRenderer lRend;
     private List<MeshRenderer> rends;
 
-    private float grappleGrace;
-    public float maxGrappleGrace;
+    private bool extending;
+    private bool wallGrabbed;
+    private bool retracting;
 
+    private float distanceToWall;
+    private float lerpPercent = 0;
+    private float angle;
+
+    //improved extending and retracting
+    private Vector3 grappleStartingPos;
+    private Vector3 maxExtendedPoint;
     private Vector3 grapplePoint;
+
+    public float maxGrappleGrace;
+    private float grappleGrace;
+    #endregion
+
 
     [HideInInspector]
     public GameObject grabbedEnemy;
     //vector for pulling direction player -> wall
     [HideInInspector]
     public Vector3 forceDirection;
-    public Text deleteThisLater;
     // Start is called before the first frame update
 
-    private float angle;
+
+    public Text deleteThisLater;
     void Start()
     {
         control = player.GetComponent<playerController1>();
@@ -121,7 +127,6 @@ public class grapplingHook : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         grappleStartingPos = new Vector3(player.transform.position.x, player.transform.position.y + baseHeightIncrease, player.transform.position.z) + (playerCamera.transform.forward * grappleDistFromPlayer);
 
         //moves grapple to player position
@@ -218,7 +223,6 @@ public class grapplingHook : MonoBehaviour
         if (extending || wallGrabbed || retracting)
         {
             lRend.SetPosition(0, transform.position);
-            //lRend.SetPosition(1, parent.transform.position);
             lRend.SetPosition(1, JNT_Hand_L.position);
         }
         else
@@ -290,10 +294,12 @@ public class grapplingHook : MonoBehaviour
         {
             if (extending)
             {
+                SoundManager.instance.playSound("grappleHookImpact");
                 extending = false;
                 wallGrabbed = true;
                 ContactPoint contact = collision.contacts[0];
                 grapplePoint = contact.point;
+                //control.resetDoubleJump();
                 startGrapple();
             }
         }
@@ -338,6 +344,7 @@ public class grapplingHook : MonoBehaviour
     IEnumerator extend()
     {
         reappear();
+        SoundManager.instance.playSound("grappleHookThrow");
         control.animator().SetBool("grappleThrow", true);
         StopCoroutine(retract());
         extending = true;
@@ -365,6 +372,7 @@ public class grapplingHook : MonoBehaviour
     IEnumerator retract()
     {
         StopCoroutine(extend());
+        SoundManager.instance.playSound("grappleHookReel");
         control.animator().SetBool("grappleThrow", false);
         wallGrabbed = false;
         retracting = true;
