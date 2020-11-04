@@ -35,12 +35,12 @@ public class SoundManager : MonoBehaviour
     {
         
         Sound s = Array.Find(sounds, sound => sound.name == soundName);
-        s.source.pitch = UnityEngine.Random.Range(s.pitch - s.pitchRandomizer, s.pitch + s.pitchRandomizer);
         if(s == null)
         {
             Debug.LogWarning("sound " + soundName + " not found");
             return;
         }
+        s.source.pitch = UnityEngine.Random.Range(s.pitch - s.pitchRandomizer, s.pitch + s.pitchRandomizer);
         s.source.Play();
     }
 }

@@ -779,6 +779,12 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!4 &21730875 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4897162903399133448, guid: ac79447f2fc28674781f800ceba169e7,
+    type: 3}
+  m_PrefabInstance: {fileID: 1093082577}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &23458928 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: c0e58578df70eee4b9fa2c91ffa157bb,
@@ -6676,6 +6682,18 @@ Transform:
   m_Father: {fileID: 639861535}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &228640884 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1744011395892868420, guid: 42e61a815c4f1fe44bd93c13b7c61904,
+    type: 3}
+  m_PrefabInstance: {fileID: 1857479566}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5d0d442361f5d4428ccd3bf7655ab2f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!43 &234345793
 Mesh:
   m_ObjectHideFlags: 0
@@ -20573,6 +20591,11 @@ PrefabInstance:
       propertyPath: deleteThisLater
       value: 
       objectReference: {fileID: 1655862221}
+    - target: {fileID: 5600749127471954166, guid: ac79447f2fc28674781f800ceba169e7,
+        type: 3}
+      propertyPath: hook
+      value: 
+      objectReference: {fileID: 228640884}
     - target: {fileID: 6730093160646667984, guid: ac79447f2fc28674781f800ceba169e7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -21298,6 +21321,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6587864393751099091, guid: fbe7d547b1311294c99f0c0bd9d9bd8b,
     type: 3}
   m_PrefabInstance: {fileID: 1190978500}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1147870328 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6395722638800192838, guid: ac79447f2fc28674781f800ceba169e7,
+    type: 3}
+  m_PrefabInstance: {fileID: 1093082577}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1148654879
 PrefabInstance:
@@ -33965,6 +33994,21 @@ PrefabInstance:
       propertyPath: playerCamera
       value: 
       objectReference: {fileID: 1413852234}
+    - target: {fileID: 1744011395892868420, guid: 42e61a815c4f1fe44bd93c13b7c61904,
+        type: 3}
+      propertyPath: deleteThisLater
+      value: 
+      objectReference: {fileID: 1655862221}
+    - target: {fileID: 1744011395892868420, guid: 42e61a815c4f1fe44bd93c13b7c61904,
+        type: 3}
+      propertyPath: JNT_Hand_L
+      value: 
+      objectReference: {fileID: 1147870328}
+    - target: {fileID: 1744011395892868420, guid: 42e61a815c4f1fe44bd93c13b7c61904,
+        type: 3}
+      propertyPath: JNT_UpperArm_L
+      value: 
+      objectReference: {fileID: 21730875}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 42e61a815c4f1fe44bd93c13b7c61904, type: 3}
 --- !u!4 &1871372750 stripped
