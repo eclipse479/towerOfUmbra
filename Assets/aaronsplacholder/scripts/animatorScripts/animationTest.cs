@@ -32,15 +32,15 @@ public class animationTest : MonoBehaviour
 
     public void attack1Particle()
     {
-        ParticleManager.instance.playParticle("swordSwing", attackPoint.transform.position, Quaternion.Euler(0, 45, 0));
+        ParticleManager.instance.addParticle("Swordslash", attackPoint.transform.position, Quaternion.Euler(0, 45, 0));
     }
     public void attack2Particle()
     {
-        ParticleManager.instance.playParticle("swordSwing", attackPoint.transform.position, Quaternion.Euler(0, 0, 0));
+        ParticleManager.instance.addParticle("Swordslash", attackPoint.transform.position, Quaternion.Euler(0, 0, 0));
     }
     public void attack3Particle()
     {
-        ParticleManager.instance.playParticle("swordSwing", attackPoint.transform.position, Quaternion.Euler(90, 0, 0));
+        ParticleManager.instance.addParticle("Swordslash", attackPoint.transform.position, Quaternion.Euler(90, 0, 0));
     }
 
     public void createHitBox()
