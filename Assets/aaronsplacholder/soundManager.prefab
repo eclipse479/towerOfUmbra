@@ -48,14 +48,14 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 96065967e50904a4090835146a5155cd, type: 3}
     pitch: 1
     pitchRandomizer: 0
-    volume: 0.5
+    volume: 0.4
     loop: 1
     source: {fileID: 0}
   - name: swordSwing
-    clip: {fileID: 8300000, guid: ff952905304ec574c8c38cbe3a77c434, type: 3}
+    clip: {fileID: 8300000, guid: d16ca43fdcc6c63478853a9987a5f921, type: 3}
     pitch: 1
     pitchRandomizer: 0.2
-    volume: 0.5
+    volume: 1
     loop: 0
     source: {fileID: 0}
   - name: playerDamaged_1
@@ -66,7 +66,7 @@ MonoBehaviour:
     loop: 0
     source: {fileID: 0}
   - name: playerDeath
-    clip: {fileID: 8300000, guid: 7e5c2a4eab084ca49a08783a98f8bf02, type: 3}
+    clip: {fileID: 8300000, guid: db2b4fdd7f253af47b53f5d3ed38680d, type: 3}
     pitch: 1
     pitchRandomizer: 0.2
     volume: 1
@@ -83,14 +83,14 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 10aa573cf0d721c44af43962db013edc, type: 3}
     pitch: 1
     pitchRandomizer: 0.2
-    volume: 1
+    volume: 0.6
     loop: 0
     source: {fileID: 0}
   - name: fireballThrow
     clip: {fileID: 8300000, guid: 0a7e19e4cd30ceb41bbfe7aeb119c6ab, type: 3}
     pitch: 1
     pitchRandomizer: 0.2
-    volume: 1
+    volume: 0.7
     loop: 0
     source: {fileID: 0}
   - name: fireballImpact
@@ -104,14 +104,14 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: fcd7a29afe732964c8134be702a2335c, type: 3}
     pitch: 1
     pitchRandomizer: 0.2
-    volume: 1
+    volume: 0.4
     loop: 0
     source: {fileID: 0}
   - name: skeletonDeath
     clip: {fileID: 8300000, guid: 5c5c35b219dde4c408e4752d1c177223, type: 3}
     pitch: 1
     pitchRandomizer: 0.2
-    volume: 1
+    volume: 0.7
     loop: 0
     source: {fileID: 0}
   - name: caveAmbience
@@ -188,11 +188,39 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: bc7d637669db2a048bb9388111d91548, type: 3}
     pitch: 1
     pitchRandomizer: 0.2
-    volume: 1
+    volume: 0.6
     loop: 0
     source: {fileID: 0}
   - name: spiderwebThrow
-    clip: {fileID: 8300000, guid: 6522bab7cc6decb4183e65d56b318661, type: 3}
+    clip: {fileID: 8300000, guid: 0a7e19e4cd30ceb41bbfe7aeb119c6ab, type: 3}
+    pitch: 1
+    pitchRandomizer: 0.2
+    volume: 0.7
+    loop: 0
+    source: {fileID: 0}
+  - name: SkeletonMeleeAttack
+    clip: {fileID: 8300000, guid: 58cfcffc781278a4bafa7646a286445b, type: 3}
+    pitch: 1
+    pitchRandomizer: 0.2
+    volume: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: spiderMelee attack
+    clip: {fileID: 8300000, guid: 63cc881827f757e46a04833e8b688922, type: 3}
+    pitch: 1
+    pitchRandomizer: 0.2
+    volume: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Torchesburning
+    clip: {fileID: 8300000, guid: 676d2efa2c7055247ba806627f6172e4, type: 3}
+    pitch: 1
+    pitchRandomizer: 0.2
+    volume: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: TorchesLit
+    clip: {fileID: 8300000, guid: 0a7e19e4cd30ceb41bbfe7aeb119c6ab, type: 3}
     pitch: 1
     pitchRandomizer: 0.2
     volume: 1

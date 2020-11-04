@@ -180,13 +180,14 @@ MonoBehaviour:
   max_speed: 10
   target: {fileID: 0}
   ray_centre: {fileID: 2312264040567953524}
-  ray_offset: 5.52
+  ray_offset: 3
   drop_cast_dist: 1.5
   min_dist: 5
   attack_cooldown: 0.3
   attack_range: 2.43
   bullet: {fileID: 7091955269792678419, guid: bb59f89fb9312114ca0153b3160eeca7, type: 3}
-  shoot_cooldown: 0.5
+  shoot_cooldown: 3
+  shooting_hand: {fileID: 7165838025093101201}
   enemiesLeftText: {fileID: 0}
   stun_duration: 2
   stun_recovery: 2
@@ -246,7 +247,7 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2312264039623448751}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 9db2e404b5a7a4f4c96ce730f65e4514, type: 3}
+  m_Avatar: {fileID: 9000000, guid: 88017e1a141c30641853cad3c6b7f4a5, type: 3}
   m_Controller: {fileID: 9100000, guid: b23b420c30d23934293cc88dae596070, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 1
@@ -554,6 +555,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2312264039623448741}
     m_Modifications:
+    - target: {fileID: -6057140222963153312, guid: 9db2e404b5a7a4f4c96ce730f65e4514,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 9db2e404b5a7a4f4c96ce730f65e4514,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -629,6 +635,12 @@ PrefabInstance:
 --- !u!4 &3047811049443125800 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 9db2e404b5a7a4f4c96ce730f65e4514,
+    type: 3}
+  m_PrefabInstance: {fileID: 8013791387584086322}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &7165838025093101201 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8339365266557110365, guid: 9db2e404b5a7a4f4c96ce730f65e4514,
     type: 3}
   m_PrefabInstance: {fileID: 8013791387584086322}
   m_PrefabAsset: {fileID: 0}

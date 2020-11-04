@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -91,6 +92,8 @@ public class grapplingHook : MonoBehaviour
     public Vector3 forceDirection;
     public Text deleteThisLater;
     // Start is called before the first frame update
+
+    private float angle;
     void Start()
     {
         control = player.GetComponent<playerController1>();
@@ -188,7 +191,6 @@ public class grapplingHook : MonoBehaviour
             control.animator().SetFloat("yAngle", input.y);
             string y = input.y.ToString("F2");
             string x = input.x.ToString("F2");
-            deleteThisLater.text = "X: " + x + " Y: " + y;
         }
         
         if(wallGrabbed)
@@ -201,12 +203,10 @@ public class grapplingHook : MonoBehaviour
             {
                 lengthenGrapplingHook();
             }
+            angle = (Mathf.Atan2(grapplePoint.y - player.transform.position.y, grapplePoint.x - player.transform.position.x) * Mathf.Rad2Deg);
         }
 
 
-        
-
-       
     }
     private void LateUpdate()
     {
@@ -407,5 +407,10 @@ public class grapplingHook : MonoBehaviour
         {
             rend.enabled = true;
         }
+    }
+
+    public float theAngle()
+    {
+        return angle;
     }
 }

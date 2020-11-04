@@ -93,7 +93,10 @@ public class EnemyBehaviour : MonoBehaviour
     // Shooting needs
     [Header("Shooting Settings")]
     public GameObject bullet;
-    [Tooltip("Timer before enemy can shoot again")]public float shoot_cooldown = 2.0f;
+    [Tooltip("Timer before enemy can shoot again")] public float shoot_cooldown = 2.0f;
+    [Tooltip("Where the projectile launches from")] public Transform shooting_hand;
+    Vector3 shooting_direction; // Where the projectile is aimed
+    Quaternion shooting_angle = new Quaternion();
     bool is_shooting = false;
     bool can_shoot = true;
     float shoot_timer;
@@ -141,9 +144,13 @@ public class EnemyBehaviour : MonoBehaviour
     public float ground_check_radius = 1.0f;
     bool is_grounded;
 
-
+    /* For the Sounds */
     SoundManager sound;
+
+    /* Particles to be used and tranforms*/
     ParticleManager particles;
+    ParticleSystem particle_effect;
+    Transform particle_transform;
 
     // Things that need to be loaded before first frame
     private void Awake()
@@ -190,7 +197,6 @@ public class EnemyBehaviour : MonoBehaviour
 
         Random.InitState(System.DateTime.UtcNow.Second);
         
-
         // Get the player as target
         target = GameObject.FindGameObjectWithTag("player").transform;
         rb = GetComponent<Rigidbody>();
@@ -203,6 +209,14 @@ public class EnemyBehaviour : MonoBehaviour
             ray.origin = ray_centre.position;
         }
 
+        // Check for particles
+        if (particles != null)
+        {
+            particle_effect = particles.addParticle("bloodSplatter", ray.origin, transform.rotation);
+            particle_transform = particle_effect.gameObject.transform;
+        }
+
+       
         // They cast down no matter what
         ledge_ray = new Ray();
         ledge_ray.direction = -transform.up;
@@ -342,6 +356,17 @@ public class EnemyBehaviour : MonoBehaviour
                       case (STATE)2: // Attack
                         attack();
                           break;
+                    case (STATE)3:
+                        shooting_direction = (target.position - shooting_hand.position).normalized; // Get the direction
+
+                        if (transform.rotation.y > 0)
+                        {
+                            shooting_direction.z *= -1;
+                        }
+
+                        animator.SetFloat("x", shooting_direction.z);
+                        animator.SetFloat("y", shooting_direction.y);
+                        break;
                     default:
                         break;
                 }
@@ -393,10 +418,15 @@ public class EnemyBehaviour : MonoBehaviour
     /// </summary>
     void shoot()
     {
-        if (ray_centre != null)
-            Instantiate(bullet, ray_centre.position + transform.forward, transform.rotation);
+        shooting_angle.SetFromToRotation(transform.forward, shooting_direction);
+
+        //animator.SetFloat("x", shooting_direction.z);
+        //animator.SetFloat("y", shooting_direction.y);
+
+        if (shooting_hand != null)
+            Instantiate(bullet, shooting_hand.position, shooting_angle);
         else
-            Instantiate(bullet, transform.position + transform.forward, transform.rotation);
+            Instantiate(bullet, transform.position + transform.forward, shooting_angle);
 
         // Check type of enemy for the sound to play
         switch (gameObject.tag)
@@ -722,14 +752,6 @@ public class EnemyBehaviour : MonoBehaviour
                 }
             }
 
-            // Check for particles
-            if (particles != null)
-            {
-                particles.playParticle("bloodSplatter", transform.position, transform.rotation);
-            }
-
-            
-
             // Reset Enemy velocity
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
@@ -737,7 +759,12 @@ public class EnemyBehaviour : MonoBehaviour
             rb.AddForce((transform.up * knockback_vertical) + (-transform.forward * knockback_horizontal), ForceMode.VelocityChange);
         }
 
-
+        if (particle_effect != null)
+        {
+            particle_transform.position = ray_centre.position;
+            particle_transform.rotation = transform.rotation;
+            particle_effect.Play();
+        }
 
 
         // If it has no health points
