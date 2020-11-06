@@ -24,8 +24,6 @@ public class grapplingHook : MonoBehaviour
     [Tooltip("how fast the grapple moves")]
     [Min(0.1f)]
     public float extendRate;
-    //is the hook extended
-    private bool active;
     [Tooltip("aditional height the grapple starts at")]
     public float baseHeightIncrease;
 
@@ -75,6 +73,8 @@ public class grapplingHook : MonoBehaviour
 
     private bool extending;
     private bool wallGrabbed;
+    //is the hook extended
+    private bool active;
     private bool retracting;
 
     private float distanceToWall;
@@ -134,16 +134,16 @@ public class grapplingHook : MonoBehaviour
         //moves grapple to player position
         parent.transform.position = grappleStartingPos;
 
+
+
         if (Input.GetMouseButtonDown(1))
         {
             grappleGrace = maxGrappleGrace;
         }
-
         if(grappleGrace > 0)
         {
             grappleGrace -= Time.deltaTime;
         }
-
 
         if (spring)
         {
@@ -159,19 +159,11 @@ public class grapplingHook : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonUp(1))
-        {
-            extending = false;
-            StopCoroutine(extend());
-            if (!retracting)
-                StartCoroutine(retract());         //start retracting when mouse button is let go
-        }
-
 
         if (!active)
         {
             //gets a new spot to shoot a grapple towards
-            if (grappleGrace >= 0)
+            if (grappleGrace > 0)
             {
                 RaycastHit hit;
                 grappleGrace = -1;
@@ -187,8 +179,19 @@ public class grapplingHook : MonoBehaviour
                 }
             }
         }
-        else
+        else //if active
         {
+            //reel in grapple if it is active
+            if (!Input.GetMouseButton(1))
+            {
+                extending = false;
+                if(extending)
+                    StopCoroutine(extend());
+                if (!retracting)
+                    StartCoroutine(retract());         //start retracting when mouse button is let go
+            }
+
+
             Vector3 input = transform.position - JNT_UpperArm_L.position;
             input.Normalize();
             if(player.transform.rotation.y < 0)
@@ -213,6 +216,8 @@ public class grapplingHook : MonoBehaviour
             }
             angle = (Mathf.Atan2(grapplePoint.y - player.transform.position.y, grapplePoint.x - player.transform.position.x) * Mathf.Rad2Deg);
         }
+
+        //stops the spaming of spacebar when grappled to a wall
         if(pullTimer > 0)
         pullTimer -= Time.deltaTime;
     }
@@ -346,11 +351,11 @@ public class grapplingHook : MonoBehaviour
 
     IEnumerator extend()
     {
+        extending = true;
         reappear();
         SoundManager.instance.playSound("grappleHookThrow");
         control.animator().SetBool("grappleThrow", true);
         StopCoroutine(retract());
-        extending = true;
         rb.isKinematic = false;
         bool maxReached = false;
         maxExtendedPoint = parent.transform.position + (gameObject.transform.right * maxLength);
@@ -374,14 +379,14 @@ public class grapplingHook : MonoBehaviour
 
     IEnumerator retract()
     {
+        retracting = true;
         StopCoroutine(extend());
         SoundManager.instance.playSound("grappleHookReel");
-        control.animator().SetBool("grappleThrow", false);
         wallGrabbed = false;
-        retracting = true;
         collide.enabled = false;        //collider turned off
         rb.isKinematic = true;          //kinematic to stop physics
-        maxExtendedPoint = transform.position;
+        Vector3 theDis = transform.position - parent.transform.position;
+        float dis = theDis.magnitude; ;
         while (retracting)
         {
             if(spring)
@@ -392,7 +397,7 @@ public class grapplingHook : MonoBehaviour
 
             transform.position = Vector3.MoveTowards(transform.position, endPos, extendRate * Time.deltaTime);
             lerpPercent += extendRate * Time.deltaTime;
-            if (lerpPercent > maxLength)
+            if (lerpPercent > dis)//problem!!!!
             {
                 retracting = false;
             }
@@ -400,6 +405,7 @@ public class grapplingHook : MonoBehaviour
         }
         lerpPercent = 0;                //reset the lerp value
         active = false;
+        control.animator().SetBool("grappleThrow", false);
         disappear();
     }
 

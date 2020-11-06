@@ -25,6 +25,8 @@ public class levelRestart : MonoBehaviour
      
         if (currentRestartTimer < 0)//reloads current scene
         {
+            Time.timeScale = 1.0f;//remove pause
+            playerStats.health = playerStats.maxHealth;
             Scene scene = SceneManager.GetActiveScene();
             if (scene.name == "TutorialLevel")
             { 
