@@ -6,7 +6,7 @@ public class animationTest : MonoBehaviour
     public float attackRange;
     public LayerMask enemyLayers;
     private SoundManager soundManager;
-
+    public Transform swordTip;
     private void Awake()
     {
         soundManager = FindObjectOfType<SoundManager>();
@@ -27,20 +27,20 @@ public class animationTest : MonoBehaviour
     }
     public void playFootstepSound()
     {
-        soundManager.playSound("footstep_1");
+        //soundManager.playSound("footstep_1");
     }
 
     public void attack1Particle()
     {
-        ParticleManager.instance.addParticle("Swordslash", attackPoint.transform.position, Quaternion.Euler(0, 45, 0));
+        ParticleManager.instance.addParticle("PlayerSwordTrail", swordTip.transform.position, Quaternion.Euler(0, 45, 0));
     }
     public void attack2Particle()
     {
-        ParticleManager.instance.addParticle("Swordslash", attackPoint.transform.position, Quaternion.Euler(0, 0, 0));
+        ParticleManager.instance.addParticle("PlayerSwordTrail", attackPoint.transform.position, Quaternion.Euler(0, 0, 0));
     }
     public void attack3Particle()
     {
-        ParticleManager.instance.addParticle("Swordslash", attackPoint.transform.position, Quaternion.Euler(90, 0, 0));
+        ParticleManager.instance.addParticle("PlayerSwordTrail", attackPoint.transform.position, Quaternion.Euler(90, 0, 0));
     }
 
     public void createHitBox()

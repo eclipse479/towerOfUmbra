@@ -5,6 +5,7 @@ using UnityEngine;
 public static class playerStats
 {
     private static float playerHealth;
+    private static float playerMaxHealth;
     private static int noOfClicks;
 
     public static float health
@@ -16,6 +17,17 @@ public static class playerStats
         set
         {
             playerHealth = value;
+        }
+    }
+    public static float maxHealth
+    {
+        get
+        {
+            return playerMaxHealth;
+        }
+        set
+        {
+            playerMaxHealth = value;
         }
     }
     public static int clicks

@@ -161,7 +161,8 @@ public class playerController1 : MonoBehaviour
         healthbarImage = healthBar.transform.GetChild(1).gameObject.GetComponent<Image>();
         if(playerStats.health <= 0 && !dead)
         {
-           playerStats.health = maxHealth;
+            playerStats.health = maxHealth;
+            playerStats.maxHealth = maxHealth;
         }
         else
         {
@@ -200,14 +201,14 @@ public class playerController1 : MonoBehaviour
                 
                 if (grounded)
                 {
-                    if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+                    if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.A))
                     {
                         rb.AddForce(transform.forward * acceleration * Time.deltaTime, ForceMode.VelocityChange);
                     }
                 }
                 else if(isGrappled)
                 {
-                    if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+                    if (Input.GetKey(KeyCode.A))
                     {
                         if (hook.theAngle() >= 0 && hook.theAngle() < 100)//left of grapple point
                         {
@@ -224,7 +225,7 @@ public class playerController1 : MonoBehaviour
                             rb.AddForce(transform.forward * acceleration * Time.deltaTime * maxGrappledMovementMultiplier, ForceMode.VelocityChange);
                         }
                     }
-                    else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+                    else if (Input.GetKey(KeyCode.D))
                     {
                         if (hook.theAngle() >= 80 && hook.theAngle() < 180)//right of grapple point
                         {
@@ -244,7 +245,7 @@ public class playerController1 : MonoBehaviour
                 }
                 else
                 {
-                    if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+                    if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.A))
                     {
                         rb.AddForce(transform.forward * acceleration * Time.deltaTime * airMovementMultiplier, ForceMode.VelocityChange);
                     }
@@ -319,7 +320,7 @@ public class playerController1 : MonoBehaviour
                 speedCheck();
                 //input for the player movement
                
-                    if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+                    if (Input.GetKey(KeyCode.D))
                     {
                         if (Input.GetKeyDown(KeyCode.D) && rb.velocity.x > 0)
                         {
@@ -330,7 +331,7 @@ public class playerController1 : MonoBehaviour
                         //change player facing direction
                         transform.eulerAngles = new Vector3(0, -90, 0);
                     }
-                    if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+                    if (Input.GetKey(KeyCode.A))
                     {
                         if (Input.GetKeyDown(KeyCode.A) && rb.velocity.x < 0)
                         {
@@ -407,12 +408,9 @@ public class playerController1 : MonoBehaviour
                 //swing sword
                 if (Input.GetMouseButtonDown(0) && !isGrappled)
                 {
-                    if(grounded || rb.velocity.y < 0)
-                    {
                         resetComboCooldown();
                         attackNumber++;
                         attackNumber = Mathf.Clamp(attackNumber, 0, 3);
-                    }
                 }    
                 if(attackNumber == 1) //starts the first attack the rest should occur automatically if clicked again
                 {
@@ -463,26 +461,10 @@ public class playerController1 : MonoBehaviour
         if (collision.gameObject.tag == "bullet")
         {
             //reduce health
-            playerStats.health--;
+            takeDamage(1.0f);
             knockBack(collision.gameObject);
-            //move health bar health
-            healthbarImage.fillAmount = playerStats.health / maxHealth;
             
-            if (playerStats.health <= 0)
-            {
-                if(!dead)
-                {
-                    ani.SetTrigger("dead");
-                    SoundManager.instance.playSound("playerDeath");
-                    dead = true;
-                }
-                gameObject.layer = 19;
-            }
-            else
-            {
-                SoundManager.instance.playSound("playerDamaged_1");
-                StartCoroutine(Flasher());
-            }
+            
         }
         if (playerStats.health <= 0)
         {
@@ -519,10 +501,7 @@ public class playerController1 : MonoBehaviour
     /// <summary>
     /// when the sword collides with an enemy for combo purposes
     /// </summary>
-    public void swordCollision()
-    {
-        Debug.Log("sword hit a thing");
-    }
+
     /// <summary>
     /// knockback applied to the player when colliding with an enemy
     /// </summary>
@@ -755,6 +734,27 @@ public class playerController1 : MonoBehaviour
 
         angle -= 90;
         angle *= -1;
+    }
+    public void takeDamage(float damage)
+    {
+        playerStats.health -= damage;
+        healthbarImage.fillAmount = playerStats.health / maxHealth;
+
+        if (playerStats.health <= 0)
+        {
+            if (!dead)
+            {
+                ani.SetTrigger("dead");
+                SoundManager.instance.playSound("playerDeath");
+                dead = true;
+            }
+            gameObject.layer = 19;
+        }
+        else
+        {
+            SoundManager.instance.playSound("playerDamaged_1");
+            StartCoroutine(Flasher());
+        }
     }
 
     public Animator animator()
