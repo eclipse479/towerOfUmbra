@@ -28,6 +28,7 @@ public class animationTest : MonoBehaviour
     public void playFootstepSound()
     {
         //soundManager.playSound("footstep_1");
+        Debug.Log("footstep");
     }
 
     public void attack1Particle()

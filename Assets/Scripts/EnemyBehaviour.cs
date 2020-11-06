@@ -486,10 +486,8 @@ public class EnemyBehaviour : MonoBehaviour
 
                 sound.playSound("playerDamaged_1");
 
-                player_rb.AddForce(transform.forward * knockback_to_player_horizontal + player.transform.up * knockback_to_player_vertical, ForceMode.VelocityChange);
-                playerStats.health -= damage_to_player;
-                player.GetComponent<playerController1>().flashStart();
-                player.GetComponent<playerController1>().healthbarImage.fillAmount = playerStats.health / player.GetComponent<playerController1>().maxHealth;
+                player.GetComponent<playerController1>().takeDamage(1.0f);
+                player.GetComponent<playerController1>().knockBack(gameObject);
             }
             setAttack();
         }

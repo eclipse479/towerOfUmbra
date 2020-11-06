@@ -292,7 +292,6 @@ public class playerController1 : MonoBehaviour
         //pausing
         if (!dead)
         {
-            deleteThisLater.text = hook.theAngle().ToString();
             //pausing
             if (Input.GetKeyDown(KeyCode.Escape))
             {
@@ -507,7 +506,7 @@ public class playerController1 : MonoBehaviour
     /// </summary>
     /// <param name="enemy"></param>
 
-    private void knockBack(GameObject enemy)
+    public void knockBack(GameObject enemy)
     {
         float xDirection = horizontalKnockBackAmount;
         //determines direction to knock back
@@ -579,6 +578,11 @@ public class playerController1 : MonoBehaviour
         }
         float speedInput = currentSpeed / playerMaxMovementSpeed;
         ani.SetFloat("speed", speedInput);
+        if (speedInput > 0)
+            deleteThisLater.color = Color.white;
+        else
+            deleteThisLater.color = Color.blue;
+        deleteThisLater.text = speedInput.ToString();
     }
 
     /// <summary>
