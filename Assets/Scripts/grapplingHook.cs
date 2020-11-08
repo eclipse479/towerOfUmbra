@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -97,7 +96,6 @@ public class grapplingHook : MonoBehaviour
     //vector for pulling direction player -> wall
     [HideInInspector]
     public Vector3 forceDirection;
-    // Start is called before the first frame update
 
 
     public Text deleteThisLater;
@@ -397,7 +395,7 @@ public class grapplingHook : MonoBehaviour
 
             transform.position = Vector3.MoveTowards(transform.position, endPos, extendRate * Time.deltaTime);
             lerpPercent += extendRate * Time.deltaTime;
-            if (lerpPercent > dis)//problem!!!!
+            if (lerpPercent > dis)
             {
                 retracting = false;
             }

@@ -7,8 +7,10 @@ public class animationTest : MonoBehaviour
     public LayerMask enemyLayers;
     private SoundManager soundManager;
     public Transform swordTip;
+    private playerController1 control;
     private void Awake()
     {
+        control = gameObject.transform.parent.GetComponent<playerController1>();
         soundManager = FindObjectOfType<SoundManager>();
     }
 
@@ -27,7 +29,8 @@ public class animationTest : MonoBehaviour
     }
     public void playFootstepSound()
     {
-        //soundManager.playSound("footstep_1");
+        if(control.speedInput > 0.1f)
+        soundManager.playSound("footstep_1");
         Debug.Log("footstep");
     }
 
