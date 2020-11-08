@@ -148,7 +148,8 @@ public class playerController1 : MonoBehaviour
 
     [HideInInspector]
     public bool isGrappled;
-
+    [HideInInspector]
+    public float speedInput;
     //temp player speed text
     [Tooltip("Text used for debugging")]
     public Text deleteThisLater;
@@ -363,14 +364,14 @@ public class playerController1 : MonoBehaviour
                 {
                     addFriction();
                 }
-                else // if any movement key is pressed
-                {
-                    if (rb.velocity.x > 1 || rb.velocity.x < -1)
-                    {
-                        //apply anti bump force for slopes
-                        applyAntiBump();
-                    }
-                }
+               // else // if any movement key is pressed
+               // {
+               //     if (rb.velocity.x > 1 || rb.velocity.x < -1)
+               //     {
+               //         //apply anti bump force for slopes
+               //         applyAntiBump();
+               //     }
+               // }
                 ///box cast to check if the player is grounded
                 //box cast for if player is grounded and can jump
                 if (groundedDelay > 0)
@@ -576,7 +577,7 @@ public class playerController1 : MonoBehaviour
         {
             currentSpeed *= -1; // always positive
         }
-        float speedInput = currentSpeed / playerMaxMovementSpeed;
+        speedInput = currentSpeed / playerMaxMovementSpeed;
         ani.SetFloat("speed", speedInput);
         if (speedInput > 0)
             deleteThisLater.color = Color.white;
