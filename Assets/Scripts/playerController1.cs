@@ -294,7 +294,7 @@ public class playerController1 : MonoBehaviour
         if (!dead)
         {
             //pausing
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.Escape) & !mainMenu)
             {
                 if (!paused)
                 {
@@ -720,14 +720,7 @@ public class playerController1 : MonoBehaviour
     {
         paused = newBool;
         mainMenu = newBool;
-        if(newBool)
-        {
-            Time.timeScale = 0.0f;
-        }
-        else
-        {
-            Time.timeScale = 1.0f;
-        }
+        Time.timeScale = 1.0f;
     }
 
     private void grappleTimerSet()
