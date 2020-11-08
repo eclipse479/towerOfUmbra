@@ -235,8 +235,6 @@ public class EnemyBehaviour : MonoBehaviour
         Transform healthBarCanvas = gameObject.transform.Find("healthBarCanvas");
         healthBar = healthBarCanvas.gameObject.transform.Find("healthBar");
 
-       
-
         max_health = health;
 
         healthSlider = healthBar.GetComponent<Slider>();
