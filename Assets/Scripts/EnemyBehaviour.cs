@@ -4,7 +4,7 @@
  * 
  * Purpose: A state machine that dictates the enemy's actions and affects enemy counter
  * 
- * Defieciencies: Doesn't work with NavMesh yet.
+ * Defieciencies: Doesn't account for grounded check
  * 
  * 
  */
@@ -140,8 +140,7 @@ public class EnemyBehaviour : MonoBehaviour
     float nav_cooldown;
 
     [Header("Ground Check")]
-    public float ground_check_offset = 2.0f;
-    public float ground_check_radius = 1.0f;
+    public float ground_ray_length = 3.0f;
     bool is_grounded;
 
     /* For the Sounds */
@@ -151,6 +150,9 @@ public class EnemyBehaviour : MonoBehaviour
     ParticleManager particles;
     ParticleSystem particle_effect;
     Transform particle_transform;
+
+    // Sword Trails Particles : Dedicated melee particles
+    public ParticleSystem melee_particle;
 
     // Things that need to be loaded before first frame
     private void Awake()
@@ -267,8 +269,7 @@ public class EnemyBehaviour : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-        
+    {   
         // The direction of the ray changes each frame
         if (ray_centre != null)
         {
@@ -279,21 +280,8 @@ public class EnemyBehaviour : MonoBehaviour
             ray.origin = transform.position;
         }
 
-        // Look for the ground
-        if (Physics.SphereCast(ray.origin - new Vector3(0, ground_check_offset, 0), ground_check_radius, -transform.up, out hit, ground_check_radius))
-        {
-            // As long as it isn't itself
-            if (hit.collider.gameObject != gameObject)
-            {
-                is_grounded = true;
-            }
-        }
-        else
-        {
-            is_grounded = false;
-        }
+        // groundCheck(ray, ground_ray_length);
      
-
         ray.direction = transform.forward;
         Debug.DrawRay(ray.origin, ray.direction, Color.green);
 
@@ -368,7 +356,7 @@ public class EnemyBehaviour : MonoBehaviour
                     case (STATE)3: // Shoot
                         if (shooting_hand != null)
                         {
-                            shooting_direction = (target.position - shooting_hand.position).normalized; // Get the direction
+                            shooting_direction = ((target.position + new Vector3(0, 1.2f, 0)) - shooting_hand.position).normalized; // Get the direction
 
                             if (transform.rotation.y > 0)
                             {
@@ -393,7 +381,7 @@ public class EnemyBehaviour : MonoBehaviour
                   // If the enemy has already attacked
                   if (!can_shoot)
                   {
-                      shoot_timer -= 1 * Time.deltaTime;
+                      shoot_timer -= Time.deltaTime;
                       if (shoot_timer <= 0.0f)
                       {
                           shoot_timer = shoot_cooldown;
@@ -415,7 +403,7 @@ public class EnemyBehaviour : MonoBehaviour
     /// </summary>
     void hookStun()
     {
-        dizzy_time -= 1 * Time.deltaTime;
+        dizzy_time -= Time.deltaTime;
             
         if (dizzy_time <= 0)
         {
@@ -451,6 +439,12 @@ public class EnemyBehaviour : MonoBehaviour
         }
 
         can_shoot = false;
+    }
+
+    // Shooting sound
+    void shotReady()
+    {
+        sound.playSound("fireballThrow");
     }
 
     // For the animator events to reset shooting timer
@@ -497,10 +491,27 @@ public class EnemyBehaviour : MonoBehaviour
            is_attacking = false;
     }
 
+    // Activate the attack sphere
     void activateAttack()
     {
         is_attacking = true;
-    }    
+    }  
+    
+    // Attack Sound
+    void attackSound()
+    {
+        switch(gameObject.tag)
+        {
+            case "skeleton":
+                sound.playSound("SkeletonMeleeAttack");
+                break;
+            case "spider":
+                sound.playSound("spiderMelee attack");
+                break;
+            default:
+                break;
+        }
+    }
 
     /// <summary>
     /// Look in front of itself
@@ -548,12 +559,24 @@ public class EnemyBehaviour : MonoBehaviour
         if (distance_to_player < detection_range)
         {
             transform.forward = new Vector3((target.position - transform.position).x, 0, 0).normalized;
-            behaviour = STATE.CHASING;
             return true;
         }
         return false;
     }
 
+    void groundCheck(Ray ground_ray, float ray_distance)
+    {
+        // Look for the ground
+        if (Physics.Raycast(ground_ray.origin, -transform.up, ray_distance, 9))
+        {
+            is_grounded = true;
+        }
+        else
+        {
+            is_grounded = false;
+        }
+        animator.SetBool("grounded", is_grounded);
+    }
 
     void pathCheck(PathRays[] paths)
     {
@@ -668,15 +691,12 @@ public class EnemyBehaviour : MonoBehaviour
         rb.useGravity = false;
         collider.enabled = false;
         this.enabled = false;
-        
-        // Destroy(gameObject);
     }
 
     // For the enemy's search zone
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(transform.position, detection_range);
-        Gizmos.DrawWireSphere(ray.origin - new Vector3(0, ground_check_offset, 0), ground_check_radius);
     }
 
     // For the attack radius
@@ -788,6 +808,30 @@ public class EnemyBehaviour : MonoBehaviour
     }
 
  
+    /// <summary>
+    /// Footstep sounds to be triggered via aniamtion events
+    /// </summary>
+    public void footstep()
+    {
+        sound.playSound("footstep_1");
+    }
+
+    /// <summary>
+    /// Plays the melee trail during attack swing
+    /// </summary>
+    void meleeTrail()
+    {
+        melee_particle.Play();
+    }
+
+    /// <summary>
+    /// Stops the melee trails
+    /// </summary>
+    void stopTrail()
+    {
+        melee_particle.Stop();
+    }
+
 
     public bool IsDead
     {

@@ -196,6 +196,7 @@ MonoBehaviour:
   jump_force: 10
   ground_check_offset: 0.64
   ground_check_radius: 2.5
+  melee_particle: {fileID: 4895289336962198178}
 --- !u!54 &2312264039623448738
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -558,7 +559,7 @@ PrefabInstance:
     - target: {fileID: 4857455779021140569, guid: 23be4fffdb81657499f1395faddff86f,
         type: 3}
       propertyPath: playOnAwake
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4857455779021140569, guid: 23be4fffdb81657499f1395faddff86f,
         type: 3}
@@ -573,12 +574,12 @@ PrefabInstance:
     - target: {fileID: 4857455779021140571, guid: 23be4fffdb81657499f1395faddff86f,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4857455779021140571, guid: 23be4fffdb81657499f1395faddff86f,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 20.97
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4857455779021140571, guid: 23be4fffdb81657499f1395faddff86f,
         type: 3}
@@ -608,7 +609,7 @@ PrefabInstance:
     - target: {fileID: 4857455779805984201, guid: 23be4fffdb81657499f1395faddff86f,
         type: 3}
       propertyPath: playOnAwake
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4857455779805984201, guid: 23be4fffdb81657499f1395faddff86f,
         type: 3}
@@ -707,6 +708,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 23be4fffdb81657499f1395faddff86f, type: 3}
+--- !u!198 &4895289336962198178 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 4857455779805984201, guid: 23be4fffdb81657499f1395faddff86f,
+    type: 3}
+  m_PrefabInstance: {fileID: 37904548989460331}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8013791387584086322
 PrefabInstance:
   m_ObjectHideFlags: 0
