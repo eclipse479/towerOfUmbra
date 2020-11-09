@@ -226,7 +226,7 @@ public class grapplingHook : MonoBehaviour
     }
     void drawRope()
     {
-        if (extending || wallGrabbed || retracting)
+        if (active)
         {
             lRend.SetPosition(0, transform.position);
             lRend.SetPosition(1, JNT_Hand_L.position);

@@ -29,9 +29,7 @@ public class animationTest : MonoBehaviour
     }
     public void playFootstepSound()
     {
-        if(control.speedInput > 0.1f)
-        soundManager.playSound("footstep_1");
-        Debug.Log("footstep");
+        control.playFootstep();
     }
 
     public void attack1Particle()
