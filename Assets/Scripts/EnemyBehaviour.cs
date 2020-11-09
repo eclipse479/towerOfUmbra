@@ -356,7 +356,7 @@ public class EnemyBehaviour : MonoBehaviour
                     case (STATE)3: // Shoot
                         if (shooting_hand != null)
                         {
-                            shooting_direction = ((target.position + new Vector3(0, 3.0f, 0)) - shooting_hand.position).normalized; // Get the direction
+                            shooting_direction = ((target.position + new Vector3(0, 1.2f, 0)) - shooting_hand.position).normalized; // Get the direction
 
                             if (transform.rotation.y > 0)
                             {
@@ -439,6 +439,12 @@ public class EnemyBehaviour : MonoBehaviour
         }
 
         can_shoot = false;
+    }
+
+    // Shooting sound
+    void shotReady()
+    {
+        sound.playSound("fireballThrow");
     }
 
     // For the animator events to reset shooting timer
