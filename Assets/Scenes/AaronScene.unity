@@ -748,6 +748,11 @@ PrefabInstance:
       propertyPath: enemiesLeftText
       value: 
       objectReference: {fileID: 1226977125}
+    - target: {fileID: 2312264039623448739, guid: e7946915413248e48b07bbad1ce50f4d,
+        type: 3}
+      propertyPath: health
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 2312264039623448741, guid: e7946915413248e48b07bbad1ce50f4d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -756,7 +761,7 @@ PrefabInstance:
     - target: {fileID: 2312264039623448741, guid: e7946915413248e48b07bbad1ce50f4d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.07
+      value: -3.69
       objectReference: {fileID: 0}
     - target: {fileID: 2312264039623448741, guid: e7946915413248e48b07bbad1ce50f4d,
         type: 3}
@@ -7767,6 +7772,31 @@ PrefabInstance:
     - target: {fileID: 6913591392865385095, guid: b8248b42ce976e540b0f8a16df780af4,
         type: 3}
       propertyPath: sounds.Array.data[4].volume
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6913591392865385095, guid: b8248b42ce976e540b0f8a16df780af4,
+        type: 3}
+      propertyPath: sounds.Array.data[10].loop
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6913591392865385095, guid: b8248b42ce976e540b0f8a16df780af4,
+        type: 3}
+      propertyPath: sounds.Array.data[11].loop
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6913591392865385095, guid: b8248b42ce976e540b0f8a16df780af4,
+        type: 3}
+      propertyPath: sounds.Array.data[12].loop
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6913591392865385095, guid: b8248b42ce976e540b0f8a16df780af4,
+        type: 3}
+      propertyPath: sounds.Array.data[13].loop
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6913591392865385095, guid: b8248b42ce976e540b0f8a16df780af4,
+        type: 3}
+      propertyPath: sounds.Array.data[26].loop
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -10910,22 +10940,27 @@ PrefabInstance:
     - target: {fileID: 5600749127471954166, guid: ac79447f2fc28674781f800ceba169e7,
         type: 3}
       propertyPath: maxHealth
-      value: 2
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 5600749127471954166, guid: ac79447f2fc28674781f800ceba169e7,
         type: 3}
       propertyPath: maxComboDelay
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 5600749127471954166, guid: ac79447f2fc28674781f800ceba169e7,
+        type: 3}
+      propertyPath: gravityIncrease
+      value: 1.45
+      objectReference: {fileID: 0}
     - target: {fileID: 6730093160646667984, guid: ac79447f2fc28674781f800ceba169e7,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 69.6
+      value: 61.7
       objectReference: {fileID: 0}
     - target: {fileID: 6730093160646667984, guid: ac79447f2fc28674781f800ceba169e7,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 20.4
+      value: 4.3
       objectReference: {fileID: 0}
     - target: {fileID: 6730093160646667984, guid: ac79447f2fc28674781f800ceba169e7,
         type: 3}
