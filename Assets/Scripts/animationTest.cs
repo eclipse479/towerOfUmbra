@@ -27,6 +27,10 @@ public class animationTest : MonoBehaviour
     {
         soundManager.playSound("playerLand");
     }
+    public void playJumpingSound()
+    {
+        soundManager.playSound("jumping");
+    }
     public void playFootstepSound()
     {
         control.playFootstep();

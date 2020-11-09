@@ -24,7 +24,8 @@ public class bulletScript : MonoBehaviour
         target = GameObject.FindGameObjectWithTag("player").transform;
 
         bullet_rb = GetComponent<Rigidbody>();
-        Vector3 direction = (target.position - transform.position).normalized;
+        Vector3 direction = ((target.position + new Vector3(0, 3.0f, 0)) - transform.position).normalized;
+        transform.forward = direction;
 
         bullet_rb.AddForce(direction * bulletSpeed, ForceMode.VelocityChange);
     }
