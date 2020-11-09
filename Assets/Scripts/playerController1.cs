@@ -148,7 +148,8 @@ public class playerController1 : MonoBehaviour
 
     [HideInInspector]
     public bool isGrappled;
-
+    [HideInInspector]
+    public float speedInput;
     //temp player speed text
     [Tooltip("Text used for debugging")]
     public Text deleteThisLater;
@@ -293,7 +294,7 @@ public class playerController1 : MonoBehaviour
         if (!dead)
         {
             //pausing
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.Escape) & !mainMenu)
             {
                 if (!paused)
                 {
@@ -363,14 +364,14 @@ public class playerController1 : MonoBehaviour
                 {
                     addFriction();
                 }
-                else // if any movement key is pressed
-                {
-                    if (rb.velocity.x > 1 || rb.velocity.x < -1)
-                    {
-                        //apply anti bump force for slopes
-                        applyAntiBump();
-                    }
-                }
+               // else // if any movement key is pressed
+               // {
+               //     if (rb.velocity.x > 1 || rb.velocity.x < -1)
+               //     {
+               //         //apply anti bump force for slopes
+               //         applyAntiBump();
+               //     }
+               // }
                 ///box cast to check if the player is grounded
                 //box cast for if player is grounded and can jump
                 if (groundedDelay > 0)
@@ -434,6 +435,11 @@ public class playerController1 : MonoBehaviour
                 }
                 
             }
+            if (currentComboDelay > 0)
+                deleteThisLater.color = Color.white;
+            else
+                deleteThisLater.color = Color.blue;
+            deleteThisLater.text = currentComboDelay.ToString();
         }
         else if (dead)
         {
@@ -576,13 +582,8 @@ public class playerController1 : MonoBehaviour
         {
             currentSpeed *= -1; // always positive
         }
-        float speedInput = currentSpeed / playerMaxMovementSpeed;
+        speedInput = currentSpeed / playerMaxMovementSpeed;
         ani.SetFloat("speed", speedInput);
-        if (speedInput > 0)
-            deleteThisLater.color = Color.white;
-        else
-            deleteThisLater.color = Color.blue;
-        deleteThisLater.text = speedInput.ToString();
     }
 
     /// <summary>
@@ -719,14 +720,7 @@ public class playerController1 : MonoBehaviour
     {
         paused = newBool;
         mainMenu = newBool;
-        if(newBool)
-        {
-            Time.timeScale = 0.0f;
-        }
-        else
-        {
-            Time.timeScale = 1.0f;
-        }
+        Time.timeScale = 1.0f;
     }
 
     private void grappleTimerSet()
@@ -768,5 +762,10 @@ public class playerController1 : MonoBehaviour
     public void resetDoubleJump()
     {
         doubleJump = true;
+    }
+    public void playFootstep()
+    {
+        if(speedInput > 0.1f && !jumping)
+        SoundManager.instance.playSound("footstep_1");
     }
 }

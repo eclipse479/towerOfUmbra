@@ -28,19 +28,30 @@ public class SoundManager : MonoBehaviour
             s.source.pitch = s.pitch;                           //changes the initial pitch of the sound
             s.source.loop = s.loop;                             //will the sound loop
         }
-        playSound("theme");
+        playSound("tutorialMusic");
+        playSound("tutorialAmbience");
     }
 
     public void playSound(string soundName)
     {
-           
-           Sound s = Array.Find(sounds, sound => sound.name == soundName);
-           if(s == null)
-           {
-               Debug.LogWarning("sound " + soundName + " not found");
-               return;
-           }
-           s.source.pitch = UnityEngine.Random.Range(s.pitch - s.pitchRandomizer, s.pitch + s.pitchRandomizer);
-           s.source.Play();
+        Sound s = Array.Find(sounds, sound => sound.name == soundName);
+        if(s == null)
+        {
+            Debug.LogWarning("sound " + soundName + " not found");
+            return;
+        }
+        s.source.pitch = UnityEngine.Random.Range(s.pitch - s.pitchRandomizer, s.pitch + s.pitchRandomizer);
+        s.source.Play();
+    }
+    public void stopSound(string soundName)
+    {
+
+        Sound s = Array.Find(sounds, sound => sound.name == soundName);
+        if (s == null)
+        {
+            Debug.LogWarning("sound " + soundName + " not found");
+            return;
+        }
+        s.source.Stop();
     }
 }
