@@ -435,6 +435,11 @@ public class playerController1 : MonoBehaviour
                 }
                 
             }
+            if (currentComboDelay > 0)
+                deleteThisLater.color = Color.white;
+            else
+                deleteThisLater.color = Color.blue;
+            deleteThisLater.text = currentComboDelay.ToString();
         }
         else if (dead)
         {
@@ -579,11 +584,6 @@ public class playerController1 : MonoBehaviour
         }
         speedInput = currentSpeed / playerMaxMovementSpeed;
         ani.SetFloat("speed", speedInput);
-        if (speedInput > 0)
-            deleteThisLater.color = Color.white;
-        else
-            deleteThisLater.color = Color.blue;
-        deleteThisLater.text = speedInput.ToString();
     }
 
     /// <summary>
@@ -762,5 +762,10 @@ public class playerController1 : MonoBehaviour
     public void resetDoubleJump()
     {
         doubleJump = true;
+    }
+    public void playFootstep()
+    {
+        if(speedInput > 0.1f && !jumping)
+        SoundManager.instance.playSound("footstep_1");
     }
 }

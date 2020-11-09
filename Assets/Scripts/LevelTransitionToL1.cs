@@ -11,6 +11,12 @@ public class LevelTransitionToL1 : MonoBehaviour
         {
             Debug.Log("player has entered");
             SceneManager.LoadScene(1);
+
+            SoundManager.instance.stopSound("tutorialAmbience");
+            SoundManager.instance.stopSound("tutorialMusic");
+            SoundManager.instance.playSound("caveAmbience");
+            SoundManager.instance.playSound("caveMusic");
+
         }
         
     }
