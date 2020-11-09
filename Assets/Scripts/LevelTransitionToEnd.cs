@@ -11,6 +11,7 @@ public class LevelTransitionToEnd : MonoBehaviour
         {
             Debug.Log("player has entered");
             SceneManager.LoadScene(4);
+            SoundManager.instance.playSound("TorchesBurning");
         }
         
     }

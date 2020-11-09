@@ -126,6 +126,7 @@ GameObject:
   - component: {fileID: 7859704924231195383}
   - component: {fileID: 872947323144409148}
   - component: {fileID: 7529201172115619977}
+  - component: {fileID: 5001574713301155488}
   m_Layer: 0
   m_Name: restartTimer
   m_TagString: Untagged
@@ -192,6 +193,21 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 'Respawing in: '
+--- !u!114 &5001574713301155488
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2529872175997994277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0.16037738, g: 0.0007564989, b: 0.0007564989, a: 1}
+  m_EffectDistance: {x: 1.4, y: 0.01}
+  m_UseGraphicAlpha: 1
 --- !u!1 &3394334681456093689
 GameObject:
   m_ObjectHideFlags: 0
@@ -203,6 +219,7 @@ GameObject:
   - component: {fileID: 6281493341081670455}
   - component: {fileID: 4719786440006353002}
   - component: {fileID: 690788083089713204}
+  - component: {fileID: 1809291313636521108}
   m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
@@ -269,3 +286,18 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: YOU ARE DEAD!
+--- !u!114 &1809291313636521108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3394334681456093689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0.16037738, g: 0.0007564989, b: 0.0007564989, a: 1}
+  m_EffectDistance: {x: 2.12, y: 0.01}
+  m_UseGraphicAlpha: 1
