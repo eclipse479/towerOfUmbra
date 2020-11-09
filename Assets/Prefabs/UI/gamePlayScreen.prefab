@@ -162,6 +162,7 @@ GameObject:
   - component: {fileID: 3887477955154737893}
   - component: {fileID: 5818391743433831209}
   - component: {fileID: 8907477880616390669}
+  - component: {fileID: 412476550091405694}
   m_Layer: 5
   m_Name: enemiesLeft
   m_TagString: Untagged
@@ -243,6 +244,21 @@ MonoBehaviour:
   completeCanvas: {fileID: 0}
   gamePlayScreen: {fileID: 7743204379176393206}
   playerBlockingWall: {fileID: 0}
+--- !u!114 &412476550091405694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 629940596813518630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0.16037738, g: 0.0007564989, b: 0.0007564989, a: 1}
+  m_EffectDistance: {x: 1, y: 0.86}
+  m_UseGraphicAlpha: 1
 --- !u!1 &7743204379789341729
 GameObject:
   m_ObjectHideFlags: 0
