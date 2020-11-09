@@ -16,6 +16,8 @@ public class AnimationSwitch : MonoBehaviour
 {
     EnemyBehaviour state;
     Animator animation;
+    bool knockback;
+    bool stun;
 
     private void Awake()
     {
@@ -31,6 +33,9 @@ public class AnimationSwitch : MonoBehaviour
         {
              if (!state.isStunned && !state.IsDizzy)
              {
+                knockback = false;
+                stun = false;
+                animation.SetBool("stun", stun);
                 animation.SetFloat("Stun Time", 0.0f);
                 switch (state.State)
                  {
@@ -45,6 +50,7 @@ public class AnimationSwitch : MonoBehaviour
                          break;
                      case EnemyBehaviour.STATE.ATTACK:
                              state.IsShooting = false;
+                        if (state.stun_duration < 0)
                              animation.SetTrigger("Attack");
                          break;
                      case EnemyBehaviour.STATE.CHASING:
@@ -61,11 +67,23 @@ public class AnimationSwitch : MonoBehaviour
              }
              else if (state.isStunned)
              {
-                 animation.SetTrigger("Knockback");
+                if (!knockback)
+                {
+                    animation.SetTrigger("Knockback");
+                    knockback = true;
+                }
              }
              else
              {
-                animation.SetFloat("Stun Time", state.StunTime);
+                knockback = false;
+                if (state.StunTime > 0.0)
+                {
+                    stun = true;
+                    animation.SetBool("stun", stun);
+                }
+                
+                if (stun)
+                    animation.SetFloat("Stun Time", state.StunTime);
              }
         }
 
