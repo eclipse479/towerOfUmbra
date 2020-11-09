@@ -50,7 +50,7 @@ public class AnimationSwitch : MonoBehaviour
                          break;
                      case EnemyBehaviour.STATE.ATTACK:
                              state.IsShooting = false;
-                        if (state.stun_duration < 0)
+                        if (!stun)
                              animation.SetTrigger("Attack");
                          break;
                      case EnemyBehaviour.STATE.CHASING:
