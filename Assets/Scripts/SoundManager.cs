@@ -31,16 +31,16 @@ public class SoundManager : MonoBehaviour
         playSound("theme");
     }
 
- public void playSound(string soundName)
+    public void playSound(string soundName)
     {
-        
-        Sound s = Array.Find(sounds, sound => sound.name == soundName);
-        if(s == null)
-        {
-            Debug.LogWarning("sound " + soundName + " not found");
-            return;
-        }
-        s.source.pitch = UnityEngine.Random.Range(s.pitch - s.pitchRandomizer, s.pitch + s.pitchRandomizer);
-        s.source.Play();
+           
+           Sound s = Array.Find(sounds, sound => sound.name == soundName);
+           if(s == null)
+           {
+               Debug.LogWarning("sound " + soundName + " not found");
+               return;
+           }
+           s.source.pitch = UnityEngine.Random.Range(s.pitch - s.pitchRandomizer, s.pitch + s.pitchRandomizer);
+           s.source.Play();
     }
 }
