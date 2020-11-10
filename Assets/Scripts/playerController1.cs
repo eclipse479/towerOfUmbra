@@ -84,9 +84,6 @@ public class playerController1 : MonoBehaviour
     public float grappleMovementTimerReductionSpeed;
     private float currentGrappleMovement;
     #endregion
-    //timer for how long the force is applied
-    private float maxAntiBumpForceTimer = 0.3f;
-    private float antiBumpForceTimer;
 
     #region jumping
     [Header("JUMPING")]
@@ -154,9 +151,11 @@ public class playerController1 : MonoBehaviour
     [HideInInspector]
     public float speedInput;
     //private SoundManager soundManager;
+    private ParticleManager manager;
     private void Awake()
     {
-        bloodSplatter = ParticleManager.instance.addParticle("PlayerBloodSplatter", transform.position, transform.rotation);
+        manager = FindObjectOfType<ParticleManager>();
+        bloodSplatter = manager.addParticle("PlayerBloodSplatter", transform.position, transform.rotation);
         particleTransform = bloodSplatter.gameObject.transform;
 
         currentGrappleMovement = maxGrappledMovementMultiplier;
@@ -268,7 +267,6 @@ public class playerController1 : MonoBehaviour
                     //jumps
                     rb.AddForce(transform.up * jumpForce, ForceMode.VelocityChange);
                     jumping = true;
-                    antiBumpForceTimer = -1;
                     coyoteTime = -1;  // -> not grounded
                     jumpBuffer = -1;   // -> hasn't pressed the key
                 }
@@ -284,7 +282,6 @@ public class playerController1 : MonoBehaviour
                     rb.AddForce(transform.up * jumpForce * doubleJumpForce, ForceMode.VelocityChange);//jump half as high
                     doubleJump = false;
                     jumping = true;
-                    antiBumpForceTimer = -1;
                     jumpBuffer = -1;
                 }
             }
