@@ -136,6 +136,9 @@ public class playerController1 : MonoBehaviour
     private Animator ani;
     #endregion
 
+
+    private ParticleSystem bloodSplatter;
+    private Transform particleTransform;
     //pausing
     private bool paused;
     private bool dead;
@@ -156,6 +159,9 @@ public class playerController1 : MonoBehaviour
     //private SoundManager soundManager;
     private void Awake()
     {
+        bloodSplatter = ParticleManager.instance.addParticle("PlayerBloodSplatter", transform.position, transform.rotation);
+        particleTransform = bloodSplatter.gameObject.transform;
+
         currentGrappleMovement = maxGrappledMovementMultiplier;
         isGrappled = false;
         //health bar values
@@ -400,11 +406,7 @@ public class playerController1 : MonoBehaviour
                     grounded = false;
                     ani.SetBool("grounded", false);
                 }
-                ///---------------------------------------------------------------------------------------------------------------------------
-                //checks ground directally beneth and in front of the player
-                groundCheck();
-                ///---------------------------------------------------------------------------------------------------------------------------
-                //deleteThisLater.text = currentComboDelay.ToString();
+
                 //swing sword
                 if (Input.GetMouseButtonDown(0) && !isGrappled)
                 {
@@ -435,11 +437,6 @@ public class playerController1 : MonoBehaviour
                 }
                 
             }
-            if (currentComboDelay > 0)
-                deleteThisLater.color = Color.white;
-            else
-                deleteThisLater.color = Color.blue;
-            deleteThisLater.text = currentComboDelay.ToString();
         }
         else if (dead)
         {
@@ -611,77 +608,6 @@ public class playerController1 : MonoBehaviour
         collide.material.frictionCombine = PhysicMaterialCombine.Minimum;
     }
 
-
-    /// <summary>
-    /// applies a force downwards when enter/exiting a slope to keep the player on the ground
-    /// </summary>
-    private void applyAntiBump()
-    {
-
-        if (antiBumpForceTimer >= 0)
-        {
-            antiBumpForceTimer -= Time.deltaTime;
-        }
-        if (antiBumpForceTimer > 0 && !jumping /*&& grounded*/)
-        {
-            RaycastHit forwardRay;
-            if (!Physics.Raycast(transform.position + new Vector3(0, -0.45f, 0), transform.forward, out forwardRay, 1.0f, platformLayerMask))
-            {
-                Debug.DrawRay(transform.position + new Vector3(0, -0.45f, 0), transform.forward, Color.black);
-                rb.AddForce(-Vector3.up * antiSlopeBumpForce, ForceMode.VelocityChange);
-            }
-            else
-                Debug.DrawRay(transform.position + new Vector3(0, -0.45f, 0), transform.forward * forwardRay.distance, Color.black);
-        }
-    }
-
-    /// <summary>
-    /// checks the floor directally beneth the player
-    /// </summary>
-    private void floorCheck()
-    {
-        if (Physics.Raycast(transform.position + new Vector3(0, -0.4f, 0), -transform.up, out floorCheckRay, 0.2f, platformLayerMask))
-        {
-            Debug.DrawRay(transform.position + new Vector3(0, -0.4f, 0), -transform.up * floorCheckRay.distance, Color.blue);
-        }
-        else
-        {
-            Debug.DrawRay(transform.position + new Vector3(0, -0.4f, 0), -transform.up * 0.2f, Color.blue);
-        }
-    }
-
-    /// <summary>
-    /// sends a raycast down in front of the player and to determine is a slope if in front
-    /// </summary>
-    /// <returns></returns>
-    private void groundCheck()
-    {
-        //check directally beneth the player
-        floorCheck();
-        
-
-        //check the ground slightly in front of the player
-        Vector3 rayCastPos = transform.position + new Vector3(0, -0.4f, 0) + (transform.forward * 0.5f);
-        float length = 0.4f;
-        if (Physics.Raycast(rayCastPos, -transform.up, out inFrontOfPlayer, length, platformLayerMask))
-        {
-            Debug.DrawRay(rayCastPos, -transform.up * inFrontOfPlayer.distance, Color.cyan);
-            //if the spot in front of the player hits ground and the normal is not the same as the normal the player is on
-            if (floorCheckRay.normal.y != inFrontOfPlayer.normal.y && floorCheckRay.normal.y != 0 && inFrontOfPlayer.normal.y != 0)
-            {
-                antiBumpForceTimer = maxAntiBumpForceTimer;
-            }
-            else
-            {
-               // deleteThisLater.text = "sameGround";
-            }
-        }
-        else
-        {
-            //deleteThisLater.text = "nothing in front";
-            Debug.DrawRay(rayCastPos, -transform.up * length, Color.gray);
-        }
-    }
     public void flashStart()
     {
         StartCoroutine(Flasher());
@@ -737,6 +663,9 @@ public class playerController1 : MonoBehaviour
     {
         playerStats.health -= damage;
         healthbarImage.fillAmount = playerStats.health / maxHealth;
+        particleTransform.position = gameObject.transform.position + new Vector3(0, 1, 0);
+        particleTransform.rotation = gameObject.transform.rotation;
+        bloodSplatter.Play();
 
         if (playerStats.health <= 0)
         {
@@ -765,7 +694,9 @@ public class playerController1 : MonoBehaviour
     }
     public void playFootstep()
     {
-        if(speedInput > 0.1f && !jumping)
-        SoundManager.instance.playSound("footstep_1");
+        if (speedInput > 0.1f && !jumping)
+        {
+            SoundManager.instance.playSound("footstep_1");
+        }
     }
 }
