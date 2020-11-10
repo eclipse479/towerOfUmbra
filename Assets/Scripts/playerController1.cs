@@ -153,9 +153,6 @@ public class playerController1 : MonoBehaviour
     public bool isGrappled;
     [HideInInspector]
     public float speedInput;
-    //temp player speed text
-    [Tooltip("Text used for debugging")]
-    public Text deleteThisLater;
     //private SoundManager soundManager;
     private void Awake()
     {
