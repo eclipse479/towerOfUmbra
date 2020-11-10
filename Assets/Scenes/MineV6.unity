@@ -9974,6 +9974,24 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &543482765 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2039971622, guid: dc501115bb1a8de448dbef4736d7f97e,
+    type: 3}
+  m_PrefabInstance: {fileID: 8737585338075635509}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &543482767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 543482765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b94693633a5f144db786777233bc953, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!43 &545905249
 Mesh:
   m_ObjectHideFlags: 0
@@ -12971,7 +12989,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 8737585338075635509}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 543482765}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
@@ -16586,18 +16604,6 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!114 &1009136262 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1795406709, guid: dc501115bb1a8de448dbef4736d7f97e,
-    type: 3}
-  m_PrefabInstance: {fileID: 8737585338075635509}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39c320b89af5cfd43b2fad7107046e7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1016505868
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -35401,10 +35407,10 @@ PrefabInstance:
     - target: {fileID: 2039971624, guid: dc501115bb1a8de448dbef4736d7f97e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1009136262}
+      objectReference: {fileID: 543482767}
     - target: {fileID: 2039971624, guid: dc501115bb1a8de448dbef4736d7f97e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: quitButtonPressed
+      value: Quitgame
       objectReference: {fileID: 0}
     - target: {fileID: 5684477726024687547, guid: dc501115bb1a8de448dbef4736d7f97e,
         type: 3}
@@ -35531,5 +35537,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1795406709, guid: dc501115bb1a8de448dbef4736d7f97e, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: dc501115bb1a8de448dbef4736d7f97e, type: 3}
