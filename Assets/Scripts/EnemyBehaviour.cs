@@ -155,6 +155,7 @@ public class EnemyBehaviour : MonoBehaviour
 
     // Sword Trails Particles : Dedicated melee particles
     public ParticleSystem melee_particle;
+    [Tooltip("For the spider only")] public ParticleSystem melee_particle_2;
 
     AudioSource footstep_sound;
 
@@ -844,7 +845,18 @@ public class EnemyBehaviour : MonoBehaviour
     /// </summary>
     void meleeTrail()
     {
-        melee_particle.Play();
+        switch (gameObject.tag)
+        {
+            case "skeleton":
+                melee_particle.Play();
+                break;
+            case "spider":
+                melee_particle.Play();
+                melee_particle_2.Play();
+                break;
+            default:
+                break;
+        }
     }
 
     /// <summary>
@@ -852,7 +864,18 @@ public class EnemyBehaviour : MonoBehaviour
     /// </summary>
     void stopTrail()
     {
-        melee_particle.Stop();
+        switch (gameObject.tag)
+        {
+            case "skeleton":
+                melee_particle.Stop();
+                break;
+            case "spider":
+                melee_particle.Stop();
+                melee_particle_2.Stop();
+                break;
+            default:
+                break;
+        }
     }
 
 
