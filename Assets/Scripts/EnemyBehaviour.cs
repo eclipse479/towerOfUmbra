@@ -113,7 +113,6 @@ public class EnemyBehaviour : MonoBehaviour
 
     // Stun values
     [Header("Stun settings")]
-    [Tooltip("How long the enemy is stunned")] public float stun_duration = 2.0f;
     [Tooltip("Rate of stun recovery")] public float stun_recovery = 2.0f;
     [Tooltip("How long enemy stays dizzy")] public float dizzy_duration;
     bool is_dizzy = false;
@@ -148,17 +147,26 @@ public class EnemyBehaviour : MonoBehaviour
 
     /* Particles to be used and tranforms*/
     ParticleManager particles;
-    ParticleSystem particle_effect;
+    ParticleSystem hit_effect; // For hit_effect
+    ParticleSystem stun_particle; // For stun particles
+    float stun_particle_timer;
+    Transform stun_particle_transform; 
     Transform particle_transform;
 
     // Sword Trails Particles : Dedicated melee particles
     public ParticleSystem melee_particle;
+
+    AudioSource footstep_sound;
+
 
     // Things that need to be loaded before first frame
     private void Awake()
     {
         animator = GetComponent<Animator>();
         collider = GetComponent<Collider>();
+
+        if (gameObject.tag == "skeleton")
+            footstep_sound = GetComponent<AudioSource>();
 
         // Search for sound
         sound = FindObjectOfType<SoundManager>();
@@ -216,17 +224,22 @@ public class EnemyBehaviour : MonoBehaviour
         {
             switch (gameObject.tag)
             {
+                // Looking for the stun effect
                 case "skeleton":
-                    particle_effect = particles.addParticle("SkeletonHitEffect", ray.origin, transform.rotation);
-                    particle_transform = particle_effect.gameObject.transform;
+                    hit_effect = particles.addParticle("SkeletonHitEffect", ray.origin, transform.rotation);
+                    particle_transform = hit_effect.gameObject.transform;
                     break;
                 case "spider":
-                    particle_effect = particles.addParticle("SpiderBloodEffect", ray.origin, transform.rotation);
-                    particle_transform = particle_effect.gameObject.transform;
+                    hit_effect = particles.addParticle("SpiderBloodEffect", ray.origin, transform.rotation);
+                    particle_transform = hit_effect.gameObject.transform;
                     break;
                 default:
                     break;
             }
+
+            // Stun Particle
+            stun_particle = particles.addParticle("Stun effect", transform.position, transform.rotation);
+            stun_particle_transform = stun_particle.gameObject.transform;
         }
 
        
@@ -248,9 +261,6 @@ public class EnemyBehaviour : MonoBehaviour
 
         // Shoot Cooldown
         shoot_timer = shoot_cooldown;
-
-        // Stun duration
-        stun_time = stun_duration;
     }
 
     // Start is called before the first frame update
@@ -403,12 +413,16 @@ public class EnemyBehaviour : MonoBehaviour
     /// </summary>
     void hookStun()
     {
-        dizzy_time -= Time.deltaTime;
-            
+        dizzy_time -= stun_recovery * Time.deltaTime;
+
+        if (!stun_particle.isPlaying)
+            stun_particle.Play();
+
         if (dizzy_time <= 0)
         {
             is_dizzy = false;
             dizzy_time = dizzy_duration;
+            stun_particle.Stop();
         }
     }
 
@@ -750,7 +764,16 @@ public class EnemyBehaviour : MonoBehaviour
                 default:
                     break;
             }
+
+            stun_particle_transform.position = transform.position;
+            stun_particle_transform.rotation = transform.rotation;
+            stun_particle.Play();
+
             is_dizzy = true;
+
+            // Reset Enemy velocity
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
         }
     }
 
@@ -786,11 +809,11 @@ public class EnemyBehaviour : MonoBehaviour
             rb.AddForce((transform.up * knockback_vertical) + (-transform.forward * knockback_horizontal), ForceMode.VelocityChange);
         }
 
-        if (particle_effect != null)
+        if (hit_effect != null)
         {
             particle_transform.position = ray_centre.position;
             particle_transform.rotation = transform.rotation;
-            particle_effect.Play();
+            hit_effect.Play();
         }
 
 
@@ -813,7 +836,7 @@ public class EnemyBehaviour : MonoBehaviour
     /// </summary>
     public void footstep()
     {
-        sound.playSound("footstep_1");
+         footstep_sound.Play();
     }
 
     /// <summary>
