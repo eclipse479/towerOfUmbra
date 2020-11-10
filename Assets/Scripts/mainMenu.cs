@@ -15,11 +15,13 @@ public class mainMenu : MonoBehaviour
     {
         player.setMainmenu(false);
         gameObject.SetActive(false);
+        SoundManager.instance.playSound("Click");
     }
 
     public void quitButtonPressed()
     {
         Application.Quit();
+        SoundManager.instance.playSound("Click");
         Debug.Log("quit");
     }
      

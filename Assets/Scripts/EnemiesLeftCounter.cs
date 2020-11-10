@@ -66,6 +66,7 @@ public class EnemiesLeftCounter : MonoBehaviour
 
     private void setTorchesOnFire()
     {
+        SoundManager.instance.playSound("torchesLit");
         foreach(GameObject fire in torches)
         {
             fire.SetActive(true);

@@ -90,7 +90,10 @@ public class grapplingHook : MonoBehaviour
     private float pullTimer;
     #endregion
 
-
+    #region particles
+    private ParticleSystem impact;
+    private Transform impactTransform;
+    #endregion
     [HideInInspector]
     public GameObject grabbedEnemy;
     //vector for pulling direction player -> wall
@@ -101,6 +104,11 @@ public class grapplingHook : MonoBehaviour
     public Text deleteThisLater;
     void Start()
     {
+
+        impact = ParticleManager.instance.addParticle("grappleHit", transform.position, transform.rotation);
+        impactTransform = impact.gameObject.transform;
+
+
         control = player.GetComponent<playerController1>();
         rends = new List<MeshRenderer>();
         for (int i = 1; i <= 3; i++)
@@ -288,6 +296,9 @@ public class grapplingHook : MonoBehaviour
         //collisions with various objects with tags
         if (collision.gameObject.tag == "enemy" && extending)
         {
+            impactTransform.position = gameObject.transform.position;
+            impactTransform.rotation = gameObject.transform.rotation;
+            impact.Play();
             extending = false;
             StopCoroutine(extend());
             if (!retracting)
@@ -300,6 +311,9 @@ public class grapplingHook : MonoBehaviour
         {
             if (extending)
             {
+                impactTransform.position = gameObject.transform.position;
+                impactTransform.rotation = gameObject.transform.rotation;
+                impact.Play();
                 SoundManager.instance.playSound("grappleHookImpact");
                 extending = false;
                 wallGrabbed = true;
@@ -311,6 +325,9 @@ public class grapplingHook : MonoBehaviour
         }
         else if(!wallGrabbed)
         {
+            impactTransform.position = gameObject.transform.position;
+            impactTransform.rotation = gameObject.transform.rotation;
+            impact.Play();
             //hits anything else
             extending = false;
             StopCoroutine(extend());
@@ -350,6 +367,7 @@ public class grapplingHook : MonoBehaviour
     IEnumerator extend()
     {
         extending = true;
+        lerpPercent = 0;                                //resest the lerp timer
         reappear();
         SoundManager.instance.playSound("grappleHookThrow");
         control.animator().SetBool("grappleThrow", true);
@@ -370,7 +388,6 @@ public class grapplingHook : MonoBehaviour
             }
             yield return null;
         }
-        lerpPercent = 0;                                //resest the lerp timer
         if(maxReached)
            yield return StartCoroutine(retract());         //start retracting when extending has been completed
     }
@@ -378,6 +395,7 @@ public class grapplingHook : MonoBehaviour
     IEnumerator retract()
     {
         retracting = true;
+        lerpPercent = 0;                //reset the lerp value
         StopCoroutine(extend());
         SoundManager.instance.playSound("grappleHookReel");
         wallGrabbed = false;
@@ -401,7 +419,6 @@ public class grapplingHook : MonoBehaviour
             }
             yield return null;
         }
-        lerpPercent = 0;                //reset the lerp value
         active = false;
         control.animator().SetBool("grappleThrow", false);
         disappear();
