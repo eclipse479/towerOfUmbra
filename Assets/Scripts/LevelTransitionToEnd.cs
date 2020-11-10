@@ -11,6 +11,8 @@ public class LevelTransitionToEnd : MonoBehaviour
         {
             Debug.Log("player has entered");
             SceneManager.LoadScene(4);
+            SoundManager.instance.stopSound("caveMusic");
+            SoundManager.instance.stopSound("caveAmbience");
             SoundManager.instance.playSound("TorchesBurning");
             SoundManager.instance.playSound("EndingMusic");
         }
