@@ -8,10 +8,17 @@ public class animationTest : MonoBehaviour
     private SoundManager soundManager;
     public Transform swordTip;
     private playerController1 control;
+
+    private ParticleManager manager;
+    private ParticleSystem landing;
+    private Transform landingTransform;
     private void Awake()
     {
+        manager = FindObjectOfType<ParticleManager>();
         control = gameObject.transform.parent.GetComponent<playerController1>();
         soundManager = FindObjectOfType<SoundManager>();
+        landing = manager.addParticle("Footsteps impact", transform.position, Quaternion.Euler(0,0,0));
+        landingTransform = landing.gameObject.transform;
     }
 
     public void swordOff()
@@ -25,7 +32,13 @@ public class animationTest : MonoBehaviour
 
     public void playLandingSound()
     {
+        landingTransform.position = gameObject.transform.position;
+        landing.Play();
         soundManager.playSound("playerLand");
+    }
+    public void stopLandingParticle()
+    {
+        landing.Stop();
     }
     public void playJumpingSound()
     {
@@ -36,18 +49,15 @@ public class animationTest : MonoBehaviour
         control.playFootstep();
     }
 
-    public void attack1Particle()
+    public void attackParticle()
     {
-        ParticleManager.instance.addParticle("PlayerSwordTrail", swordTip.transform.position, Quaternion.Euler(0, 45, 0));
+        if(swordTip.gameObject.activeSelf)
+        swordTip.gameObject.SetActive(false);
+        else
+        swordTip.gameObject.SetActive(true);
+        
     }
-    public void attack2Particle()
-    {
-        ParticleManager.instance.addParticle("PlayerSwordTrail", attackPoint.transform.position, Quaternion.Euler(0, 0, 0));
-    }
-    public void attack3Particle()
-    {
-        ParticleManager.instance.addParticle("PlayerSwordTrail", attackPoint.transform.position, Quaternion.Euler(90, 0, 0));
-    }
+
 
     public void createHitBox()
     {
