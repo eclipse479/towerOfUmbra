@@ -39,7 +39,6 @@ public class bulletScript : MonoBehaviour
     void Update()
     {
         lifeTime -= Time.deltaTime;
-        // bullet_rb.AddForce(transform.right * bulletSpeed * Time.deltaTime, ForceMode.Force);
 
         if (lifeTime < 0)
         {
