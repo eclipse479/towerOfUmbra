@@ -325,18 +325,6 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!114 &240940507 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1417503691, guid: 0af5cc857729e6949b1ca1ee29617012,
-    type: 3}
-  m_PrefabInstance: {fileID: 242251603}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &242251603
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1065,7 +1053,7 @@ PrefabInstance:
         type: 3}
       propertyPath: healthText
       value: 
-      objectReference: {fileID: 925564187}
+      objectReference: {fileID: 0}
     - target: {fileID: 5600749127471954166, guid: ac79447f2fc28674781f800ceba169e7,
         type: 3}
       propertyPath: healthBar
@@ -1075,7 +1063,7 @@ PrefabInstance:
         type: 3}
       propertyPath: deleteThisLater
       value: 
-      objectReference: {fileID: 240940507}
+      objectReference: {fileID: 0}
     - target: {fileID: 5600749127471954166, guid: ac79447f2fc28674781f800ceba169e7,
         type: 3}
       propertyPath: doubleJumpForce
@@ -1652,7 +1640,7 @@ PrefabInstance:
         type: 3}
       propertyPath: deleteThisLater
       value: 
-      objectReference: {fileID: 240940507}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 42e61a815c4f1fe44bd93c13b7c61904, type: 3}
 --- !u!1 &825639702 stripped
@@ -1661,18 +1649,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1474248013}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &925564187 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7743204379325426939, guid: 0af5cc857729e6949b1ca1ee29617012,
-    type: 3}
-  m_PrefabInstance: {fileID: 242251603}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &937160111
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2293,7 +2269,7 @@ PrefabInstance:
     - target: {fileID: 2312264039623448739, guid: e7946915413248e48b07bbad1ce50f4d,
         type: 3}
       propertyPath: knockback_vertical
-      value: 5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2312264039623448739, guid: e7946915413248e48b07bbad1ce50f4d,
         type: 3}
@@ -2995,7 +2971,7 @@ PrefabInstance:
     - target: {fileID: 9196819208811733596, guid: 0bd34f934304a554eb1deaa4da81f648,
         type: 3}
       propertyPath: dizzy_duration
-      value: 2
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 9196819208811733596, guid: 0bd34f934304a554eb1deaa4da81f648,
         type: 3}
@@ -3006,7 +2982,7 @@ PrefabInstance:
     - target: {fileID: 9196819208811733596, guid: 0bd34f934304a554eb1deaa4da81f648,
         type: 3}
       propertyPath: health
-      value: 20
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 9196819208811733596, guid: 0bd34f934304a554eb1deaa4da81f648,
         type: 3}
