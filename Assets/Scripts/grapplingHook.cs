@@ -99,9 +99,6 @@ public class grapplingHook : MonoBehaviour
     //vector for pulling direction player -> wall
     [HideInInspector]
     public Vector3 forceDirection;
-
-
-    public Text deleteThisLater;
     void Start()
     {
 
