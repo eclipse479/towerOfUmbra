@@ -57,4 +57,20 @@ public class ParticleManager : MonoBehaviour
 
         return Instantiate(p.particle, position, rotation);
     }
+
+
+    public ParticleSystem addParticle(string particle_name, Vector3 position)
+    {
+        Particle p = Array.Find(particles, particle => particle.name == particle_name);
+
+        if (p == null)
+        {
+            Debug.Log("Warning: Particle" + particle_name + " not found!");
+            return null;
+        }
+
+        p.particle.transform.position = position;
+
+        return Instantiate(p.particle, position, p.particle.transform.rotation);
+    }
 }
