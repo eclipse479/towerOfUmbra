@@ -168,7 +168,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh244528
+  m_Name: pb_Mesh32778
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -874,7 +874,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh244542
+  m_Name: pb_Mesh32792
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1763,7 +1763,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-296656
+  m_Name: pb_Mesh-38048
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1926,7 +1926,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-295440
+  m_Name: pb_Mesh-36828
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -2251,6 +2251,11 @@ PrefabInstance:
       propertyPath: particles.Array.data[1].particle_end
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8264693451088234590, guid: ed7523edb69f0724bbeeb1e38f7120dd,
+        type: 3}
+      propertyPath: particles.Array.data[3].loop
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8264693451088234591, guid: ed7523edb69f0724bbeeb1e38f7120dd,
         type: 3}
       propertyPath: m_Name
@@ -2298,7 +2303,7 @@ PrefabInstance:
     - target: {fileID: 2312264039623448739, guid: e7946915413248e48b07bbad1ce50f4d,
         type: 3}
       propertyPath: attack_range
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2312264039623448739, guid: e7946915413248e48b07bbad1ce50f4d,
         type: 3}
@@ -2998,6 +3003,21 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 7091955269792678419, guid: 67f3c4f0aa066534691231d4050edaa2,
         type: 3}
+    - target: {fileID: 9196819208811733596, guid: 0bd34f934304a554eb1deaa4da81f648,
+        type: 3}
+      propertyPath: health
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 9196819208811733596, guid: 0bd34f934304a554eb1deaa4da81f648,
+        type: 3}
+      propertyPath: stun_duration
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 9196819208811733596, guid: 0bd34f934304a554eb1deaa4da81f648,
+        type: 3}
+      propertyPath: stun_recovery
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9196819208811733598, guid: 0bd34f934304a554eb1deaa4da81f648,
         type: 3}
       propertyPath: m_LocalPosition.x

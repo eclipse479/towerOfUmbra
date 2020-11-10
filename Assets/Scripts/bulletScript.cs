@@ -16,6 +16,9 @@ public class bulletScript : MonoBehaviour
     // Rigidbody
     Rigidbody bullet_rb;
 
+    // Sound
+    SoundManager sound;
+
     private void Awake()
     {
         // Layer to damage
@@ -28,6 +31,8 @@ public class bulletScript : MonoBehaviour
         transform.forward = direction;
 
         bullet_rb.AddForce(direction * bulletSpeed, ForceMode.VelocityChange);
+
+        sound = FindObjectOfType<SoundManager>();
     }
 
     // Update is called once per frame
@@ -49,10 +54,12 @@ public class bulletScript : MonoBehaviour
         if (hit.layer == player)
         {
             Destroy(gameObject);
+            sound.playSound("fireballImpact");
         }
         else if (hit.layer != player && hit.layer != 11)
         {
             Destroy(gameObject);
+            sound.playSound("fireballImpact");
         }
     }
 
