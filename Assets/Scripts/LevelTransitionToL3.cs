@@ -11,6 +11,7 @@ public class LevelTransitionToL3 : MonoBehaviour
         {
             Debug.Log("player has entered");
             SceneManager.LoadScene(3);
+            SoundManager.instance.stopSound("TorchesBurning");
         }
         
     }

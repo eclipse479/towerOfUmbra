@@ -10,6 +10,7 @@ public class LevelTransitionToL2 : MonoBehaviour
         if (other.gameObject.tag == "player")
         {
             Debug.Log("player has entered");
+            SoundManager.instance.stopSound("TorchesBurning");
             SceneManager.LoadScene(2);
         }
         
