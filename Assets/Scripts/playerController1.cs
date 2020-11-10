@@ -136,6 +136,9 @@ public class playerController1 : MonoBehaviour
     private Animator ani;
     #endregion
 
+
+    private ParticleSystem bloodSplatter;
+    private Transform particleTransform;
     //pausing
     private bool paused;
     private bool dead;
@@ -156,6 +159,9 @@ public class playerController1 : MonoBehaviour
     //private SoundManager soundManager;
     private void Awake()
     {
+        bloodSplatter = ParticleManager.instance.addParticle("PlayerBloodSplatter", transform.position, transform.rotation);
+        particleTransform = bloodSplatter.gameObject.transform;
+
         currentGrappleMovement = maxGrappledMovementMultiplier;
         isGrappled = false;
         //health bar values
@@ -431,11 +437,6 @@ public class playerController1 : MonoBehaviour
                 }
                 
             }
-            if (currentComboDelay > 0)
-                deleteThisLater.color = Color.white;
-            else
-                deleteThisLater.color = Color.blue;
-            deleteThisLater.text = currentComboDelay.ToString();
         }
         else if (dead)
         {
@@ -662,6 +663,9 @@ public class playerController1 : MonoBehaviour
     {
         playerStats.health -= damage;
         healthbarImage.fillAmount = playerStats.health / maxHealth;
+        particleTransform.position = gameObject.transform.position + new Vector3(0, 1, 0);
+        particleTransform.rotation = gameObject.transform.rotation;
+        bloodSplatter.Play();
 
         if (playerStats.health <= 0)
         {
@@ -690,7 +694,9 @@ public class playerController1 : MonoBehaviour
     }
     public void playFootstep()
     {
-        if(speedInput > 0.1f && !jumping)
-        SoundManager.instance.playSound("footstep_1");
+        if (speedInput > 0.1f && !jumping)
+        {
+            SoundManager.instance.playSound("footstep_1");
+        }
     }
 }
