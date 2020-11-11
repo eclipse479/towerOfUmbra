@@ -14,6 +14,7 @@ public class LevelTransitionToL1 : MonoBehaviour
 
             SoundManager.instance.stopSound("tutorialAmbience");
             SoundManager.instance.stopSound("tutorialMusic");
+            SoundManager.instance.stopSound("TorchesBurning");
             SoundManager.instance.playSound("caveAmbience");
             SoundManager.instance.playSound("caveMusic");
 

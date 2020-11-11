@@ -40,6 +40,8 @@ public class EnemiesLeftCounter : MonoBehaviour
         {
             if(playerBlockingWall != null)
             {
+                SoundManager.instance.playSound("TorchesLit");
+                SoundManager.instance.playSound("TorchesButning");
                 playerBlockingWall.SetActive(false);
                 counterText.text = "all enemies have been slain";
             }

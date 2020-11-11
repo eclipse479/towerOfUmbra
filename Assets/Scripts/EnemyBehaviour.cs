@@ -239,7 +239,7 @@ public class EnemyBehaviour : MonoBehaviour
             }
 
             // Stun Particle
-            stun_particle = particles.addParticle("Stun effect", transform.position, transform.rotation);
+            stun_particle = particles.addParticle("Stun effect", transform.position);
             stun_particle_transform = stun_particle.gameObject.transform;
         }
 
@@ -766,8 +766,7 @@ public class EnemyBehaviour : MonoBehaviour
                     break;
             }
 
-            stun_particle_transform.position = transform.position;
-            stun_particle_transform.rotation = transform.rotation;
+            stun_particle_transform.position = transform.position + new Vector3(0, 4.0f, 0);
             stun_particle.Play();
 
             is_dizzy = true;
