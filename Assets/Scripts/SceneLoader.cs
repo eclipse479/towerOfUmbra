@@ -14,7 +14,7 @@ public class SceneLoader : MonoBehaviour
     public void restartFromTutorial()
     {
         SoundManager.instance.stopSound("EndingMusic");
-        SoundManager.instance.stopSound("TorchesBurning");
+        SoundManager.instance.stopSound("EndingAmbieance");
         SoundManager.instance.playSound("TutorialMusic");
         SoundManager.instance.playSound("TutorialAmbience");
         playerStats.health = playerStats.maxHealth;

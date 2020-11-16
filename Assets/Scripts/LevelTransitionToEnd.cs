@@ -14,6 +14,7 @@ public class LevelTransitionToEnd : MonoBehaviour
             SoundManager.instance.stopSound("caveMusic");
             SoundManager.instance.stopSound("caveAmbience");
             SoundManager.instance.playSound("EndingMusic");
+            SoundManager.instance.playSound("EndingAmbieance");
         }
         
     }
